@@ -1,0 +1,83 @@
+1. See code
+
+2. A pointer variable contains the memory address of a piece of data.
+	It's different from a non-pointer variable because non-pointer 
+	variables store the data itself, whereas pointer variables tell us
+	where a value, array, or another variable is stored in memory.
+	
+3. Compiled code: a compiler turns a program to machine code before you run
+	a program. When you run a program, your computer only reads the compiled 
+	code, and doesn't touch the original file (C is a compiled language).
+	
+   Intepreted code: you take your source code, press "run", and the program
+	gets compiled "as-you-go"--a line of code gets read, then gets compiled,
+	then run, during execution (Matlab and Python are intepreted languages).
+	
+4. Hexadecimal numbers in 8-digit binary and 3-digit decimals:
+	a) 0x1E: 0001 1110 (binary) | 16+8+4+2 = 030 (decimal) | msb 0
+	b) 0x32: 0011 0010 (binary) | 32+16+2  = 050 (decimal) | msb 0 
+	c) 0xFE: 1111 1110 (binary) | 255-1    = 254 (decimal) | msb 1
+	d) 0xC4: 1100 0100 (binary) | 128+64+4 = 196 (decimal) | msb 1
+	
+6. Given that each byte of memory has a 16-bit address, this means we have
+	2^16 total bytes of memory (2^n bytes memory -> n bits per mem address).
+	Since each byte contains 4 bits, we have 4 * 2^16 bits of memory, or
+	2^18 bits of memory. 
+
+7. Chars and their equivalent numbers in ASCII:
+	a) char 'k': 107
+	b) char '5': 53
+	c) char '=': 61
+	d) char '?': 63
+
+8. Range of values for different datatypes:
+	a) unsigned char: 0 to 255
+	b) unsigned short: 0 to 65535
+	c) double:
+		- sign can be -1 or 1
+		- mantissa has 52 bits. significand ranges from 1 to 2 - 2^52
+		- exponent has 11 bits. binary E-max = (2^10 - 1) = 1023 
+		- range is from -(2 - 2^-52)*2^1023 to +(2 - 2^-52)*2^1023
+		- decimal range is from -1.7 * 10^308 to +1.7 * 10^308
+
+10. Unsigned integers can only be >= 0. Range is from 0 to INT_MAX.
+	Signed integers can be negative or positive. Range is from 
+		-(INT_MAX + 1)/2 to (INT_MAX - 1)/2
+	This means that when comparing a signed vs. unsigned version of the
+	same int-like datatype (int, short, long, char), you can represent
+	larger values with the unsigned version than the signed version
+	(ex: max val of a signed char is 127; max val of unsigned char is 255)
+
+11. a) For integer math, pros and cons of using chars instead of ints:
+		Pros: chars take up fewer bytes and computations are generally faster
+		Cons: chars can only represent from -128 to 127 or 0 to 255; doing
+			computations with larger numbers will cause integer overflow
+			
+	b) For floating point math, pros and cons of using floats instead of doubles:
+		Pros: floats take up fewer bytes and are generally faster
+		Cons: floats cannot represent exponents as large as doubles can	
+			or numbers to as high floating-point precision as doubles can
+			
+	c) For integer math, pros and cons of using chars instead of floats:
+		Pros: chars take up 1 byte of space rather than 4 bytes (for a float);
+			chars are int-like which means greater computation speed
+		Cons: chars can't represent values as large as floats can; integer
+			division with a char will return an int always (ex: 7/2 = 3)
+		
+
+16. In this example, a "pointer to type double" takes up 8 bytes and points
+	to a floating-point datatype. Of the most common integer and floating 
+	point datatypes discussed in this chapter, the most similar datatypes 
+	should probably also take up 8 bytes of space. On the PIC32, a long long int
+	and a long double both take up 8 bytes of space as well. We could argue that
+	the most similar datatype to the pointer example given is a long long int,
+	because it takes up the same number of bytes and data isn't formatted as 
+	"sign-exponent-significand" like a double is.
+
+17. 		    // (a) the initial conditions, all memory contents unknown
+	kp = &i;    // (b) Data at: | 0xB0..0xB3 : unkn | 0xB0..0xB3 : unkn | 0xB8 : 0xB0 | 0xB9 : unkn
+	j = *kp;    // (c) Data at: | 0xB0..0xB3 : unkn | 0xB0..0xB3 : unkn | 0xB8 : 0xB0 | 0xB9 : unkn
+	i = 0xAE;   // (d) Data at: | 0xB0..0xB3 : 0xAE | 0xB0..0xB3 : unkn | 0xB8 : 0xB0 | 0xB9 : unkn
+	np = kp;    // (e) Data at: | 0xB0..0xB3 : 0xAE | 0xB0..0xB3 : unkn | 0xB8 : 0xB0 | 0xB9 : 0xB0
+	*np = 0x12; // (f) Data at: | 0xB0..0xB3 : 0x12 | 0xB0..0xB3 : unkn | 0xB8 : 0xB0 | 0xB9 : 0xB0
+	j = *kp;    // (g) Data at: | 0xB0..0xB3 : 0x12 | 0xB0..0xB3 : 0x12 | 0xB8 : 0xB0 | 0xB9 : 0xB0

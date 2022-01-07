@@ -1,0 +1,75 @@
+Appendix A exercises 18-19, 21-22, 27-28, 30-32, 34-35
+
+18. The four steps of the GCC compiler are:
+	- Preprocessor: opens all files, copies and pastes code from
+		sources like #include "filename.h" or #define VAR = 12 into main()
+	- Compiler: turns files into Assembly code, .s
+	- Assembler:
+	- Linker:
+
+19. The return type of main() is an int. The meaning of this
+	is the exit code of the program, meaning "what happened as a result
+	of executing this program". An exit code of 0 means everything
+	ran smoothly. An exit code of 1 (or anything else) means an error
+	occurred somewhere in the code.
+
+21. unsigned char  sum, i = 60,	j = 80,	k = 200;
+	sum = i + j; //sum is 140
+	sum = i + k; //sum is 260 - 256 = 4
+	sum = j + k; //sum is 280 - 256 = 24
+
+22. int a=2, b=3, c;
+	float d=1.0, e=3.5, f;
+	
+	a) f = a/b; 			// f equals 0
+	b) f = ((float) a)/b; 	// f equals 0.6666...
+	c) f = (float) (a/b); 	// f equals 0.00
+	d) c = e/d; 			// c equals 3.500
+	e) c = (int) (e/d); 	// c equals 3
+	f) f = ((int) e)/d 		// c equals 3.00
+
+27. Given that our code is already split up into functions,
+	the best thing to do would be to evaluate the output of
+	each function one at a time. Since we know the expected
+	output of the program, we should also know the expected
+	output of each function we use in the program. The source
+	of error will come in the first function where our
+	expected results do not match the actual results.
+
+28. See code
+
+30. Data stored within an array:
+	x[1]           // (a) equals 3
+	*x             // (b) equals 4
+	*(x+2)         // (c) equals 2
+	(*x)+2         // (d) equals 4+2 = 6
+	*x[3]          // (e) error, x[3] is an int not a pointer
+	x[4]           // (f) error, out of bounds
+	*(&(x[1]) + 1) // (g) equals 2
+
+31. int i, k=6;
+	i= 3*(5>1) + (k=2) + (k==6);
+	
+	Final value of i:
+	i = 3*1 + 2 + 0
+	i = 5
+
+32. unsigned char a=0x0D, b=0x03, c;
+
+	//in binary: 
+	//a = 0000 1101
+	//b = 0000 0011
+
+	//bitwise operators:
+	c = ~a; 	// (a) bit complement, 	c = 1111 0010 = 0xF2
+	c = a & b;	// (b) bitwise AND, 	c = 0000 0001 = 0x01
+	c = a | b; 	// (c) bitwise OR, 		c = 0000 1111 = 0x0F
+	c = a ˆ b; 	// (d) bitwise XOR, 	c = 0000 1110 = 0x0E
+	c = a >> 3; // (e) right shift (3),	c = 1010 0001 = 0xA1		
+	c = a << 3; // (f) left shift (3),	c = 0110 1000 = 0x68
+	c &= b; 	// (g) bitwise AND assignment, c = c & b
+						//c is 0110 1000, b is 0000 0011
+						//c &= b is 0000 0000 = 0x00
+34.
+
+35.
