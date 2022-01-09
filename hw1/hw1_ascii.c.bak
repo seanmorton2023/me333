@@ -21,5 +21,7 @@ int main(void) {
 		printf("Num: %3d  |  ASCII char: %2c\n",val,val);
 	}
 	
+	//I'm not sure the 127 value makes any sense printed out,
+	//since ASCII 127 = "DEL", but I'll leave it in
 	return 0;
 }

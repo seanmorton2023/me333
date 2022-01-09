@@ -1,13 +1,27 @@
+ME333 Homework 1
+Sean Morton
+1.11.22
+
 Appendix A exercises 18-19, 21-22, 27-28, 30-32, 34-35
+
+TODO: finalize code
+turn in code for invest.c as well
+
+
 
 18. The four steps of the GCC compiler are:
 	- Preprocessor: opens all files, copies and pastes code from
-		sources like #include "filename.h" or #define VAR = 12 into main()
-	- Compiler: turns files into Assembly code, .s
-	- Assembler:
-	- Linker:
+		sources like #include "filename.h" or #define VAR = 12 into main().
+		(Output: function prototypes for #includes are listed at the 
+		top of the files that use those #includes)
+	- Compiler: turns files into Assembly code, a low level language
+		that humans can read
+	- Assembler: turns Assembly code into pure machine code (in binary),
+		also called object code
+	- Linker: takes all object code files (in programs that have multiple
+		.c files, for example) and merges them together into an executable
 
-19. The return type of main() is an int. The meaning of this
+19. The return type of main() is an int. The meaning of this value
 	is the exit code of the program, meaning "what happened as a result
 	of executing this program". An exit code of 0 means everything
 	ran smoothly. An exit code of 1 (or anything else) means an error
@@ -21,12 +35,12 @@ Appendix A exercises 18-19, 21-22, 27-28, 30-32, 34-35
 22. int a=2, b=3, c;
 	float d=1.0, e=3.5, f;
 	
-	a) f = a/b; 			// f equals 0
-	b) f = ((float) a)/b; 	// f equals 0.6666...
-	c) f = (float) (a/b); 	// f equals 0.00
-	d) c = e/d; 			// c equals 3.500
-	e) c = (int) (e/d); 	// c equals 3
-	f) f = ((int) e)/d 		// c equals 3.00
+	f = a/b; 			// (a) f equals 0.00
+	f = ((float) a)/b; 	// (b) f equals 0.6666...
+	f = (float) (a/b); 	// (c) f equals 0.00
+	c = e/d; 			// (d) c equals 3
+	c = (int) (e/d); 	// (e) c equals 3
+	f = ((int) e)/d 	// (f) f equals 3.00
 
 27. Given that our code is already split up into functions,
 	the best thing to do would be to evaluate the output of
@@ -39,13 +53,15 @@ Appendix A exercises 18-19, 21-22, 27-28, 30-32, 34-35
 28. See code
 
 30. Data stored within an array:
-	x[1]           // (a) equals 3
-	*x             // (b) equals 4
-	*(x+2)         // (c) equals 2
-	(*x)+2         // (d) equals 4+2 = 6
-	*x[3]          // (e) error, x[3] is an int not a pointer
-	x[4]           // (f) error, out of bounds
-	*(&(x[1]) + 1) // (g) equals 2
+	int x[4] = {4, 3, 2, 1};
+	
+	printf("%d\n",x[1]          ); // (a) equals 3
+	printf("%d\n",*x            ); // (b) equals 4
+	printf("%d\n",*(x+2)        ); // (c) equals 2
+	printf("%d\n",(*x)+2        ); // (d) equals 4+2 = 6
+	printf("%d\n",*x[3]         ); // (e) error, x[3] is an int not a pointer
+	printf("%d\n",x[4]          ); // (f) value unknown: out of bounds
+	printf("%d\n",*(&(x[1]) + 1)); // (g) equals 2
 
 31. int i, k=6;
 	i= 3*(5>1) + (k=2) + (k==6);
@@ -53,6 +69,11 @@ Appendix A exercises 18-19, 21-22, 27-28, 30-32, 34-35
 	Final value of i:
 	i = 3*1 + 2 + 0
 	i = 5
+	
+	In the strange code above, (5>1) and (k==6) evaluate to logical True.
+	This can also be turned into an int value of 1. (k=2) sets a value
+	for k, but it also uses k in the arithmetic operation, so the value
+	of k gets added to i. Therefore, i = 3*1 + 2 + 0 = 5.
 
 32. unsigned char a=0x0D, b=0x03, c;
 
@@ -65,11 +86,12 @@ Appendix A exercises 18-19, 21-22, 27-28, 30-32, 34-35
 	c = a & b;	// (b) bitwise AND, 	c = 0000 0001 = 0x01
 	c = a | b; 	// (c) bitwise OR, 		c = 0000 1111 = 0x0F
 	c = a ˆ b; 	// (d) bitwise XOR, 	c = 0000 1110 = 0x0E
-	c = a >> 3; // (e) right shift (3),	c = 1010 0001 = 0xA1		
+	c = a >> 3; // (e) right shift (3),	c = 0000 0001 = 0x01		
 	c = a << 3; // (f) left shift (3),	c = 0110 1000 = 0x68
 	c &= b; 	// (g) bitwise AND assignment, c = c & b
 						//c is 0110 1000, b is 0000 0011
 						//c &= b is 0000 0000 = 0x00
-34.
 
-35.
+34. see hw1_ascii.c for code and hw1_ascii_out.txt for results
+
+35. see hw1_bubble.c for code and video for a demo

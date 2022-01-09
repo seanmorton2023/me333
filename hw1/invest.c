@@ -45,7 +45,7 @@ int getUserInput(Investment *invp) {
     (invp->years > 0) && (invp->years <= MAX_YEARS);
   printf("Valid input?  %d\n",valid);
 
-   if (!valid) { // ! is logical NOT ==SecA.4.11== 
+   if (!valid) { 
     printf("Invalid input; exiting.\n");
   }
   return(valid);
@@ -58,7 +58,7 @@ void sendOutput(double *arr, int yrs) {
   char outstring[100];     
 
   printf("\nRESULTS:\n\n");
-  for (i=0; i<=yrs; i++) {  // ++, +=, math in ==SecA.4.7==
+  for (i=0; i<=yrs; i++) { 
     sprintf(outstring,"Year %3d:  %10.2f\n",i,arr[i]); 
     printf("%s",outstring);
   }

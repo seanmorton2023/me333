@@ -7,7 +7,6 @@
  * Usage: compile and run from cmd
  */
 
-
 #include <stdio.h>
 
 int main(void) {
