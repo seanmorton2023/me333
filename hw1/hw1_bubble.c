@@ -39,7 +39,7 @@ int main(void) {
 			}
 		
 		}
-		//printf("Curr string: %s\n", str);
+		printf("Curr string: %s\n", str);
 	}
 	
 	printResult(str);	

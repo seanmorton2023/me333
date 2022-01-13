@@ -3,7 +3,7 @@
  * ME 333
  * 
  * Purpose: sort a string using a simple algorithm
- * Usage: compile and run, then input a string: ex. samplestring
+ * Usage: compile and run, then input a string: ex. aslkdkasl
  */
 
 #include <stdio.h>

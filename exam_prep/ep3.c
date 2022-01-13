@@ -1,0 +1,52 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
+ #define MAX_LEN 100
+ 
+ typedef struct {
+	 char name[MAX_LEN];
+	 char lat[MAX_LEN];
+	 char longi[MAX_LEN];
+	 float entry_price;
+ } Landmark;
+ 
+ void fill_name(Landmark*);
+ void fill_params(Landmark*);
+ 
+ int main() {
+ 
+	Landmark pru;
+	sprintf(pru.name, "The Prudential Center");
+	sprintf(pru.longi, "47\" 56' 22deg");
+	sprintf(pru.lat, "80\" 44' 34deg");
+	pru.entry_price = 22.34;
+		
+	printf("The landmark %s is located at: \nlong %s \nlat %s\n\n",
+			pru.name, pru.longi, pru.lat);
+			
+	//pru.longi = "47\" 56' 22deg";
+	//pru.lat = "80\" 44' 34deg";
+ 
+	Landmark mfa;
+	fill_name(&mfa);
+	printf("\nThe name of the landmark is: %s", mfa.name);
+	fill_params(&mfa);
+	printf("\nThe long, lat, and price are: \nlong: %s \nlat: %s \nprice: %f",
+			mfa.longi, mfa.lat, mfa.entry_price);
+ }
+ 
+ void fill_name(Landmark *m) {
+	 printf("Enter the landmark name (max length %d): ",MAX_LEN);
+	 scanf("%s",m->name);
+	 
+	 //Q: when I type in Museum of Fine Arts as a name, it only displays
+	 //Museum and nothing after the space when I use printf() on the name.
+	 //however, when I type it in as museum_of_fine_arts, my "enter" button
+	 //doesn't end the string entry process. why is that?
+ }
+ 
+ void fill_params(Landmark *m) {
+	 
+	 printf("\nEnter a longitude as 12.34.56, then a latitude as same, then the entry price:\n");
+	scanf("%s %s %f", m->longi, m->lat, &m->entry_price);
+ }
