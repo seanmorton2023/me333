@@ -1,0 +1,26 @@
+1. Every int-like datatype in C has a range of numbers that can be 
+	represented by that datatype--for an unsigned char, this range 
+	is [0, 255]. Integer overflow is where the value assigned to a 
+	variable exceeds the allowable range. Because of the concept of 
+	"Two's Complement", when overflow happens the value will wrap 
+	around from MAX to MIN: in this example, variable "c" wraps 
+	around from 255 to 0, such that even though a + b = 275, 
+	variable c = 275 - 256 = 19.
+	
+	Edited code: unsigned short c = a + b;
+	range of an unsigned short is [0, 65535] so no overflow
+	
+	
+2. #define is a preprocessor command and will make our "NUMSTATES" 
+	variable a constant--wherever NUMSTATES is written in the code,
+	the preprocessor will replace that variable with value 3.
+
+	int numStates is a variable, not a constant, and can be 
+	manipulated in the code.
+	
+3. When you build a project with multiple .c files, the compiler 
+	turns each .c file into a .o (object) file, and the linker 
+	connects each .o file together to make an executable. In 
+	order for each .c file to be aware of each other, we need to 
+	use header files (.h) and write #include "filename.h" if we 
+	want to include functions from filename.c in another .c file. When we do this, the compiler is able to locate the functions from filename.c in memory and paste them into the C files that say #include "filename.h".

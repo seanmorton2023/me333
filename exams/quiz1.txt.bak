@@ -1,0 +1,85 @@
+1. Every int-like datatype in C has a range of numbers that can be 
+	represented by that datatype--for an unsigned char, this range 
+	is [0, 255]. Integer overflow is where the value assigned to a 
+	variable exceeds the allowable range. Because of the concept of 
+	"Two's Complement", when overflow happens the value will wrap 
+	around from MAX to MIN: in this example, variable "c" wraps 
+	around from 255 to 0, such that even though a + b = 275, 
+	variable c = 275 - 256 = 19.
+	
+	Edited code: unsigned short c = a + b;
+	range of an unsigned short is [0, 65535] so no overflow
+	
+	
+2. #define is a preprocessor command and will make our "NUMSTATES" 
+	variable a constant--wherever NUMSTATES is written in the code,
+	the preprocessor will replace that variable with value 3.
+
+	int numStates is a variable, not a constant, and can be 
+	manipulated in the code.
+	
+	
+3. When you build a project with multiple .c files, the compiler 
+	turns each .c file into a .o (object) file, and the linker 
+	connects each .o file together to make an executable. In 
+	order for each .c file to be aware of each other, we need to 
+	use header files (.h) and write #include "filename.h" if we 
+	want to include functions from filename.c in another .c file. 
+	When we do this, the compiler is able to locate the functions 
+	from filename.c in memory and paste them into the C files that 
+	say #include "filename.h".
+	
+	Sometimes a header file will be included in more than one 
+	other c file in the project. Include guards are there so 
+	that no C file can include the same header file more than once.
+	
+4. 	unsigned char q[5] = {2, 12, 'j', 128, 10};
+	unsigned char a; int b;
+	
+	a = *(q+1); 
+	
+	//a) a = 12
+	//	rationale: q[1] = 12
+	
+	b = ((int)q[3]) << 2; 
+	
+	//b) b = 512
+	//	rationale: q[3] = 128 = 0b 1000 0000;
+	//	0b 1000 0000 << 2 = 0b 0010 0000 0000 = 2^9 = 512
+	
+	a = q[q[0]]+1;
+	
+	//c) a = 107;
+	//	rationale: q[0] = 2; q[2] = 'j' = 106;
+	// 	106 + 1 = 107
+	
+	b = q[3]*2;
+	
+	//d) b = 256;
+	//	rationale: q[3] = 128; 128*2 = 256
+	
+	b = q[3]*2;
+	//e) b = unknown;
+	//	rationale: q[4] = 10 and q[5] = out of bounds
+	
+5. Printing all lowercase letters: 
+
+	#include <stdio.h>
+
+	int main(void) {
+
+		char min = 97, max = 122;
+		int i = min;
+		while (i <= max) {
+			printf("%c\n", i++);
+		}
+	}
+	
+6. I wrote my answers for parts 6-9 in .c files. See quiz1-2.c
+	for my answers for 6, 7, and 8.
+	
+7. See quiz1-2.c
+
+8. See quiz1-2.c
+
+9. For this question, see quiz1-3.c

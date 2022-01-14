@@ -16,14 +16,15 @@ int main(void) {
 
 	//------question 6------------
 	Car mycar;
+	Car* carp = &mycar;
 	mycar.id = 1;
-	sprintf(mycar.brand, '\0');
+	sprintf(carp->brand, '\0');
 	
 	for (int i = 0; i < 10; ++i) {
 		mycar.miles[i] = 0;
 	}
 
-	printf("The car's id and brand are: \nid: %d \nbrand: %s\n",
+	printf("The car's id and brand are: \nid: %d \nbrand: %s \n",
 			mycar.id, mycar.brand);
 			
 	printf("\nThe car's miles array is:\n");
@@ -31,11 +32,13 @@ int main(void) {
 		printf("%.1f ", mycar.brand[j]);
 	}
 	
-	//-----question 7-----------
-	printf("\n\nEnter the brand name of the car: ");
-	scanf("%s", mycar.brand);
 	
-	printf("The car's brand is: %s\n", mycar.brand);
+	//-----question 7-----------
+	Car hiscar;
+	printf("\n\nEnter the brand name of the car: ");
+	scanf("%s", hiscar.brand);
+	
+	printf("The car's brand is: %s\n", hiscar.brand);
 	
 	//------question 8--------
 	Car toyota;
