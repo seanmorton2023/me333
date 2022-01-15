@@ -1,0 +1,78 @@
+3. Pin 12 of the PIC32MX795F512H can serve as a:
+	- analog input, like to sensors and potentiometers
+	- comparator input,
+	- change notification input, and cause an interrupt if an input changes,
+	- digital input, and
+	- digital output.
+	
+	This pin is not 5V-tolerant, per the diagram.
+
+4.	The name of the SFR you need to modify in order to change
+	pins on PORTC from output to input is TRISC. Specifically
+	we need to change bits in TRISC from 0 to 1 to change pins
+	from output to input.
+
+	source: pg 163-4 in PIC32 datasheet
+
+5.
+
+
+
+
+
+	sources: 
+	memory map on reset, pg. 57 for PIC32MX795F512H
+	comparator register map pg. 328-9 for CM1CON
+
+6. Basic function of items in the PIC32 architecture:
+	- SYSCLK: "system clock", the clock input the CPU runs on
+	- PBCLK: "peripheral bus clock", used to clock instructions
+		to peripherals
+	- PORTA: missing on our version of the PIC32
+	- PORTB to PORTG: digital i/o pins
+	- Timer1 to Timer5: count the number of pulses of a signal
+		and can be used to count up to 2^16 - 1
+	- 
+	
+	[ talk about which pins can be used as analog in port a-g ]
+	
+	- 10-bit ADC: can read analog voltages from up to 16 pins and 
+		convert them to digital signal values
+	- PWM OC1-5: used to create either a single pulse or a continu-
+		ous pulse train with a certain duration and frequency
+	- Data RAM: quick-access memory used to store temporary data
+	- Program Flash Memory: a large amount of slow-access memory
+		used to store program instructions
+	- Prefetch Cache Module: stores recent program instructions
+		and prepares the next instruction to be requested by the 
+		CPU to increase speed of execution
+
+7. Peripherals not clocked by PBCLK: PORTA through PORTB ae clocked
+	by SYSCLK and the USB peripheral runs on USBCLK.
+
+8. A 10-bit ADC can detect up to 2^10 = 1024 different values of V.
+	For voltages between 0 and 3.3V, these values are separated
+	by 3.22 mV. Therefore ~3.22mV is the largest voltage difference
+	that the microcontroller may not be able to detect.
+
+9. The PIC32 family reference manual says "The 16-line cache supplies
+	an instruction every clock, for loops up to 256 bytes long."
+	This seems to imply that a program loop up to 256 bytes in size 
+	can be completely stored in the cache.
+
+10. The data path between the prefetch cache module and the flash
+	memory is 128 bits wide so that it can provide the same band-\
+	width to the CPU as a 32 bit wide 
+
+11.
+
+12.
+
+13.
+
+14.
+
+15.
+
+16.
+

@@ -58,7 +58,7 @@
 	//d) b = 256;
 	//	rationale: q[3] = 128; 128*2 = 256
 	
-	b = q[3]*2;
+	b = q[4] / q[5];
 	//e) b = unknown;
 	//	rationale: q[4] = 10 and q[5] = out of bounds
 	
