@@ -1,0 +1,194 @@
+MECH ENG 333
+Sean Morton
+Homework 3
+
+Chapter 3, #1,3,7,8,9
+
+1. Virtual addresses on the PIC32
+
+  (a) VA 0x80000020:
+	Physical address:
+	PA = VA & 0x1FFFFFFF
+	8 & 1 = 1000 & 0001 = 0000
+	PA = 0x00000020
+	
+	Address is in data RAM
+	Cacheable: yes, 0x80000020 > 0x80000000
+	
+  (b) VA 0xA0000020:
+  	Physical address:
+	PA = VA & 0x1FFFFFFF
+	A & 1 = 1010 & 0001 = 0000
+	PA = 0x00000020
+	
+	Address is in data RAM
+	Cacheable: no, 0xA0000020 > 0xA0000000 
+		
+  (c) VA 0xBF800001:
+  	Physical address:
+	PA = VA & 0x1FFFFFFF
+	B & 1 = 1011 & 0001 = 0001
+	PA = 0x1F800001
+	
+	Address is in SFRs
+	SFRs are not cacheable
+  
+  (d) VA 0x9FC00111:
+  	Physical address:
+	PA = VA & 0x1FFFFFFF
+	9 & 1 = 1001 & 0001 = 0001
+	PA = 0x1FC00111
+	
+	Address is in boot flash
+	Cacheable: yes, 0x9Fc00111 > 0x9FC00000
+  
+  (e) VA 0x9D001000:
+  	Physical address:
+	PA = VA & 0x1FFFFFFF
+	9 & 1 = 1001 & 0001 = 0001
+	PA = 0x1D001000
+	
+	Address is in program flash
+	Cacheable: yes, 0x9D001000 > 0x 9D000000
+	
+	reference: Virtual Memory Map, figure 3.1 of textbook,
+		pg. 46
+
+3.  a) Bits that can be used as inputs/outputs for ports B-G:
+	
+	Port B:
+	I/O Read: bits 0-15 of PORTB (VA 6050)
+	I/O Write: bits 0-15 of LATB (VA 6060)
+	
+	Port C:
+	I/O Read: bits 12-15 of PORTC (VA 6090)
+	I/O Write: bits 12-15 of LATC (VA 60A0)
+	
+	Port D:
+	I/O Read: bits 0-11 of PORTD (VA 60D0)
+	I/O Write: bits 0-11 o LATD (VA 60E0)
+	
+	Port E:
+	I/O Read: bits 0-7 of PORTE (VA 6110)
+	I/O Write: bits 0-7 of LATE (VA 6120)
+	
+	Port F:
+	I/O Read: bits 0,1,3,4,5 of PORTF (VA 6150)
+	I/O Write: bits 0,1,3,4,5 of LATF (VA 6160)
+	
+	Port G:
+	I/O Read: bits 2,3,6,7,8,9 of PORTG (VA 6190)
+	I/O Write: bits 2,3,6,7,8,9 of LATG (VA 61A0)
+
+	For the PIC32MX795F512H in Figure 2.1 of the textbook,
+	pin 60 corresponds to bit 0 of port E (RE0).
+
+	reference: PIC32 family datasheet pg. 162-168,
+		port A-G register maps for all PIC32s
+		
+	b) SFR INTCON:
+	
+	In this "interrupt control" SFR, bits 5-7, 11, 13-15, and 
+	17-31 are unimplemented. The bits that are implemented are:
+	
+	Bits 0-4 = INTxEP (0 < x < 4)
+	Bits 8-10 = TPC<2.0>
+	Bit 12 = MVEC
+	Bit 16 = SS0
+	
+	reference: PIC32 family datasheet pg. 85, 
+		interrupt register map 
+	
+
+7. Two reasons might be behind the fact that the final hex
+	file (.hex) is so much smaller than the object files
+	(.o) that make up our program instructions:
+	
+	- Our .o files are relocatable object code, so the 
+		specific memory addresses where instructions will take
+		place are not yet included in the machine code. 
+		It's possible that generalized machine code takes up more
+		space than the final version of the machine code, 
+		with addresses pasted in.
+		
+	- Executable files like .elf and .exe files are not designed
+		to be compact; the textbook describes that much of
+		the bulkiness of .elf files is caused by debugging 
+		tools built into the file. Object files may similarly be
+		designed for computers like my PC, not the PIC32, meaning 
+		there's no need to economize for file space. 
+		
+		By contrast, .hex files produced by x32-bin2hex are 
+		engineered to be compact so we can store them in the 512KB worth of 
+		flash storage that our PIC32 has. They're the simplest
+		possible version of the final executable we can make,
+		unlike .o files, which don't need to be compact on our
+		PC's and may not be possible to compress as much as a
+		finalized executable.
+		
+
+8. a) In crt0.S, there seem to be two places where main()
+	is called. The first is line 524: "la t0, _main_entry".
+	The second is line 618, "la t0, main".
+	
+	Line 618 appears to be toward the end of the file, so 
+	this must be where main() is called after the C runtime
+	startup completes.
+
+	b) Using the version of processor.o located at 
+	Microchip/xc32/v3.01/pic32mx/lib/proc/32MX795F512H, here
+	are the five SFRs with the highest addresses, using
+	command "xc32-nm -n processor.o":
+	
+	bf88cb4c A C2FIFOCI31INV
+	bfc02ff0 A DEVCFG3
+	bfc02ff4 A DEVCFG2
+	bfc02ff8 A DEVCFG1
+	bfc02ffc A DEVCFG0
+
+	c) Using data found at line 1687 of file p32mx795F512H.h:
+	
+	The datatype __SPI2STATbits_t is a union of two structs
+	(typedef union{ struct{...}; struct{...}} ), and overall
+	has the following bit fields and sizes:
+	
+	A1. 	uint32_t SPIRBF:1;
+	A2. 	uint32_t SPITBF:1;
+	A3. 	uint32_t :1;
+	A4. 	uint32_t SPITBE:1;
+	A5. 	uint32_t :1;
+	A6. 	uint32_t SPIRBE:1;
+	A7. 	uint32_t SPIROV:1;
+	A8. 	uint32_t SRMT:1;
+	A9. 	uint32_t SPITUR:1;
+	A10.	uint32_t :2;
+	A11.	uint32_t SPIBUSY:1;
+	A12.	uint32_t :4;
+	A13.	uint32_t TXBUFELM:5;
+	A14.	uint32_t :3;
+	A15.	uint32_t RXBUFELM:5;
+
+	B1. 	uint32_t w:32;
+	
+	Overall, these bit fields line up very well with what's 
+	described in the SPI register map in the datasheet. Each named
+	SPI2STAT bit field in the datasheet is represented in the 
+	__SPI2STATbits_t datatype.
+	
+	The second struct, with a single bit field "w" of size 32,
+	may represent the buffer register SPI2BUF, which is 32 bits
+	wide and comes directly after SPI2STAT in the PIC32's
+	memory.
+	
+	reference: Table 18-1, SPI1 through SPI4 register map,
+		pg. 194, PIC32 family datasheet
+	
+	
+9. Using C commands TRISDSET, TRISDCLR, and TRISDINV to
+	edit bits of TRISD:
+	
+	TRISDSET = 0b1100; //set bits 2 and 3 of TRISD to 1
+	TRISDCLR = 0b100010; //clear bits 1 and 5
+	TRISDINV = 0b10001; //flip bits 0 and 4
+	
+	

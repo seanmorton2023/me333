@@ -10,45 +10,43 @@
 4.	The name of the SFR you need to modify in order to change
 	pins on PORTC from output to input is TRISC. Specifically
 	we need to change bits in TRISC from 0 to 1 to change pins
-	from output to input.
+	on PORTC from output to input.
 
-	source: pg 163-4 in PIC32 datasheet
+	source: pg 162-4 in PIC32 datasheet
 
-5.
+5.	The reset value for comparator register CM1CON, in hexadecimal,
+	appears to be 00C3 in hexadecimal.
 
-
-
-
-
-	sources: 
-	memory map on reset, pg. 57 for PIC32MX795F512H
-	comparator register map pg. 328-9 for CM1CON
+	source: comparator register map pg. 328-9, PIC32 family datasheet
 
 6. Basic function of items in the PIC32 architecture:
 	- SYSCLK: "system clock", the clock input the CPU runs on
 	- PBCLK: "peripheral bus clock", used to clock instructions
-		to peripherals
+		to (some) peripherals
 	- PORTA: missing on our version of the PIC32
 	- PORTB to PORTG: digital i/o pins
+		-  Based on the fact that all the ADC-compatible input pins
+			on the NU32 are labeled B0-B15, it seems like only pins
+			in PORTB can be used as analog input pins.
 	- Timer1 to Timer5: count the number of pulses of a signal
 		and can be used to count up to 2^16 - 1
-	- 
-	
-	[ talk about which pins can be used as analog in port a-g ]
-	
 	- 10-bit ADC: can read analog voltages from up to 16 pins and 
 		convert them to digital signal values
 	- PWM OC1-5: used to create either a single pulse or a continu-
 		ous pulse train with a certain duration and frequency
 	- Data RAM: quick-access memory used to store temporary data
-	- Program Flash Memory: a large amount of slow-access memory
+	- Program Flash Memory: slow-access memory (30 MHz instead of 80 MHz)
 		used to store program instructions
 	- Prefetch Cache Module: stores recent program instructions
 		and prepares the next instruction to be requested by the 
 		CPU to increase speed of execution
+		
+	Source: pg. 21-24 in textbook
 
-7. Peripherals not clocked by PBCLK: PORTA through PORTB ae clocked
+7. Peripherals not clocked by PBCLK: PORTA through PORTG are clocked
 	by SYSCLK and the USB peripheral runs on USBCLK.
+	
+	Source: pg. 21, 25 in textbook
 
 8. A 10-bit ADC can detect up to 2^10 = 1024 different values of V.
 	For voltages between 0 and 3.3V, these values are separated
@@ -59,20 +57,73 @@
 	an instruction every clock, for loops up to 256 bytes long."
 	This seems to imply that a program loop up to 256 bytes in size 
 	can be completely stored in the cache.
+	
+	Source: pg. 124 in PIC32 family reference manual
 
 10. The data path between the prefetch cache module and the flash
-	memory is 128 bits wide so that it can provide the same band-\
-	width to the CPU as a 32 bit wide 
+	memory is 128 bits wide so that it can provide the same band-
+	width to the CPU as a 32 bit wide path running at 4x the
+	frequency.
+	
+	Source: pg. 125 in PIC32 family reference manual
 
-11.
+11. Using the open-drain feature of the PIC32, you can produce output
+	voltages greater than 3.3V and less than 5V. This seems to work
+	using pullup resistors, and you could configure pins to swing
+	between 0V and 4V - only if those pins are 5V compatible though.
+	
+	Source: pg. 162 in PIC32 family datasheet
+	
+12. Program flash and RAM both have programmable sizes on the PIC32
+	and are each bookended by "reserved" sections of data that cannot
+	be written into. The bounds on RAM are the addresses (0x00000000, 
+	0x0001FFFF) and he bounds on Program Flash are the addresses 
+	(0x1D000000, 0x1D07FFFF). The max programmable sizes of Program
+	Flash and RAM, then, are 0x20000 and 0x80000 bytes - or 128 and 512 KB.
+	
+	Source: pg. 57 of PIC32 family datasheet
 
-12.
+13. a) If you want the frequency of PBCLK to be half of SYSCLK, you need
+	to modify bits 13-12 of register 29-2/ DEVCFG1. Set these bits to "01"
+	to get PBCLK = 1/2(SYSCLK).
+	
+	b) Bit 23 of register 29-2/ DEVCFG1 is the Watchdog Timer Enable bit. 
+	Bits 20-16 are the Watchdog Timer Postscale Select bits that let you
+	determine the time interval at which the watchdog timer must be reset.
+	To enable the watchdog timer and set the max reset time, send 
+	"1" to bit 23 and "10100" to bits 10-16.
+	
+	c) Bits 2-0 of register 29-2/ DEVCFG1 are the oscillator selection bits
+	- to turn on the primary oscillator and PLL module, send bits "011" to
+	these bits.
+	
+	Source: pg. 342 of PIC32 family datasheet
 
-13.
+14. As we talked about in class, there are both a theoretical max current
+	and a practical max current that you can draw at 5V, mainly limited
+	by the fact that high power will not disspiate well through the heat sink.
+	The theoretical max current at 5V supplied is 800mA and the practical max
+	current is ~300mA. Using V=IR, the equivalent resistance of an element from
+	5V to ground that draws max current is R = 5V/0.3A = 16.7 Ohms - this is
+	the smallest equivalent resistance that is safe to use.
+	
+	Source: page 30 of textbook
 
-14.
+15. The voltage V_in to the microcontroller is limited by the 5V regulator
+	on the lower end and by practical power usage on the upper end. V_in
+	must be >= 5.5V in order for the 5V regulator to work and < 9V so that
+	the regulators won't heat up too much. 5.5V <= V_in < 9V
+	
+	Source: page 30 of textbook
 
-15.
-
-16.
-
+16. The two buttons already attached to the NU32 development board are:
+	- the MCLR button, connected to pin 7 on the PIC32. On the PIC32 board,
+		this pin's function is as a MCLR input (master clear/reset).
+	- the USER button (NU32 pin D7), connected to pin 55 on the PIC32.
+		This pin is set up as an I/O pin, RD7.
+	
+	The two LEDS already attached to the NU32 board are located at NU32 pins
+	F0 and F1, connected to PIC32 pins 58 + 59. These pins are set up as I/O
+	pins, RF0 and RF1.
+	
+	Source: Table 2.2 / page 28 in textbook
