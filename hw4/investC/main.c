@@ -1,4 +1,5 @@
-#include "helper.h"             
+#include "calculate.h"
+#include "io.h"             
 
 int main(void) {
 

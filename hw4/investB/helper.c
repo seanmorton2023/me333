@@ -1,5 +1,4 @@
 #include "helper.h"
-#define MAX_YEARS 100   
 
 void calculateGrowth(Investment *invp) {
 

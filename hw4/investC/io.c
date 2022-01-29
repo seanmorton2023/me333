@@ -1,13 +1,4 @@
-#include "helper.h"
-#define MAX_YEARS 100   
-
-void calculateGrowth(Investment *invp) {
-
-  int i;
-  for (i = 1; i <= invp->years; i= i + 1) {
-    invp->invarray[i] = invp->growth * invp->invarray[i-1]; 
-  }
-}
+#include "io.h"
 
 int getUserInput(Investment *invp) {
 
