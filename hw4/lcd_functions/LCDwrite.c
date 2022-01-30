@@ -8,6 +8,7 @@
 int main() {
   char msg[MSG_LEN];
   int nreceived = 1;
+  int sec = 40000000;
 
   NU32_Startup();         // cache on, interrupts on, LED/button init, UART init
   
@@ -23,7 +24,16 @@ int main() {
     ++nreceived;
     LCD_Move(1,3);
     LCD_WriteString(msg);                     // write new msg at row 1 col 3
-    NU32_WriteUART3("\r\n");          
+    NU32_WriteUART3("\r\n");
+
+		
+	//test out LCD_clear function
+	_CP0_SET_COUNT(0);
+	while (_CP0_GET_COUNT() < 3*sec) {
+		
+	}
+	LCD_ClearLine(0);
+	
   }
   return 0;
 }

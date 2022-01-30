@@ -2,6 +2,8 @@
 #define LCD_H
 // LCD control library for Hitachi HD44780-compatible LCDs.  
 
+void LCD_ClearLine(int ln); //made for hw4: moves to a line and clears all characters
+
 void LCD_Setup(void);                       // Initialize the LCD
 void LCD_Clear(void);                       // Clear the screen, return to position (0,0)
 void LCD_Move(int line, int col);           // Move position to the given line and column

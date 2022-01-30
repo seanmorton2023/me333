@@ -2,16 +2,17 @@
 #include<xc.h>    // SFR definitions from the processor header file and some other macros
 
 #define PMABIT 10 // which PMA bit number to use
-#define MSG_LEN 20
+#define MSG_LEN 8
 
 
 void LCD_ClearLine(int ln) {
 	
-	char msg[MSG_LEN] = "                   ";
+	char[MSG_LEN] msg = "        ";
 	//move to the start of the specified line
 	LCD_Move(ln, 0);
 	LCD_WriteString(msg);
 }
+
 
 // wait for the peripheral master port (PMP) to be ready
 // should be called before every read and write operation

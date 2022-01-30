@@ -72,15 +72,16 @@ and which are meant to be used in other C files.
 	and how to include them. Again, for safety, use include guards in your header files.
 	Verify that your code works. Turn in your code and a separate paragraph justifying
 	your choice of header files.
-	
-	See ZIP folder for investC
-	
+		
 	Justification for choice of header files:
 	 - calculate.h and io.h are needed so we can include their corresponding
 		.c files in the project
 	 - an extra helper file investment.h is used to define the "Investment" 
 		datatype. The user can manipulate the value of MAX_YEARS within this file.
 		This is included in io.h and calculate.h.
+
+	See ZIP folder for investC
+
 
 4.4. Write a function, void LCD_ClearLine(int ln), that clears a single line of the LCD (either
 line zero or line one). You can clear a line by writing enough space (’ ’) characters to

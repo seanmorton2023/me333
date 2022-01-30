@@ -86,3 +86,8 @@ and which are meant to be used in other C files.
 4.4. Write a function, void LCD_ClearLine(int ln), that clears a single line of the LCD (either
 line zero or line one). You can clear a line by writing enough space (’ ’) characters to
 fill it.
+
+Functions we need in order to do this:
+ - LCD_Setup()
+ - LCD_Move(int row, int col)
+ - LCD_WriteString(const char *string)
