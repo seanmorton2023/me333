@@ -1,6 +1,6 @@
 #include <xc.h>          // Load the proper header for the processor
 
-#define MAX_CYCLES 4000000
+#define MAX_CYCLES 1000000
 #define DELTA_CYCLES 100000
 
 void delay(int);

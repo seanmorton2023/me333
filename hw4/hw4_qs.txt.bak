@@ -1,5 +1,6 @@
 ME333
 Sean Morton
+Homework 4
 
 Chapter 3, prob. 4,5
 Chapter 4, prob. 1,2,4
@@ -20,7 +21,7 @@ calls delay with a value decreased by DELTACYCLES, and so on, until the value is
 zero, at which time it resets the value to MAXCYCLES. Use #define to define the constants
 MAXCYCLES as 1,000,000 and DELTACYCLES as 100,000. Turn in your code.
 
-	See attached code
+	See attached file simplePIC.c
 
 _________________
 
@@ -39,7 +40,7 @@ and which are meant to be used in other C files.
 	 
 	Global variables/preprocessor commands private to NU32.c:
 		#define NU32_DESIRED_BAUD 230400    // Baudrate for RS232
-		...plus 19 "#pragma config" commands
+		...plus 19 "#pragma config" commands for Device Configuration Registers
 		
 	Global variables/preprocessor commands to be used in other .c files:
 		#define NU32_LED1 LATFbits.LATF0    // LED1 on the NU32 board
@@ -55,7 +56,7 @@ and which are meant to be used in other C files.
 	and display the results on your computer screen. Turn in your code for all the files,
 	with comments where you altered the input and output statements.
 	
-	See ZIP folder for investA
+	See attached file investA.c
 
 	b. Split invest.c into two C files, main.c and helper.c, and one header file, helper.h.
 	helper.c contains all functions other than main. Which constants, function prototypes,
@@ -64,7 +65,20 @@ and which are meant to be used in other C files.
 	Turn in your code and a separate paragraph justifying your choice for where to put the
 	various definitions.
 	
-	See ZIP folder for investB
+	See ZIP folder investB.zip
+
+	Justification for what each file contains:
+	 - helper.c: definitions for each helper function described by helper.h.
+	 - helper.h:
+		- #define MAX_YEARS 100. Needs to be used in the struct definition
+			for the Investment type, plus users can easily edit it here
+		- struct definition for Investment type. This struct needs to be used
+			in both helper.c and main.c so a header file is the right place for it
+		- declarations of each helper function. It's appropriate to put the 
+			declarations of functions into the .h file and the definitions into
+			the corresponding .c file of the same name.
+	- main.c: just the main() function; encourages the user to go to the header file
+		to access constants, functions, and type definitions
 
 	c. Break invest.c into three files: main.c, io.c, and calculate.c. Any function which
 	handles input or output should be in io.c. Think about which prototypes, data types,
@@ -73,6 +87,8 @@ and which are meant to be used in other C files.
 	Verify that your code works. Turn in your code and a separate paragraph justifying
 	your choice of header files.
 		
+	See ZIP folder investC.zip
+	
 	Justification for choice of header files:
 	 - calculate.h and io.h are needed so we can include their corresponding
 		.c files in the project
@@ -80,9 +96,14 @@ and which are meant to be used in other C files.
 		datatype. The user can manipulate the value of MAX_YEARS within this file.
 		This is included in io.h and calculate.h.
 
-	See ZIP folder for investC
-
 
 4.4. Write a function, void LCD_ClearLine(int ln), that clears a single line of the LCD (either
 line zero or line one). You can clear a line by writing enough space (’ ’) characters to
 fill it.
+
+	See ZIP folder lcd_functions.zip
+
+	Functions from LCD.c we need in order to write LCD_ClearLine():
+	 - LCD_Setup()
+	 - LCD_Move(int row, int col)
+	 - LCD_WriteString(const char *string)

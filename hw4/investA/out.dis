@@ -6573,10 +6573,7 @@ int getUserInput(Investment *invp) {
   NU32_WriteUART3(write_msg);
 9d00794c:	0f402259 	jal	9d008964 <NU32_WriteUART3>
 9d007950:	27a40018 	addiu	a0,sp,24
-
-
    if (!valid) { 
-    //sprintf(write_msg, "Invalid input; exiting.\r\n");
 	NU32_WriteUART3("Invalid input; exiting.\r\n");
 9d007954:	3c049d00 	lui	a0,0x9d00
 9d007958:	0f402259 	jal	9d008964 <NU32_WriteUART3>
@@ -6607,12 +6604,11 @@ void sendOutput(double *arr, int yrs) {
   int i;
   char outstring[MAX_MSG_LENGTH];     
 
-  //sprintf(outstring,"\r\nRESULTS:\r\n\n");
+  //MODIFIED: NU32 write and sprintf instead of printf
   NU32_WriteUART3("\r\nRESULTS:\r\n\n");
 9d007994:	3c049d00 	lui	a0,0x9d00
 9d007998:	0f402259 	jal	9d008964 <NU32_WriteUART3>
 9d00799c:	24841e78 	addiu	a0,a0,7800
-  
   for (i=0; i<=yrs; i++) { 
 9d0079a0:	06400011 	bltz	s2,9d0079e8 <sendOutput+0x74>
 9d0079a4:	26520001 	addiu	s2,s2,1

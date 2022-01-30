@@ -8,6 +8,8 @@ void delay(int);
 int main(void) {
   TRISF = 0xFFFC;        // Pins 0 and 1 of Port F are LED1 and LED2.  Clear
                          // bits 0 and 1 to zero, for output.  Others are inputs.
+						 
+  //MODIFIED: have both LEDs on at a time
   LATFbits.LATF0 = 1;    // Turn LED1 on and LED2 on.  These pins sink current
   LATFbits.LATF1 = 1;    // on the NU32, so "high" (1) = "off" and "low" (0) = "on"
 

@@ -8,7 +8,7 @@
 void LCD_ClearLine(int ln) {
 	
 	char msg[MSG_LEN] = "                   ";
-	//move to the start of the specified line
+	//move to the start of the specified line and clear
 	LCD_Move(ln, 0);
 	LCD_WriteString(msg);
 }

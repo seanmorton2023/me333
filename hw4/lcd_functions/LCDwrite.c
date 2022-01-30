@@ -2,13 +2,11 @@
 #include "LCD.h"
 
 #include <stdio.h>
-
 #define MSG_LEN 20
 
 int main() {
   char msg[MSG_LEN];
   int nreceived = 1;
-  int sec = 40000000;
 
   NU32_Startup();         // cache on, interrupts on, LED/button init, UART init
   
@@ -28,9 +26,8 @@ int main() {
 
 		
 	//test out LCD_clear function
-	_CP0_SET_COUNT(0);
-	while (_CP0_GET_COUNT() < 3*sec) {
-		
+	while (NU32_USER) {
+		//nothing; wait
 	}
 	LCD_ClearLine(0);
 	
