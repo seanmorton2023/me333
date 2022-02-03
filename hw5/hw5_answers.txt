@@ -1,0 +1,124 @@
+Sean Morton
+MECH ENG 333
+Homework 5
+
+
+Chapter 5 (use no optimization for all exercises): Exercises 3, 4.
+Chapter 6: Exercises 1, 4, 5, 8, 9, 16, 17. Make a demo video for 6.17
+
+
+5.3 Disassembly of code that uses different mathematical operations:
+
+char c1=5, c2=6, c3;
+int i1=5, i2=6, i3;
+long long int j1=5, j2=6, j3;
+float f1=1.01, f2=2.02, f3;
+long double d1=1.01, d2=2.02, d3;
+
+For each datatype, test out x3 = x1<op>x2, where
+<op> includes operations +, -, *, /
+
+
+a)
+
+b)
+
+c)
+
+Table: 
+
+char int long long float long double
++ 1.0 (4)
+− ∗ /
+
+d)
+
+_____________________
+
+5.4 Assembly commands for bitwise operations:
+
+unsigned int u1=33, u2=17, u3;
+
+u3 = u1 & u2; // bitwise AND
+u3 = u1 | u2; // bitwise OR
+u3 = u2 << 4; // shift left 4 spaces, or multiply by 2ˆ4 = 16
+u3 = u1 >> 3; // shift right 3 spaces, or divide by 2ˆ3 = 8
+
+
+_____________________
+
+
+6.1: Pros and cons (if any) of using interrupts vs. polling:
+
+6.4. 
+
+(a) What happens if an IRQ is generated for an ISR at priority level 4, subpriority level 2
+while the CPU is in normal execution (not executing an ISR)? 
+
+(b) What happens if that IRQ is generated while the CPU is executing a priority level 2, 
+subpriority level 3 ISR?
+
+(c) What happens if that IRQ is generated while the CPU is executing a priority level 4,
+subpriority level 0 ISR? 
+
+(d) What happens if that IRQ is generated while the CPU is executing a priority level 6, subpriority level 0 ISR?
+
+
+6.5. An interrupt asks the CPU to stop what it’s doing, attend to something else, and then
+return to what it was doing. When the CPU is asked to stop what it’s doing, it needs to
+remember “context” of what it was working on, i.e., the values currently stored in the
+CPU registers. (a) Assuming no shadow register set, what is the Qrst thing the CPU must
+do before executing the ISR and the last thing it must do upon completing the ISR?
+(b) How does using the shadow register set change the situation?
+
+
+6.8. For the problems below, use only the SFRs IECx, IFSx, IPCy, and INTCON, and their
+CLR, SET, and INV registers (do not use other registers, nor the bit fields as in
+IFS0bits.INT0IF). Give valid C bit manipulation commands to perform the operations
+without changing any uninvolved bits. Also indicate, in English, what you are trying to
+do, in case you have the right idea but wrong C statements. Do not use any constants
+defined in Microchip XC32 Qles; just use numbers.
+
+a. Enable the Timer2 interrupt, set its Rag status to 0, and set its vector’s priority and
+subpriority to 5 and 2, respectively.
+
+b. Enable the Real-Time Clock and Calendar interrupt, set its flag status to 0, and set its
+vector’s priority and subpriority to 6 and 1, respectively.
+
+c. Enable the UART4 receiver interrupt, set its Rag status to 0, and set its vector’s
+priority and subpriority to 7 and 3, respectively.
+
+d. Enable the INT2 external input interrupt, set its flag status to 0, set its vector’s
+priority and subpriority to 3 and 2, and conQgure it to trigger on a rising edge.
+
+
+_____________________
+
+6.9. Edit Code Sample 6.3 so that each line correctly uses the “bits” forms of the SFRs.
+In other words, the left-hand sides of the statements should use a form similar to that
+used in step 5, except using INTCONbits, IPC0bits, and IEC0bits.
+
+
+16. Modify Code Sample 6.2 so the USER button is debounced. How can you change the
+ISR so the LEDs do not Rash if the falling edge comes at the beginning of a very brief,
+spurious down pulse? Verify that your solution works. (Hint: Any real button press
+should last much more than 10 ms, while the mechanical bouncing period of any decent
+switch should be much less than 10 ms. See also Chapter B.2.1 for a hardware solution
+to debouncing.)
+
+
+17. Using your solution for debouncing the USER button (Exercise 16), write a stopwatch
+program using an ISR based on INT2. Connect a wire from the USER button pin to the
+INT2 pin so you can use the USER button as your timing button. Using the NU32
+library, your program should send the following message to the user’s screen: Press the
+USER button to start the timer. When the USER button has been pressed, it should
+send the following message: Press the USER button again to stop the timer. When
+the user presses the button again, it should send a message such as 12.505 seconds
+elapsed. The ISR should either (1) start the core timer at 0 counts or (2) read the current
+timer count, depending on whether the program is in the “waiting to begin timing” state
+or the “timing state.” Use priority level 6 and the shadow register set. Verify that the
+timing is accurate. The stopwatch only has to be accurate for periods of less than the core
+timer’s rollover time.
+You could also try using polling in your main function to write out the current elapsed
+time (when the program is in the “timing state”) to the user’s screen every second so the
+user can see the running time.
