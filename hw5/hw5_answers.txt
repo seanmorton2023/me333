@@ -287,15 +287,15 @@ INTCONSET = 0b1 << 2; //using INT2EP, set polarity control so that
 --
 
 _____________________
-6.9. Edit Code Sample 6.3 so that each line correctly uses the “bits” forms of the SFRs.
-In other words, the left-hand sides of the statements should use a form similar to that
-used in step 5, except using INTCONbits, IPC0bits, and IEC0bits.
+6.9. Edit Code Sample 6.3 (INT_timing.c) so that each line correctly uses the “bits” forms of
+the SFRs. In other words, the left-hand sides of the statements should use a form similar to 
+that used in step 5, except using INTCONbits, IPC0bits, and IEC0bits.
 
 
 _____________________
 
-16. Modify Code Sample 6.2 so the USER button is debounced. How can you change the
-ISR so the LEDs do not Rash if the falling edge comes at the beginning of a very brief,
+16. Modify Code Sample 6.2 (INT_ext_int.c) so the USER button is debounced. How can you change 
+theISR so the LEDs do not flash if the falling edge comes at the beginning of a very brief,
 spurious down pulse? Verify that your solution works. (Hint: Any real button press
 should last much more than 10 ms, while the mechanical bouncing period of any decent
 switch should be much less than 10 ms. See also Chapter B.2.1 for a hardware solution
@@ -305,11 +305,18 @@ to debouncing.)
 17. Using your solution for debouncing the USER button (Exercise 16), write a stopwatch
 program using an ISR based on INT2. Connect a wire from the USER button pin to the
 INT2 pin so you can use the USER button as your timing button. Using the NU32
-library, your program should send the following message to the user’s screen: Press the
-USER button to start the timer. When the USER button has been pressed, it should
-send the following message: Press the USER button again to stop the timer. When
-the user presses the button again, it should send a message such as 12.505 seconds
-elapsed. The ISR should either (1) start the core timer at 0 counts or (2) read the current
+library, your program should send the following message to the user’s screen: 
+
+Press the USER button to start the timer. 
+
+When the USER button has been pressed, it should send the following message: 
+
+Press the USER button again to stop the timer.
+ 
+When the user presses the button again, it should send a message such as "12.505 seconds
+elapsed."
+
+ The ISR should either (1) start the core timer at 0 counts or (2) read the current
 timer count, depending on whether the program is in the “waiting to begin timing” state
 or the “timing state.” Use priority level 6 and the shadow register set. Verify that the
 timing is accurate. The stopwatch only has to be accurate for periods of less than the core
