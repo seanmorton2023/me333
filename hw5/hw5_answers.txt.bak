@@ -254,16 +254,39 @@ IPC8SET = 0b1 << 24; //set subpriority to 1
 c. Enable the UART4 receiver interrupt, set its flag status to 0, and set its vector’s
 priority and subpriority to 7 and 3, respectively.
 
+UART4 receiver interrupt vectors and bits:
+Flag: IFS2<4>
+Enable: IEC2<4>
+Priority: IPC12<12:10>
+Sub-priority: IPC12<9:8>
 
+IEC2SET = 0b1 << 4; //enable UART4 interrupt
+IFS2CLR = 0b1 << 4; //set flag status to 0
+IPC12SET = 0x7 << 10; //set priority to 7
+IPC12SET = 0x3 << 8; //set subpriority to 3
 
 --
 
 d. Enable the INT2 external input interrupt, set its flag status to 0, set its vector’s
-priority and subpriority to 3 and 2, and conQgure it to trigger on a rising edge.
+priority and subpriority to 3 and 2, and configure it to trigger on a rising edge.
 
+INT2 external input interrupt vectors and bits:
+Flag: IFS0<11>
+Enable: IEC0<11>
+Priority: IPC2<28:26>
+Sub-priority: IPC2<25:24>
+
+
+IEC0SET = 0b1 << 11; //enable INT2 interrupt
+IFS0CLR = 0b1 << 11; //set flag status to 0
+IPC2SET = 0x3 << 26; //set priority to 3
+IPC2SET = 0x2 <<  24; //set subpriority to 2\
+
+INTCONSET = 0b1 << 2; //using INT2EP, set polarity control so that
+						it is triggered on a rising edge (1 = rising edge)
+--
 
 _____________________
-
 6.9. Edit Code Sample 6.3 so that each line correctly uses the “bits” forms of the SFRs.
 In other words, the left-hand sides of the statements should use a form similar to that
 used in step 5, except using INTCONbits, IPC0bits, and IEC0bits.
