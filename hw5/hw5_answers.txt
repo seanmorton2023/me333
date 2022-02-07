@@ -19,20 +19,81 @@ For each datatype, test out x3 = x1<op>x2, where
 <op> includes operations +, -, *, /
 
 
-a)
+a) Combinations of datatypes and operations that cause a jump to a 
+	subroutine:
+	
+	- Division of a long long double:
+		j4 = j2 / j3;
+		9d002fc4:	8f828020 	lw	v0,-32736(gp)
+		9d002fc8:	8f838024 	lw	v1,-32732(gp)
+		9d002fcc:	8f848028 	lw	a0,-32728(gp)
+		9d002fd0:	8f85802c 	lw	a1,-32724(gp)
+		9d002fd4:	00803025 	move	a2,a0
+		9d002fd8:	00a03825 	move	a3,a1
+		9d002fdc:	00402025 	move	a0,v0
+		9d002fe0:	00602825 	move	a1,v1
+		9d002fe4:	0f4008ae 	jal	9d0022b8 <__divdi3>
+		...
+		
+	- Float math: addition, subtraction, multiplication, division
+	- Double-precision: addition, subtraction, multiplication, division
+	
+b) In cases where there isn't a jump to a subroutine, these are
+	the fastest ways to execute commands, in terms of lines of XC32 Assembly:
+	
+	- Int-like addition/subtraction:
+		- Fastest: int +/- (4 lines)
+		- Slowest: long +/- (11 lines), char +/- (8 lines)
+		
+	- Int-like multiplication/division:
+		- Fastest: int * (4 lines)
+		- Slowest: long * (14 lines)
+		
+c) 
 
-b)
+Table: attach later
 
-c)
 
-Table: 
+d) Math subroutine: code for long double division
 
-char int long long float long double
-+ 1.0 (4)
-− ∗ /
+Disassembly file for long double division:
 
-d)
+9d001e00 <__divdf3>:
+9d001e00:	00055040 000a5542 00054ac0 00047d42     @P..BU...J..B}..
+9d001e10:	012f4825 000442c0 3c0e8000 012e4825     %H/..B.....<%H..
+9d001e20:	00076840 000d6d42 000762c0 00067d42     @h..Bm...b..B}..
+9d001e30:	018f6025 00065ac0 018e6025 00a72826     %`...Z..%`..&(..
+9d001e40:	00ae2824 254fffff 2de107fe 102000cb     $(....O%...-.. .
+9d001e50:	00000000                                ....
 
+A reference to long double division in the .map file:
+.text.dp32mul   0x000000009d001e00      0x4b8
+ .text.dp32mul  0x000000009d001e00      0x4b8 c:/program files/microchip/xc32/v3.01/pic32mx/lib\libm.a(dp32div.o)
+                0x000000009d001e00                dpdiv
+                0x000000009d001e00                __divdf3
+
+
+Some memory usage taken from the .map file:
+Microchip PIC32 Memory-Usage Report
+
+kseg0 Program-Memory Usage
+section                    address  length [bytes]      (dec)  Description
+-------                 ----------  -------------------------  -----------
+.text.dp32mul           0x9d001e00          0x4b8        1208   
+.text                   0x9d0022b8          0x440        1088  App's exec code 
+.text.dp32subadd        0x9d0026f8          0x430        1072   
+.text.dp32mul           0x9d002b28          0x32c         812   
+.text                   0x9d002e54          0x5b4        1460  App's exec code 
+.text.fpsubadd          0x9d003408          0x278         632   
+.text.fp32div           0x9d003680          0x230         560   
+.text.fp32mul           0x9d0038b0          0x1bc         444   
+
+The math subroutines listed in this memory-usage report are stored at the start of
+cacheable memory (kseg0), as all their addresses start with 0x9D.
+
+I'm not entirely sure what "App's exec code" refers to, but these sections all seem
+to relate to math operations, so I included those lines. Approx. 1KB is used by each
+math subroutine, as seen above.
 _____________________
 
 5.4 Assembly commands for bitwise operations:
@@ -44,49 +105,158 @@ u3 = u1 | u2; // bitwise OR
 u3 = u2 << 4; // shift left 4 spaces, or multiply by 2ˆ4 = 16
 u3 = u1 >> 3; // shift right 3 spaces, or divide by 2ˆ3 = 8
 
+Disassembled in Assembly:
+u3 = u1 & u2; // bitwise AND
+9d002244:	8fc30000 	lw	v1,0(s8)
+9d002248:	8fc20004 	lw	v0,4(s8)
+9d00224c:	00621024 	and	v0,v1,v0
+9d002250:	afc20008 	sw	v0,8(s8)
+u3 = u1 | u2; // bitwise OR
+9d002254:	8fc30000 	lw	v1,0(s8)
+9d002258:	8fc20004 	lw	v0,4(s8)
+9d00225c:	00621025 	or	v0,v1,v0
+9d002260:	afc20008 	sw	v0,8(s8)
+u3 = u2 << 4; // shift left 4 spaces, or multiply by 2ˆ4 = 16
+9d002264:	8fc20004 	lw	v0,4(s8)
+9d002268:	00021100 	sll	v0,v0,0x4
+9d00226c:	afc20008 	sw	v0,8(s8)
+u3 = u1 >> 3; // shift right 3 spaces, or divide by 2ˆ3 = 8
+9d002270:	8fc20000 	lw	v0,0(s8)
+9d002274:	000210c2 	srl	v0,v0,0x3
+9d002278:	afc20008 	sw	v0,8(s8)
+9d00227c:	00001025 	move	v0,zero
 
+
+# of Assembly commands that it takes to carry out each bitwise operation:
+ - Bitwise AND: 4 commands
+ - Bitwise OR: 4 commands
+ - Bit shift left: 3 commands
+ - Bit shift right: 4 commands
 _____________________
 
 
 6.1: Pros and cons (if any) of using interrupts vs. polling:
+
+Pros of using interrupts:
+ - Other code can be running while we're checking for interrupts
+ - Faster response time--program instantly jumps to ISR
+ - Priority levels + queueing
+ - Interrupts can occur at different frequencies using diff. internal timers
+
+Cons of using interrupts:
+ - If not using shadow register set, we have to save all variables currently
+	being used in main() and restore after we finish the ISR
+		- as such, polling may be faster in execution time
+ - Variables must be passed as volatile global variables so that an ISR can
+	have access to them without being expressly called by main()
+______________________
 
 6.4. 
 
 (a) What happens if an IRQ is generated for an ISR at priority level 4, subpriority level 2
 while the CPU is in normal execution (not executing an ISR)? 
 
+The CPU will jump from main() to the ISR, then deal with the interrupt according
+to the ISR function we wrote.
+
+--
+
 (b) What happens if that IRQ is generated while the CPU is executing a priority level 2, 
 subpriority level 3 ISR?
+
+Priority level 4 > prioritity level 2, so the CPU will jump from the pri2 ISR to the pri4
+ISR function, finish dealing with the pri4 interrupt, then finish dealing with the pri2 
+interrupt.
+
+--
 
 (c) What happens if that IRQ is generated while the CPU is executing a priority level 4,
 subpriority level 0 ISR? 
 
-(d) What happens if that IRQ is generated while the CPU is executing a priority level 6, subpriority level 0 ISR?
+Both interrupts have the same priority level, so the pri4.2 interrupt will not be executed
+before the pri4.0 interrupt. Instead, the CPU will make a queue: the pri4.2 interrupt
+will be dealt with after the pri4.0 interrupt.
 
+--
+
+(d) What happens if that IRQ is generated while the CPU is executing a priority level 6, 
+subpriority level 0 ISR?
+
+Priority level 4 < priority level 6, so the pri4 interrupt will be executed after the
+pri6 interrupt is finished.
+
+______________________
 
 6.5. An interrupt asks the CPU to stop what it’s doing, attend to something else, and then
 return to what it was doing. When the CPU is asked to stop what it’s doing, it needs to
 remember “context” of what it was working on, i.e., the values currently stored in the
-CPU registers. (a) Assuming no shadow register set, what is the Qrst thing the CPU must
+CPU registers. 
+
+(a) Assuming no shadow register set, what is the first thing the CPU must
 do before executing the ISR and the last thing it must do upon completing the ISR?
+
+Before executing the ISR: the first thing the CPU must do is save all the variables
+currently being used in main().
+
+After executing the ISR: the last thing the CPU must do is reload all the variables
+being used in main() so the CPU can keep running main().
+
+--
+
 (b) How does using the shadow register set change the situation?
 
+By using the shadow register set, variables being used in main() are stored in two locations:
+an address in memory, and an address in the shadow register set as a backup. When an interrupt 
+happens, the CPU doesn't have to save and reload variables from main() because these variables
+already exist in the SRS. This saves time and can make a program more efficient.
+
+_____________________
 
 6.8. For the problems below, use only the SFRs IECx, IFSx, IPCy, and INTCON, and their
 CLR, SET, and INV registers (do not use other registers, nor the bit fields as in
 IFS0bits.INT0IF). Give valid C bit manipulation commands to perform the operations
 without changing any uninvolved bits. Also indicate, in English, what you are trying to
 do, in case you have the right idea but wrong C statements. Do not use any constants
-defined in Microchip XC32 Qles; just use numbers.
+defined in Microchip XC32 files; just use numbers.
 
-a. Enable the Timer2 interrupt, set its Rag status to 0, and set its vector’s priority and
+a. Enable the Timer2 interrupt, set its flag status to 0, and set its vector’s priority and
 subpriority to 5 and 2, respectively.
+
+Timer2 interrupt vectors and bits:
+Flag: IFS0<8>
+Enable: IEC0<8>
+Priority: IPC2<4:2>
+Sub-priority: IPC2<1:0>
+
+IEC0SET = 0b1 << 8; //enable the 8th bit of IEC0
+IFS0CLR = 0b1 << 8; //clear the 8th bit of IFS0
+IPC2SET = 0x5 << 2; //set priority to 5
+IPC2SET = 0x2; //set subpriority to 2
+
+--
 
 b. Enable the Real-Time Clock and Calendar interrupt, set its flag status to 0, and set its
 vector’s priority and subpriority to 6 and 1, respectively.
 
-c. Enable the UART4 receiver interrupt, set its Rag status to 0, and set its vector’s
+Real-Time Clock and Calendar interrupt vectors and bits:
+Flag: IFS1<15>
+Enable: IEC1<15>
+Priority: IPC8<28:26>
+Sub-priority: IPC8<25:24>
+
+IEC1SET = 0b1 << 15; //set the 15th bit of IEC1 to turn on RTCC
+IFS1CLR = 0b1 << 15; //set flag status of 15th bit of IFS1 to 0
+IPC8SET = 0x6 << 26; //set priority to 5
+IPC8SET = 0b1 << 24; //set subpriority to 1
+
+--
+
+c. Enable the UART4 receiver interrupt, set its flag status to 0, and set its vector’s
 priority and subpriority to 7 and 3, respectively.
+
+UART4 receiver interrupt:
+
+--
 
 d. Enable the INT2 external input interrupt, set its flag status to 0, set its vector’s
 priority and subpriority to 3 and 2, and conQgure it to trigger on a rising edge.
