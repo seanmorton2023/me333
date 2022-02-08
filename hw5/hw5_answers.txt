@@ -280,7 +280,7 @@ Sub-priority: IPC2<25:24>
 IEC0SET = 0b1 << 11; //enable INT2 interrupt
 IFS0CLR = 0b1 << 11; //set flag status to 0
 IPC2SET = 0x3 << 26; //set priority to 3
-IPC2SET = 0x2 <<  24; //set subpriority to 2\
+IPC2SET = 0x2 <<  24; //set subpriority to 2
 
 INTCONSET = 0b1 << 2; //using INT2EP, set polarity control so that
 						it is triggered on a rising edge (1 = rising edge)
@@ -291,16 +291,29 @@ _____________________
 the SFRs. In other words, the left-hand sides of the statements should use a form similar to 
 that used in step 5, except using INTCONbits, IPC0bits, and IEC0bits.
 
-
+See INT_timing code
 _____________________
 
 16. Modify Code Sample 6.2 (INT_ext_int.c) so the USER button is debounced. How can you change 
-theISR so the LEDs do not flash if the falling edge comes at the beginning of a very brief,
+the ISR so the LEDs do not flash if the falling edge comes at the beginning of a very brief,
 spurious down pulse? Verify that your solution works. (Hint: Any real button press
 should last much more than 10 ms, while the mechanical bouncing period of any decent
 switch should be much less than 10 ms. See also Chapter B.2.1 for a hardware solution
 to debouncing.)
 
+The software approach is to put a short delay inside the ISR. For example, if 1sec is 
+40,000,000 counts of the internal timer, 10ms = (sec)/100) = 40,000,000/100 = 400,000.
+This prevents the ISR from completing and repeating during the "bounce" after the switch press.
+We can put the following code into our ISR:
+
+_CP0_SET_COUNT(0);
+while(_CP0_GET_COUNT() < 400,000) {;}
+
+This delay "debounces" the switch press. This code is already implemented in the version
+of INT_ext_int.c so I didn't modify it. The only difference: the provided code uses a
+delay of 0.25s, or 10M core timer ticks.
+
+_____________________
 
 17. Using your solution for debouncing the USER button (Exercise 16), write a stopwatch
 program using an ISR based on INT2. Connect a wire from the USER button pin to the

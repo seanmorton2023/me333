@@ -26,14 +26,36 @@ int main(void) {
 
   NU32_Startup(); // cache on, min flash wait, interrupts on, LED/button init, UART init
   __builtin_disable_interrupts();   // step 2: disable interrupts at CPU
-  INTCONSET = 0x3;                  // step 3: INT0 and INT1 trigger on rising edge
+  
+  
+
+/*   INTCONSET = 0x3;                  // step 3: INT0 and INT1 trigger on rising edge
   IPC0CLR = 31 << 24;               // step 4: clear 5 priority and subp bits for INT0
   IPC0 |= 24 << 24;                 // step 4: set INT0 to priority 6 subpriority 0
   IPC1CLR = 0x1F << 24;             // step 4: clear 5 priority and subp bits for INT1
   IPC1 |= 0x18 << 24;               // step 4: set INT1 to priority 6 subpriority 0
   IFS0bits.INT0IF = 0;              // step 5: clear INT0 flag status
   IFS0bits.INT1IF = 0;              // step 5: clear INT1 flag status
-  IEC0SET = 0x88;                   // step 6: enable INT0 and INT1 interrupts
+  IEC0SET = 0x88;                   // step 6: enable INT0 and INT1 interrupts */
+  
+  INTCONbits.INT0EP = 1;			// step 3: INT0 and INT1 trigger on rising edge
+  INTCONbits.INT1EP = 1;
+ 
+  IPC0bits.INT0IP = 6; 			    // step 4: set INT0 to priority 6 subpriority 0
+  IPC0bits.INT0IS = 0;
+
+  IPC1bits.INT1IP = 6;              // step 4: set INT1 to priority 6 subpriority 0
+  IPC1bits.INT1IS = 0; 
+  
+  IFS0bits.INT0IF = 0;              // step 5: clear INT0 flag status
+  IFS0bits.INT1IF = 0;              // step 5: clear INT1 flag status
+
+  IEC0bits.INT0IE = 1;              // step 6: enable INT0 and INT1 interrupts
+  IEC0bits.INT1IE = 1;
+  
+  
+  
+  
   __builtin_enable_interrupts();    // step 7: enable interrupts
   while(1) {
     delay();                        // delay, so results sent back at reasonable rate
