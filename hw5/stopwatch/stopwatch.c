@@ -12,6 +12,19 @@ int sec = 40000000; //in core timer counts
 //ISR for taking an interrupt from the button press from INT2
 void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
 	
+	//set the flag status back to 0
+	IFS0bits.INT2IF = 0;
+	
+	//delay for debounce. wait for 10ms after the button press
+	count = _CP0_GET_COUNT();
+	while (_CP0_GET_COUNT() < count + 400000) {;} 
+	
+	//if the button isn't pressed after this time, then ISR was triggered by
+	//switch bounce upon release
+	if (NU32_USER) {
+		return;
+	}
+	
 	//if button was pressed to start timing, clear core timer and start the count
 	if (timing == 0) {
 		_CP0_SET_COUNT(0);
@@ -26,13 +39,6 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
 		NU32_WriteUART3("Press USER button to begin timing.\r\n");
 		timing = 0;
 	}
-	
-	//set the flag status back to 0
-	IFS0bits.INT2IF = 0;
-	
-	//delay for debounce. wait for 250ms after the button press
-	count = _CP0_GET_COUNT();
-	while (_CP0_GET_COUNT() < count + 10000000) {;} 
 }
 
 

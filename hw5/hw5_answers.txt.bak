@@ -319,17 +319,15 @@ to debouncing.)
 
 The software approach is to put a short delay inside the ISR. For example, if 1sec is 
 40,000,000 counts of the internal timer, 10ms = (sec)/100) = 40,000,000/100 = 400,000.
-This prevents the ISR from completing and repeating during the "bounce" after the switch press.
+This prevents the ISR from and repeating during the "bounce" after the switch press.
 We can put the following code into our ISR:
 
 _CP0_SET_COUNT(0);
 while(_CP0_GET_COUNT() < 400,000) {;}
 
-This delay "debounces" the switch press. This code is already implemented in the version
-of INT_ext_int.c The only difference: the provided code uses a delay of 0.25s, or 10M 
-core timer ticks, so I changed this delay to 10ms / 400k count.
 
-(see INT_ext_int)
+
+(see INT_ext_int.c)
 
 _____________________
 

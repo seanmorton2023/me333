@@ -34,7 +34,7 @@ bd00197c:	7f5a04c0 	ext	k0,k0,0x13,0x1
 bd001980:	13400005 	beqz	k0,bd001998 <_no_nmi>
 bd001984:	00000000 	nop
 bd001988:	3c1a9d00 	lui	k0,0x9d00
-bd00198c:	275a23f0 	addiu	k0,k0,9200
+bd00198c:	275a2420 	addiu	k0,k0,9248
 bd001990:	03400008 	jr	k0
 bd001994:	00000000 	nop
 
@@ -53,7 +53,7 @@ bd0019c0:	41dce000 	wrpgpr	gp,gp
 bd0019c4:	408b6002 	mtc0	t3,c0_srsctl
 bd0019c8:	000000c0 	ehb
 bd0019cc:	3c089d00 	lui	t0,0x9d00
-bd0019d0:	25082418 	addiu	t0,t0,9240
+bd0019d0:	25082448 	addiu	t0,t0,9288
 bd0019d4:	0100f809 	jalr	t0
 bd0019d8:	00000000 	nop
 
@@ -74,7 +74,7 @@ bd0019fc:	0109082b 	sltu	at,t0,t1
 bd001a00:	1420fffc 	bnez	at,bd0019f4 <_bss_init>
 bd001a04:	00000000 	nop
 bd001a08:	3c089d00 	lui	t0,0x9d00
-bd001a0c:	250821e4 	addiu	t0,t0,8676
+bd001a0c:	25082214 	addiu	t0,t0,8724
 bd001a10:	0100f809 	jalr	t0
 bd001a14:	00000000 	nop
 bd001a18:	3c090000 	lui	t1,0x0
@@ -126,7 +126,7 @@ bd001ac4:	01284025 	or	t0,t1,t0
 bd001ac8:	40886000 	mtc0	t0,c0_status
 bd001acc:	000000c0 	ehb
 bd001ad0:	3c089d00 	lui	t0,0x9d00
-bd001ad4:	25082420 	addiu	t0,t0,9248
+bd001ad4:	25082450 	addiu	t0,t0,9296
 bd001ad8:	0100f809 	jalr	t0
 bd001adc:	00000000 	nop
 bd001ae0:	40086000 	mfc0	t0,c0_status
@@ -137,7 +137,7 @@ bd001af0:	40886000 	mtc0	t0,c0_status
 bd001af4:	30840000 	andi	a0,a0,0x0
 bd001af8:	30a50000 	andi	a1,a1,0x0
 bd001afc:	3c089d00 	lui	t0,0x9d00
-bd001b00:	25082268 	addiu	t0,t0,8808
+bd001b00:	25082298 	addiu	t0,t0,8856
 bd001b04:	01000008 	jr	t0
 bd001b08:	00000000 	nop
 
@@ -145,7 +145,7 @@ Disassembly of section .bev_excpt:
 
 bd001cf0 <_bev_exception>:
 bd001cf0:	3c1a9d00 	lui	k0,0x9d00
-bd001cf4:	275a22bc 	addiu	k0,k0,8892
+bd001cf4:	275a22ec 	addiu	k0,k0,8940
 bd001cf8:	03400008 	jr	k0
 bd001cfc:	00000000 	nop
 
@@ -153,26 +153,26 @@ Disassembly of section .app_excpt:
 
 9d000180 <_gen_exception>:
 9d000180:	3c1a9d00 	lui	k0,0x9d00
-9d000184:	275a2108 	addiu	k0,k0,8456
+9d000184:	275a2138 	addiu	k0,k0,8504
 9d000188:	03400008 	jr	k0
 9d00018c:	00000000 	nop
 
 Disassembly of section .vector_0:
 
 9d000200 <__vector_dispatch_0>:
-9d000200:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000200:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000204:	00000000 	nop
 
 Disassembly of section .vector_1:
 
 9d000220 <__vector_dispatch_1>:
-9d000220:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000220:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000224:	00000000 	nop
 
 Disassembly of section .vector_2:
 
 9d000240 <__vector_dispatch_2>:
-9d000240:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000240:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000244:	00000000 	nop
 
 Disassembly of section .vector_3:
@@ -184,289 +184,289 @@ Disassembly of section .vector_3:
 Disassembly of section .vector_4:
 
 9d000280 <__vector_dispatch_4>:
-9d000280:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000280:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000284:	00000000 	nop
 
 Disassembly of section .vector_5:
 
 9d0002a0 <__vector_dispatch_5>:
-9d0002a0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0002a0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0002a4:	00000000 	nop
 
 Disassembly of section .vector_6:
 
 9d0002c0 <__vector_dispatch_6>:
-9d0002c0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0002c0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0002c4:	00000000 	nop
 
 Disassembly of section .vector_7:
 
 9d0002e0 <__vector_dispatch_7>:
-9d0002e0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0002e0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0002e4:	00000000 	nop
 
 Disassembly of section .vector_8:
 
 9d000300 <__vector_dispatch_8>:
-9d000300:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000300:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000304:	00000000 	nop
 
 Disassembly of section .vector_9:
 
 9d000320 <__vector_dispatch_9>:
-9d000320:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000320:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000324:	00000000 	nop
 
 Disassembly of section .vector_10:
 
 9d000340 <__vector_dispatch_10>:
-9d000340:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000340:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000344:	00000000 	nop
 
 Disassembly of section .vector_11:
 
 9d000360 <__vector_dispatch_11>:
-9d000360:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000360:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000364:	00000000 	nop
 
 Disassembly of section .vector_12:
 
 9d000380 <__vector_dispatch_12>:
-9d000380:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000380:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000384:	00000000 	nop
 
 Disassembly of section .vector_13:
 
 9d0003a0 <__vector_dispatch_13>:
-9d0003a0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0003a0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0003a4:	00000000 	nop
 
 Disassembly of section .vector_14:
 
 9d0003c0 <__vector_dispatch_14>:
-9d0003c0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0003c0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0003c4:	00000000 	nop
 
 Disassembly of section .vector_15:
 
 9d0003e0 <__vector_dispatch_15>:
-9d0003e0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0003e0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0003e4:	00000000 	nop
 
 Disassembly of section .vector_16:
 
 9d000400 <__vector_dispatch_16>:
-9d000400:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000400:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000404:	00000000 	nop
 
 Disassembly of section .vector_17:
 
 9d000420 <__vector_dispatch_17>:
-9d000420:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000420:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000424:	00000000 	nop
 
 Disassembly of section .vector_18:
 
 9d000440 <__vector_dispatch_18>:
-9d000440:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000440:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000444:	00000000 	nop
 
 Disassembly of section .vector_19:
 
 9d000460 <__vector_dispatch_19>:
-9d000460:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000460:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000464:	00000000 	nop
 
 Disassembly of section .vector_20:
 
 9d000480 <__vector_dispatch_20>:
-9d000480:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000480:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000484:	00000000 	nop
 
 Disassembly of section .vector_21:
 
 9d0004a0 <__vector_dispatch_21>:
-9d0004a0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0004a0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0004a4:	00000000 	nop
 
 Disassembly of section .vector_22:
 
 9d0004c0 <__vector_dispatch_22>:
-9d0004c0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0004c0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0004c4:	00000000 	nop
 
 Disassembly of section .vector_23:
 
 9d0004e0 <__vector_dispatch_23>:
-9d0004e0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0004e0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0004e4:	00000000 	nop
 
 Disassembly of section .vector_24:
 
 9d000500 <__vector_dispatch_24>:
-9d000500:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000500:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000504:	00000000 	nop
 
 Disassembly of section .vector_25:
 
 9d000520 <__vector_dispatch_25>:
-9d000520:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000520:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000524:	00000000 	nop
 
 Disassembly of section .vector_26:
 
 9d000540 <__vector_dispatch_26>:
-9d000540:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000540:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000544:	00000000 	nop
 
 Disassembly of section .vector_27:
 
 9d000560 <__vector_dispatch_27>:
-9d000560:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000560:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000564:	00000000 	nop
 
 Disassembly of section .vector_28:
 
 9d000580 <__vector_dispatch_28>:
-9d000580:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000580:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000584:	00000000 	nop
 
 Disassembly of section .vector_29:
 
 9d0005a0 <__vector_dispatch_29>:
-9d0005a0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0005a0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0005a4:	00000000 	nop
 
 Disassembly of section .vector_30:
 
 9d0005c0 <__vector_dispatch_30>:
-9d0005c0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0005c0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0005c4:	00000000 	nop
 
 Disassembly of section .vector_31:
 
 9d0005e0 <__vector_dispatch_31>:
-9d0005e0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0005e0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0005e4:	00000000 	nop
 
 Disassembly of section .vector_32:
 
 9d000600 <__vector_dispatch_32>:
-9d000600:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000600:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000604:	00000000 	nop
 
 Disassembly of section .vector_33:
 
 9d000620 <__vector_dispatch_33>:
-9d000620:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000620:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000624:	00000000 	nop
 
 Disassembly of section .vector_34:
 
 9d000640 <__vector_dispatch_34>:
-9d000640:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000640:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000644:	00000000 	nop
 
 Disassembly of section .vector_35:
 
 9d000660 <__vector_dispatch_35>:
-9d000660:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000660:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000664:	00000000 	nop
 
 Disassembly of section .vector_36:
 
 9d000680 <__vector_dispatch_36>:
-9d000680:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000680:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000684:	00000000 	nop
 
 Disassembly of section .vector_37:
 
 9d0006a0 <__vector_dispatch_37>:
-9d0006a0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0006a0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0006a4:	00000000 	nop
 
 Disassembly of section .vector_38:
 
 9d0006c0 <__vector_dispatch_38>:
-9d0006c0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0006c0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0006c4:	00000000 	nop
 
 Disassembly of section .vector_39:
 
 9d0006e0 <__vector_dispatch_39>:
-9d0006e0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0006e0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0006e4:	00000000 	nop
 
 Disassembly of section .vector_40:
 
 9d000700 <__vector_dispatch_40>:
-9d000700:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000700:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000704:	00000000 	nop
 
 Disassembly of section .vector_41:
 
 9d000720 <__vector_dispatch_41>:
-9d000720:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000720:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000724:	00000000 	nop
 
 Disassembly of section .vector_42:
 
 9d000740 <__vector_dispatch_42>:
-9d000740:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000740:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000744:	00000000 	nop
 
 Disassembly of section .vector_43:
 
 9d000760 <__vector_dispatch_43>:
-9d000760:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000760:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000764:	00000000 	nop
 
 Disassembly of section .vector_44:
 
 9d000780 <__vector_dispatch_44>:
-9d000780:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000780:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000784:	00000000 	nop
 
 Disassembly of section .vector_45:
 
 9d0007a0 <__vector_dispatch_45>:
-9d0007a0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0007a0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0007a4:	00000000 	nop
 
 Disassembly of section .vector_46:
 
 9d0007c0 <__vector_dispatch_46>:
-9d0007c0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0007c0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0007c4:	00000000 	nop
 
 Disassembly of section .vector_47:
 
 9d0007e0 <__vector_dispatch_47>:
-9d0007e0:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d0007e0:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d0007e4:	00000000 	nop
 
 Disassembly of section .vector_48:
 
 9d000800 <__vector_dispatch_48>:
-9d000800:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000800:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000804:	00000000 	nop
 
 Disassembly of section .vector_49:
 
 9d000820 <__vector_dispatch_49>:
-9d000820:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000820:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000824:	00000000 	nop
 
 Disassembly of section .vector_50:
 
 9d000840 <__vector_dispatch_50>:
-9d000840:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000840:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000844:	00000000 	nop
 
 Disassembly of section .vector_51:
 
 9d000860 <__vector_dispatch_51>:
-9d000860:	0b4008d3 	j	9d00234c <_DefaultInterrupt>
+9d000860:	0b4008df 	j	9d00237c <_DefaultInterrupt>
 9d000864:	00000000 	nop
 
 Disassembly of section ._debug_exception:
@@ -475,7 +475,7 @@ bfc00480 <__DbgExecReturn>:
 bfc00480:	409bf800 	mtc0	k1,c0_desave
 bfc00484:	000000c0 	ehb
 bfc00488:	3c1b9d00 	lui	k1,0x9d00
-bfc0048c:	277b2394 	addiu	k1,k1,9108
+bfc0048c:	277b23c4 	addiu	k1,k1,9156
 bfc00490:	13600002 	beqz	k1,bfc0049c <__DbgExecReturn+0x1c>
 bfc00494:	00000000 	nop
 bfc00498:	409bc000 	mtc0	k1,c0_depc
@@ -713,342 +713,365 @@ void __ISR(_EXTERNAL_0_VECTOR, IPL2SOFT) Ext0ISR(void) { // step 1: the ISR
 9d001fdc:	afa40008 	sw	a0,8(sp)
 9d001fe0:	afa30004 	sw	v1,4(sp)
 9d001fe4:	afa20000 	sw	v0,0(sp)
-  NU32_LED1 = 0;                  // LED1 and LED2 on
+    
+   IFS0bits.INT0IF = 0;            // clear interrupt flag IFS0<3>
 9d001fe8:	3c02bf88 	lui	v0,0xbf88
-9d001fec:	90436160 	lbu	v1,24928(v0)
-9d001ff0:	7c030004 	ins	v1,zero,0x0,0x1
-9d001ff4:	a0436160 	sb	v1,24928(v0)
-  NU32_LED2 = 0;
-9d001ff8:	90436160 	lbu	v1,24928(v0)
-9d001ffc:	7c030844 	ins	v1,zero,0x1,0x1
-9d002000:	a0436160 	sb	v1,24928(v0)
-  _CP0_SET_COUNT(0);
-9d002004:	00001025 	move	v0,zero
-9d002008:	40824800 	mtc0	v0,c0_count
-9d00200c:	000000c0 	ehb
+9d001fec:	8c431030 	lw	v1,4144(v0)
+9d001ff0:	7c0318c4 	ins	v1,zero,0x3,0x1
+9d001ff4:	ac431030 	sw	v1,4144(v0)
   
-  while(_CP0_GET_COUNT() < 10000000) { ; } // delay for 10 M core ticks, 0.25 s
-9d002010:	3c030098 	lui	v1,0x98
-9d002014:	34639680 	ori	v1,v1,0x9680
-9d002018:	40024800 	mfc0	v0,c0_count
-9d00201c:	0043102b 	sltu	v0,v0,v1
-9d002020:	1440fffd 	bnez	v0,9d002018 <Ext0ISR+0x6c>
-9d002024:	3c02bf88 	lui	v0,0xbf88
+  _CP0_SET_COUNT(0);
+9d001ff8:	00001025 	move	v0,zero
+9d001ffc:	40824800 	mtc0	v0,c0_count
+9d002000:	000000c0 	ehb
+  while(_CP0_GET_COUNT() < 400000) { ; } // delay for 400k core ticks, 10ms
+9d002004:	3c030006 	lui	v1,0x6
+9d002008:	24631a80 	addiu	v1,v1,6784
+9d00200c:	40024800 	mfc0	v0,c0_count
+9d002010:	0043102b 	sltu	v0,v0,v1
+9d002014:	1440fffd 	bnez	v0,9d00200c <Ext0ISR+0x60>
+9d002018:	3c02bf88 	lui	v0,0xbf88
+
+  //if USER button is not pressed after the ISR is triggered, then ISR was 
+  //triggered upon release of button, so do nothing
+  if (NU32_USER) {
+9d00201c:	8c4260d0 	lw	v0,24784(v0)
+9d002020:	7c4201c0 	ext	v0,v0,0x7,0x1
+9d002024:	14400017 	bnez	v0,9d002084 <Ext0ISR+0xd8>
+9d002028:	3c02bf88 	lui	v0,0xbf88
+	  return;
+  }
+  
+  NU32_LED1 = 0;                  // LED1 and LED2 on
+9d00202c:	90436160 	lbu	v1,24928(v0)
+9d002030:	7c030004 	ins	v1,zero,0x0,0x1
+9d002034:	a0436160 	sb	v1,24928(v0)
+  NU32_LED2 = 0;
+9d002038:	90436160 	lbu	v1,24928(v0)
+9d00203c:	7c030844 	ins	v1,zero,0x1,0x1
+9d002040:	a0436160 	sb	v1,24928(v0)
+  _CP0_SET_COUNT(0);
+9d002044:	00001025 	move	v0,zero
+9d002048:	40824800 	mtc0	v0,c0_count
+9d00204c:	000000c0 	ehb
+  
+  while(_CP0_GET_COUNT() < 10000000) { ; } // delay for 10M core ticks, 0.25s
+9d002050:	3c030098 	lui	v1,0x98
+9d002054:	34639680 	ori	v1,v1,0x9680
+9d002058:	40024800 	mfc0	v0,c0_count
+9d00205c:	0043102b 	sltu	v0,v0,v1
+9d002060:	1440fffd 	bnez	v0,9d002058 <Ext0ISR+0xac>
+9d002064:	3c02bf88 	lui	v0,0xbf88
   
   NU32_LED1 = 1;                  // LED1 and LED2 off
-9d002028:	90436160 	lbu	v1,24928(v0)
-9d00202c:	24040001 	li	a0,1
-9d002030:	7c830004 	ins	v1,a0,0x0,0x1
-9d002034:	a0436160 	sb	v1,24928(v0)
+9d002068:	90436160 	lbu	v1,24928(v0)
+9d00206c:	24040001 	li	a0,1
+9d002070:	7c830004 	ins	v1,a0,0x0,0x1
+9d002074:	a0436160 	sb	v1,24928(v0)
   NU32_LED2 = 1;
-9d002038:	90436160 	lbu	v1,24928(v0)
-9d00203c:	7c830844 	ins	v1,a0,0x1,0x1
-9d002040:	a0436160 	sb	v1,24928(v0)
-  IFS0bits.INT0IF = 0;            // clear interrupt flag IFS0<3>
-9d002044:	3c02bf88 	lui	v0,0xbf88
-9d002048:	8c431030 	lw	v1,4144(v0)
-9d00204c:	7c0318c4 	ins	v1,zero,0x3,0x1
-9d002050:	ac431030 	sw	v1,4144(v0)
+9d002078:	90436160 	lbu	v1,24928(v0)
+9d00207c:	7c830844 	ins	v1,a0,0x1,0x1
+9d002080:	a0436160 	sb	v1,24928(v0)
 }
-9d002054:	8fbf000c 	lw	ra,12(sp)
-9d002058:	8fa40008 	lw	a0,8(sp)
-9d00205c:	8fa30004 	lw	v1,4(sp)
-9d002060:	8fa20000 	lw	v0,0(sp)
-9d002064:	41606000 	di
-9d002068:	000000c0 	ehb
-9d00206c:	8fba001c 	lw	k0,28(sp)
-9d002070:	8fbb0018 	lw	k1,24(sp)
-9d002074:	409a7000 	mtc0	k0,c0_epc
-9d002078:	8fba0014 	lw	k0,20(sp)
-9d00207c:	27bd0020 	addiu	sp,sp,32
-9d002080:	409a6002 	mtc0	k0,c0_srsctl
-9d002084:	41dde800 	wrpgpr	sp,sp
-9d002088:	409b6000 	mtc0	k1,c0_status
-9d00208c:	42000018 	eret
+9d002084:	8fbf000c 	lw	ra,12(sp)
+9d002088:	8fa40008 	lw	a0,8(sp)
+9d00208c:	8fa30004 	lw	v1,4(sp)
+9d002090:	8fa20000 	lw	v0,0(sp)
+9d002094:	41606000 	di
+9d002098:	000000c0 	ehb
+9d00209c:	8fba001c 	lw	k0,28(sp)
+9d0020a0:	8fbb0018 	lw	k1,24(sp)
+9d0020a4:	409a7000 	mtc0	k0,c0_epc
+9d0020a8:	8fba0014 	lw	k0,20(sp)
+9d0020ac:	27bd0020 	addiu	sp,sp,32
+9d0020b0:	409a6002 	mtc0	k0,c0_srsctl
+9d0020b4:	41dde800 	wrpgpr	sp,sp
+9d0020b8:	409b6000 	mtc0	k1,c0_status
+9d0020bc:	42000018 	eret
 
-9d002090 <main>:
+9d0020c0 <main>:
 
 int main(void) {
-9d002090:	27bdffe8 	addiu	sp,sp,-24
-9d002094:	afbf0014 	sw	ra,20(sp)
+9d0020c0:	27bdffe8 	addiu	sp,sp,-24
+9d0020c4:	afbf0014 	sw	ra,20(sp)
   NU32_Startup(); // cache on, min flash wait, interrupts on, LED/button init, UART init
-9d002098:	0f400780 	jal	9d001e00 <NU32_Startup>
-9d00209c:	00000000 	nop
+9d0020c8:	0f400780 	jal	9d001e00 <NU32_Startup>
+9d0020cc:	00000000 	nop
   __builtin_disable_interrupts(); // step 2: disable interrupts
-9d0020a0:	41626000 	di	v0
-9d0020a4:	000000c0 	ehb
+9d0020d0:	41626000 	di	v0
+9d0020d4:	000000c0 	ehb
   INTCONbits.INT0EP = 0;          // step 3: INT0 triggers on falling edge
-9d0020a8:	3c02bf88 	lui	v0,0xbf88
-9d0020ac:	8c431000 	lw	v1,4096(v0)
-9d0020b0:	7c030004 	ins	v1,zero,0x0,0x1
-9d0020b4:	ac431000 	sw	v1,4096(v0)
+9d0020d8:	3c02bf88 	lui	v0,0xbf88
+9d0020dc:	8c431000 	lw	v1,4096(v0)
+9d0020e0:	7c030004 	ins	v1,zero,0x0,0x1
+9d0020e4:	ac431000 	sw	v1,4096(v0)
   IPC0bits.INT0IP = 2;            // step 4: interrupt priority 2
-9d0020b8:	3c02bf88 	lui	v0,0xbf88
-9d0020bc:	8c431090 	lw	v1,4240(v0)
-9d0020c0:	24040002 	li	a0,2
-9d0020c4:	7c83e684 	ins	v1,a0,0x1a,0x3
-9d0020c8:	ac431090 	sw	v1,4240(v0)
+9d0020e8:	3c02bf88 	lui	v0,0xbf88
+9d0020ec:	8c431090 	lw	v1,4240(v0)
+9d0020f0:	24040002 	li	a0,2
+9d0020f4:	7c83e684 	ins	v1,a0,0x1a,0x3
+9d0020f8:	ac431090 	sw	v1,4240(v0)
   IPC0bits.INT0IS = 1;            // step 4: interrupt priority 1
-9d0020cc:	8c431090 	lw	v1,4240(v0)
-9d0020d0:	24040001 	li	a0,1
-9d0020d4:	7c83ce04 	ins	v1,a0,0x18,0x2
-9d0020d8:	ac431090 	sw	v1,4240(v0)
+9d0020fc:	8c431090 	lw	v1,4240(v0)
+9d002100:	24040001 	li	a0,1
+9d002104:	7c83ce04 	ins	v1,a0,0x18,0x2
+9d002108:	ac431090 	sw	v1,4240(v0)
   IFS0bits.INT0IF = 0;            // step 5: clear the int flag
-9d0020dc:	3c02bf88 	lui	v0,0xbf88
-9d0020e0:	8c431030 	lw	v1,4144(v0)
-9d0020e4:	7c0318c4 	ins	v1,zero,0x3,0x1
-9d0020e8:	ac431030 	sw	v1,4144(v0)
+9d00210c:	3c02bf88 	lui	v0,0xbf88
+9d002110:	8c431030 	lw	v1,4144(v0)
+9d002114:	7c0318c4 	ins	v1,zero,0x3,0x1
+9d002118:	ac431030 	sw	v1,4144(v0)
   IEC0bits.INT0IE = 1;            // step 6: enable INT0 by setting IEC0<3>
-9d0020ec:	3c02bf88 	lui	v0,0xbf88
-9d0020f0:	8c431060 	lw	v1,4192(v0)
-9d0020f4:	7c8318c4 	ins	v1,a0,0x3,0x1
-9d0020f8:	ac431060 	sw	v1,4192(v0)
+9d00211c:	3c02bf88 	lui	v0,0xbf88
+9d002120:	8c431060 	lw	v1,4192(v0)
+9d002124:	7c8318c4 	ins	v1,a0,0x3,0x1
+9d002128:	ac431060 	sw	v1,4192(v0)
   __builtin_enable_interrupts();  // step 7: enable interrupts
-9d0020fc:	41626020 	ei	v0
+9d00212c:	41626020 	ei	v0
                                   // Connect RD7 (USER button) to INT0 (RD0)
   while(1) {
       ; // do nothing, loop forever
-9d002100:	1000ffff 	b	9d002100 <main+0x70>
-9d002104:	00000000 	nop
+9d002130:	1000ffff 	b	9d002130 <main+0x70>
+9d002134:	00000000 	nop
 
 Disassembly of section .text.general_exception:
 
-9d002108 <_general_exception_context>:
-9d002108:	27bdffa8 	addiu	sp,sp,-88
-9d00210c:	afa10004 	sw	at,4(sp)
-9d002110:	afa20008 	sw	v0,8(sp)
-9d002114:	afa3000c 	sw	v1,12(sp)
-9d002118:	afa40010 	sw	a0,16(sp)
-9d00211c:	afa50014 	sw	a1,20(sp)
-9d002120:	afa60018 	sw	a2,24(sp)
-9d002124:	afa7001c 	sw	a3,28(sp)
-9d002128:	afa80020 	sw	t0,32(sp)
-9d00212c:	afa90024 	sw	t1,36(sp)
-9d002130:	afaa0028 	sw	t2,40(sp)
-9d002134:	afab002c 	sw	t3,44(sp)
-9d002138:	afac0030 	sw	t4,48(sp)
-9d00213c:	afad0034 	sw	t5,52(sp)
-9d002140:	afae0038 	sw	t6,56(sp)
-9d002144:	afaf003c 	sw	t7,60(sp)
-9d002148:	afb80040 	sw	t8,64(sp)
-9d00214c:	afb90044 	sw	t9,68(sp)
-9d002150:	afbf0048 	sw	ra,72(sp)
-9d002154:	00004012 	mflo	t0
-9d002158:	afa8004c 	sw	t0,76(sp)
-9d00215c:	00004010 	mfhi	t0
-9d002160:	afa80050 	sw	t0,80(sp)
-9d002164:	3c1a9d00 	lui	k0,0x9d00
-9d002168:	275a2304 	addiu	k0,k0,8964
-9d00216c:	00000000 	nop
-9d002170:	40046800 	mfc0	a0,c0_cause
-9d002174:	40056000 	mfc0	a1,c0_status
-9d002178:	0340f809 	jalr	k0
-9d00217c:	00000000 	nop
-9d002180:	8fa80050 	lw	t0,80(sp)
-9d002184:	01000011 	mthi	t0
-9d002188:	8fa8004c 	lw	t0,76(sp)
-9d00218c:	01000013 	mtlo	t0
-9d002190:	8fa10004 	lw	at,4(sp)
-9d002194:	8fa20008 	lw	v0,8(sp)
-9d002198:	8fa3000c 	lw	v1,12(sp)
-9d00219c:	8fa40010 	lw	a0,16(sp)
-9d0021a0:	8fa50014 	lw	a1,20(sp)
-9d0021a4:	8fa60018 	lw	a2,24(sp)
-9d0021a8:	8fa7001c 	lw	a3,28(sp)
-9d0021ac:	8fa80020 	lw	t0,32(sp)
-9d0021b0:	8fa90024 	lw	t1,36(sp)
-9d0021b4:	8faa0028 	lw	t2,40(sp)
-9d0021b8:	8fab002c 	lw	t3,44(sp)
-9d0021bc:	8fac0030 	lw	t4,48(sp)
-9d0021c0:	8fad0034 	lw	t5,52(sp)
-9d0021c4:	8fae0038 	lw	t6,56(sp)
-9d0021c8:	8faf003c 	lw	t7,60(sp)
-9d0021cc:	8fb80040 	lw	t8,64(sp)
-9d0021d0:	8fb90044 	lw	t9,68(sp)
-9d0021d4:	8fbf0048 	lw	ra,72(sp)
-9d0021d8:	27bd0058 	addiu	sp,sp,88
-9d0021dc:	000000c0 	ehb
-9d0021e0:	42000018 	eret
+9d002138 <_general_exception_context>:
+9d002138:	27bdffa8 	addiu	sp,sp,-88
+9d00213c:	afa10004 	sw	at,4(sp)
+9d002140:	afa20008 	sw	v0,8(sp)
+9d002144:	afa3000c 	sw	v1,12(sp)
+9d002148:	afa40010 	sw	a0,16(sp)
+9d00214c:	afa50014 	sw	a1,20(sp)
+9d002150:	afa60018 	sw	a2,24(sp)
+9d002154:	afa7001c 	sw	a3,28(sp)
+9d002158:	afa80020 	sw	t0,32(sp)
+9d00215c:	afa90024 	sw	t1,36(sp)
+9d002160:	afaa0028 	sw	t2,40(sp)
+9d002164:	afab002c 	sw	t3,44(sp)
+9d002168:	afac0030 	sw	t4,48(sp)
+9d00216c:	afad0034 	sw	t5,52(sp)
+9d002170:	afae0038 	sw	t6,56(sp)
+9d002174:	afaf003c 	sw	t7,60(sp)
+9d002178:	afb80040 	sw	t8,64(sp)
+9d00217c:	afb90044 	sw	t9,68(sp)
+9d002180:	afbf0048 	sw	ra,72(sp)
+9d002184:	00004012 	mflo	t0
+9d002188:	afa8004c 	sw	t0,76(sp)
+9d00218c:	00004010 	mfhi	t0
+9d002190:	afa80050 	sw	t0,80(sp)
+9d002194:	3c1a9d00 	lui	k0,0x9d00
+9d002198:	275a2334 	addiu	k0,k0,9012
+9d00219c:	00000000 	nop
+9d0021a0:	40046800 	mfc0	a0,c0_cause
+9d0021a4:	40056000 	mfc0	a1,c0_status
+9d0021a8:	0340f809 	jalr	k0
+9d0021ac:	00000000 	nop
+9d0021b0:	8fa80050 	lw	t0,80(sp)
+9d0021b4:	01000011 	mthi	t0
+9d0021b8:	8fa8004c 	lw	t0,76(sp)
+9d0021bc:	01000013 	mtlo	t0
+9d0021c0:	8fa10004 	lw	at,4(sp)
+9d0021c4:	8fa20008 	lw	v0,8(sp)
+9d0021c8:	8fa3000c 	lw	v1,12(sp)
+9d0021cc:	8fa40010 	lw	a0,16(sp)
+9d0021d0:	8fa50014 	lw	a1,20(sp)
+9d0021d4:	8fa60018 	lw	a2,24(sp)
+9d0021d8:	8fa7001c 	lw	a3,28(sp)
+9d0021dc:	8fa80020 	lw	t0,32(sp)
+9d0021e0:	8fa90024 	lw	t1,36(sp)
+9d0021e4:	8faa0028 	lw	t2,40(sp)
+9d0021e8:	8fab002c 	lw	t3,44(sp)
+9d0021ec:	8fac0030 	lw	t4,48(sp)
+9d0021f0:	8fad0034 	lw	t5,52(sp)
+9d0021f4:	8fae0038 	lw	t6,56(sp)
+9d0021f8:	8faf003c 	lw	t7,60(sp)
+9d0021fc:	8fb80040 	lw	t8,64(sp)
+9d002200:	8fb90044 	lw	t9,68(sp)
+9d002204:	8fbf0048 	lw	ra,72(sp)
+9d002208:	27bd0058 	addiu	sp,sp,88
+9d00220c:	000000c0 	ehb
+9d002210:	42000018 	eret
 
 Disassembly of section .text:
 
-9d0021e4 <__pic32_data_init>:
-9d0021e4:	03e01825 	move	v1,ra
+9d002214 <__pic32_data_init>:
+9d002214:	03e01825 	move	v1,ra
 
-9d0021e8 <_dinit_init>:
-9d0021e8:	3c089d00 	lui	t0,0x9d00
-9d0021ec:	25082408 	addiu	t0,t0,9224
-9d0021f0:	8d090000 	lw	t1,0(t0)
-9d0021f4:	11200018 	beqz	t1,9d002258 <_dinit_end+0x18>
-9d0021f8:	25080004 	addiu	t0,t0,4
-9d0021fc:	8d0a0000 	lw	t2,0(t0)
-9d002200:	25080004 	addiu	t0,t0,4
-9d002204:	8d0b0000 	lw	t3,0(t0)
-9d002208:	11600009 	beqz	t3,9d002230 <_dinit_clear>
-9d00220c:	25080004 	addiu	t0,t0,4
+9d002218 <_dinit_init>:
+9d002218:	3c089d00 	lui	t0,0x9d00
+9d00221c:	25082438 	addiu	t0,t0,9272
+9d002220:	8d090000 	lw	t1,0(t0)
+9d002224:	11200018 	beqz	t1,9d002288 <_dinit_end+0x18>
+9d002228:	25080004 	addiu	t0,t0,4
+9d00222c:	8d0a0000 	lw	t2,0(t0)
+9d002230:	25080004 	addiu	t0,t0,4
+9d002234:	8d0b0000 	lw	t3,0(t0)
+9d002238:	11600009 	beqz	t3,9d002260 <_dinit_clear>
+9d00223c:	25080004 	addiu	t0,t0,4
 
-9d002210 <_dinit_copy>:
-9d002210:	910c0000 	lbu	t4,0(t0)
-9d002214:	254affff 	addiu	t2,t2,-1
-9d002218:	25080001 	addiu	t0,t0,1
-9d00221c:	a12c0000 	sb	t4,0(t1)
-9d002220:	1540fffb 	bnez	t2,9d002210 <_dinit_copy>
-9d002224:	25290001 	addiu	t1,t1,1
-9d002228:	10000005 	b	9d002240 <_dinit_end>
-9d00222c:	00000000 	nop
+9d002240 <_dinit_copy>:
+9d002240:	910c0000 	lbu	t4,0(t0)
+9d002244:	254affff 	addiu	t2,t2,-1
+9d002248:	25080001 	addiu	t0,t0,1
+9d00224c:	a12c0000 	sb	t4,0(t1)
+9d002250:	1540fffb 	bnez	t2,9d002240 <_dinit_copy>
+9d002254:	25290001 	addiu	t1,t1,1
+9d002258:	10000005 	b	9d002270 <_dinit_end>
+9d00225c:	00000000 	nop
 
-9d002230 <_dinit_clear>:
-9d002230:	a1200000 	sb	zero,0(t1)
-9d002234:	254affff 	addiu	t2,t2,-1
-9d002238:	1540fffd 	bnez	t2,9d002230 <_dinit_clear>
-9d00223c:	25290001 	addiu	t1,t1,1
+9d002260 <_dinit_clear>:
+9d002260:	a1200000 	sb	zero,0(t1)
+9d002264:	254affff 	addiu	t2,t2,-1
+9d002268:	1540fffd 	bnez	t2,9d002260 <_dinit_clear>
+9d00226c:	25290001 	addiu	t1,t1,1
 
-9d002240 <_dinit_end>:
-9d002240:	25080003 	addiu	t0,t0,3
-9d002244:	240afffc 	li	t2,-4
-9d002248:	01484024 	and	t0,t2,t0
-9d00224c:	8d090000 	lw	t1,0(t0)
-9d002250:	1520ffe7 	bnez	t1,9d0021f0 <_dinit_init+0x8>
-9d002254:	00000000 	nop
-9d002258:	0060f825 	move	ra,v1
-9d00225c:	03e00008 	jr	ra
-9d002260:	00000000 	nop
-9d002264:	00000000 	nop
+9d002270 <_dinit_end>:
+9d002270:	25080003 	addiu	t0,t0,3
+9d002274:	240afffc 	li	t2,-4
+9d002278:	01484024 	and	t0,t2,t0
+9d00227c:	8d090000 	lw	t1,0(t0)
+9d002280:	1520ffe7 	bnez	t1,9d002220 <_dinit_init+0x8>
+9d002284:	00000000 	nop
+9d002288:	0060f825 	move	ra,v1
+9d00228c:	03e00008 	jr	ra
+9d002290:	00000000 	nop
+9d002294:	00000000 	nop
 
 Disassembly of section .text.main_entry:
 
-9d002268 <_main_entry>:
-9d002268:	3c040000 	lui	a0,0x0
-9d00226c:	27bdffe8 	addiu	sp,sp,-24
-9d002270:	24840000 	addiu	a0,a0,0
-9d002274:	10800003 	beqz	a0,9d002284 <_main_entry+0x1c>
-9d002278:	afbf0014 	sw	ra,20(sp)
-9d00227c:	0080f809 	jalr	a0
-9d002280:	00000000 	nop
-9d002284:	30840000 	andi	a0,a0,0x0
-9d002288:	30a50000 	andi	a1,a1,0x0
-9d00228c:	3c089d00 	lui	t0,0x9d00
-9d002290:	25082090 	addiu	t0,t0,8336
-9d002294:	0100f809 	jalr	t0
-9d002298:	00000000 	nop
+9d002298 <_main_entry>:
+9d002298:	3c040000 	lui	a0,0x0
+9d00229c:	27bdffe8 	addiu	sp,sp,-24
+9d0022a0:	24840000 	addiu	a0,a0,0
+9d0022a4:	10800003 	beqz	a0,9d0022b4 <_main_entry+0x1c>
+9d0022a8:	afbf0014 	sw	ra,20(sp)
+9d0022ac:	0080f809 	jalr	a0
+9d0022b0:	00000000 	nop
+9d0022b4:	30840000 	andi	a0,a0,0x0
+9d0022b8:	30a50000 	andi	a1,a1,0x0
+9d0022bc:	3c089d00 	lui	t0,0x9d00
+9d0022c0:	250820c0 	addiu	t0,t0,8384
+9d0022c4:	0100f809 	jalr	t0
+9d0022c8:	00000000 	nop
 
-9d00229c <__crt0_exit>:
-9d00229c:	3c020000 24420000 10400003 00000000     ...<..B$..@.....
-9d0022ac:	0040f809 00000000 1000fff9 00000000     ..@.............
+9d0022cc <__crt0_exit>:
+9d0022cc:	3c020000 24420000 10400003 00000000     ...<..B$..@.....
+9d0022dc:	0040f809 00000000 1000fff9 00000000     ..@.............
 
 Disassembly of section .text._bootstrap_exception_handler:
 
-9d0022bc <_bootstrap_exception_handler>:
-9d0022bc:	3c020000 	lui	v0,0x0
-9d0022c0:	24420000 	addiu	v0,v0,0
-9d0022c4:	10400005 	beqz	v0,9d0022dc <_bootstrap_exception_handler+0x20>
-9d0022c8:	3c020000 	lui	v0,0x0
-9d0022cc:	24420000 	addiu	v0,v0,0
-9d0022d0:	10400003 	beqz	v0,9d0022e0 <_bootstrap_exception_handler+0x24>
-9d0022d4:	3c029d00 	lui	v0,0x9d00
-9d0022d8:	7000003f 	sdbbp
-9d0022dc:	3c029d00 	lui	v0,0x9d00
-9d0022e0:	24422394 	addiu	v0,v0,9108
-9d0022e4:	10400005 	beqz	v0,9d0022fc <_bootstrap_exception_handler+0x40>
-9d0022e8:	00000000 	nop
-9d0022ec:	27bdffe8 	addiu	sp,sp,-24
-9d0022f0:	afbf0014 	sw	ra,20(sp)
-9d0022f4:	0040f809 	jalr	v0
-9d0022f8:	00000000 	nop
-9d0022fc:	1000ffff 	b	9d0022fc <_bootstrap_exception_handler+0x40>
-9d002300:	00000000 	nop
+9d0022ec <_bootstrap_exception_handler>:
+9d0022ec:	3c020000 	lui	v0,0x0
+9d0022f0:	24420000 	addiu	v0,v0,0
+9d0022f4:	10400005 	beqz	v0,9d00230c <_bootstrap_exception_handler+0x20>
+9d0022f8:	3c020000 	lui	v0,0x0
+9d0022fc:	24420000 	addiu	v0,v0,0
+9d002300:	10400003 	beqz	v0,9d002310 <_bootstrap_exception_handler+0x24>
+9d002304:	3c029d00 	lui	v0,0x9d00
+9d002308:	7000003f 	sdbbp
+9d00230c:	3c029d00 	lui	v0,0x9d00
+9d002310:	244223c4 	addiu	v0,v0,9156
+9d002314:	10400005 	beqz	v0,9d00232c <_bootstrap_exception_handler+0x40>
+9d002318:	00000000 	nop
+9d00231c:	27bdffe8 	addiu	sp,sp,-24
+9d002320:	afbf0014 	sw	ra,20(sp)
+9d002324:	0040f809 	jalr	v0
+9d002328:	00000000 	nop
+9d00232c:	1000ffff 	b	9d00232c <_bootstrap_exception_handler+0x40>
+9d002330:	00000000 	nop
 
 Disassembly of section .text._general_exception_handler:
 
-9d002304 <_general_exception_handler>:
-9d002304:	3c020000 	lui	v0,0x0
-9d002308:	24420000 	addiu	v0,v0,0
-9d00230c:	10400005 	beqz	v0,9d002324 <_general_exception_handler+0x20>
-9d002310:	3c020000 	lui	v0,0x0
-9d002314:	24420000 	addiu	v0,v0,0
-9d002318:	10400003 	beqz	v0,9d002328 <_general_exception_handler+0x24>
-9d00231c:	3c029d00 	lui	v0,0x9d00
-9d002320:	7000003f 	sdbbp
-9d002324:	3c029d00 	lui	v0,0x9d00
-9d002328:	24422394 	addiu	v0,v0,9108
-9d00232c:	10400005 	beqz	v0,9d002344 <_general_exception_handler+0x40>
-9d002330:	00000000 	nop
-9d002334:	27bdffe8 	addiu	sp,sp,-24
-9d002338:	afbf0014 	sw	ra,20(sp)
-9d00233c:	0040f809 	jalr	v0
-9d002340:	00000000 	nop
-9d002344:	1000ffff 	b	9d002344 <_general_exception_handler+0x40>
-9d002348:	00000000 	nop
+9d002334 <_general_exception_handler>:
+9d002334:	3c020000 	lui	v0,0x0
+9d002338:	24420000 	addiu	v0,v0,0
+9d00233c:	10400005 	beqz	v0,9d002354 <_general_exception_handler+0x20>
+9d002340:	3c020000 	lui	v0,0x0
+9d002344:	24420000 	addiu	v0,v0,0
+9d002348:	10400003 	beqz	v0,9d002358 <_general_exception_handler+0x24>
+9d00234c:	3c029d00 	lui	v0,0x9d00
+9d002350:	7000003f 	sdbbp
+9d002354:	3c029d00 	lui	v0,0x9d00
+9d002358:	244223c4 	addiu	v0,v0,9156
+9d00235c:	10400005 	beqz	v0,9d002374 <_general_exception_handler+0x40>
+9d002360:	00000000 	nop
+9d002364:	27bdffe8 	addiu	sp,sp,-24
+9d002368:	afbf0014 	sw	ra,20(sp)
+9d00236c:	0040f809 	jalr	v0
+9d002370:	00000000 	nop
+9d002374:	1000ffff 	b	9d002374 <_general_exception_handler+0x40>
+9d002378:	00000000 	nop
 
 Disassembly of section .vector_default:
 
-9d00234c <_DefaultInterrupt>:
-9d00234c:	3c020000 	lui	v0,0x0
-9d002350:	24420000 	addiu	v0,v0,0
-9d002354:	10400007 	beqz	v0,9d002374 <_DefaultInterrupt+0x28>
-9d002358:	3c020000 	lui	v0,0x0
-9d00235c:	24420000 	addiu	v0,v0,0
-9d002360:	50400005 	beqzl	v0,9d002378 <_DefaultInterrupt+0x2c>
-9d002364:	3c029d00 	lui	v0,0x9d00
-9d002368:	7000003f 	sdbbp
-9d00236c:	03e00008 	jr	ra
-9d002370:	00000000 	nop
-9d002374:	3c029d00 	lui	v0,0x9d00
-9d002378:	24422394 	addiu	v0,v0,9108
-9d00237c:	10400003 	beqz	v0,9d00238c <_DefaultInterrupt+0x40>
-9d002380:	00000000 	nop
-9d002384:	0040f809 	jalr	v0
-9d002388:	00000000 	nop
-9d00238c:	03e00008 	jr	ra
-9d002390:	00000000 	nop
+9d00237c <_DefaultInterrupt>:
+9d00237c:	3c020000 	lui	v0,0x0
+9d002380:	24420000 	addiu	v0,v0,0
+9d002384:	10400007 	beqz	v0,9d0023a4 <_DefaultInterrupt+0x28>
+9d002388:	3c020000 	lui	v0,0x0
+9d00238c:	24420000 	addiu	v0,v0,0
+9d002390:	50400005 	beqzl	v0,9d0023a8 <_DefaultInterrupt+0x2c>
+9d002394:	3c029d00 	lui	v0,0x9d00
+9d002398:	7000003f 	sdbbp
+9d00239c:	03e00008 	jr	ra
+9d0023a0:	00000000 	nop
+9d0023a4:	3c029d00 	lui	v0,0x9d00
+9d0023a8:	244223c4 	addiu	v0,v0,9156
+9d0023ac:	10400003 	beqz	v0,9d0023bc <_DefaultInterrupt+0x40>
+9d0023b0:	00000000 	nop
+9d0023b4:	0040f809 	jalr	v0
+9d0023b8:	00000000 	nop
+9d0023bc:	03e00008 	jr	ra
+9d0023c0:	00000000 	nop
 
 Disassembly of section .text:
 
-9d002394 <__pic32_software_reset>:
-9d002394:	41606000 	di
-9d002398:	000000c0 	ehb
-9d00239c:	3c03aa99 	lui	v1,0xaa99
-9d0023a0:	3c02bf81 	lui	v0,0xbf81
-9d0023a4:	24636655 	addiu	v1,v1,26197
-9d0023a8:	ac40f230 	sw	zero,-3536(v0)
-9d0023ac:	ac43f230 	sw	v1,-3536(v0)
-9d0023b0:	3c035566 	lui	v1,0x5566
-9d0023b4:	346399aa 	ori	v1,v1,0x99aa
-9d0023b8:	ac43f230 	sw	v1,-3536(v0)
-9d0023bc:	3c02bf81 	lui	v0,0xbf81
-9d0023c0:	24030001 	li	v1,1
-9d0023c4:	ac43f618 	sw	v1,-2536(v0)
-9d0023c8:	3c02bf81 	lui	v0,0xbf81
-9d0023cc:	8c42f610 	lw	v0,-2544(v0)
-9d0023d0:	0b4008e7 	j	9d00239c <__pic32_software_reset+0x8>
-9d0023d4:	00000000 	nop
+9d0023c4 <__pic32_software_reset>:
+9d0023c4:	41606000 	di
+9d0023c8:	000000c0 	ehb
+9d0023cc:	3c03aa99 	lui	v1,0xaa99
+9d0023d0:	3c02bf81 	lui	v0,0xbf81
+9d0023d4:	24636655 	addiu	v1,v1,26197
+9d0023d8:	ac40f230 	sw	zero,-3536(v0)
+9d0023dc:	ac43f230 	sw	v1,-3536(v0)
+9d0023e0:	3c035566 	lui	v1,0x5566
+9d0023e4:	346399aa 	ori	v1,v1,0x99aa
+9d0023e8:	ac43f230 	sw	v1,-3536(v0)
+9d0023ec:	3c02bf81 	lui	v0,0xbf81
+9d0023f0:	24030001 	li	v1,1
+9d0023f4:	ac43f618 	sw	v1,-2536(v0)
+9d0023f8:	3c02bf81 	lui	v0,0xbf81
+9d0023fc:	8c42f610 	lw	v0,-2544(v0)
+9d002400:	0b4008f3 	j	9d0023cc <__pic32_software_reset+0x8>
+9d002404:	00000000 	nop
 
 Disassembly of section .text:
 
-9d0023f0 <_nmi_handler>:
-9d0023f0:	401a6000 	mfc0	k0,c0_status
-9d0023f4:	3c1bffbf 	lui	k1,0xffbf
-9d0023f8:	377bffff 	ori	k1,k1,0xffff
-9d0023fc:	035bd024 	and	k0,k0,k1
-9d002400:	409a6000 	mtc0	k0,c0_status
-9d002404:	42000018 	eret
+9d002420 <_nmi_handler>:
+9d002420:	401a6000 	mfc0	k0,c0_status
+9d002424:	3c1bffbf 	lui	k1,0xffbf
+9d002428:	377bffff 	ori	k1,k1,0xffff
+9d00242c:	035bd024 	and	k0,k0,k1
+9d002430:	409a6000 	mtc0	k0,c0_status
+9d002434:	42000018 	eret
 
 Disassembly of section .dinit:
 
-9d002408 <.dinit>:
-9d002408:	00000000 	nop
-9d00240c:	22222222 	addi	v0,s1,8738
-9d002410:	22222222 	addi	v0,s1,8738
-9d002414:	22222222 	addi	v0,s1,8738
+9d002438 <.dinit>:
+9d002438:	00000000 	nop
+9d00243c:	22222222 	addi	v0,s1,8738
+9d002440:	22222222 	addi	v0,s1,8738
+9d002444:	22222222 	addi	v0,s1,8738
 
 Disassembly of section .text._on_reset:
 
-9d002418 <_on_reset>:
-9d002418:	03e00008 	jr	ra
-9d00241c:	00000000 	nop
+9d002448 <_on_reset>:
+9d002448:	03e00008 	jr	ra
+9d00244c:	00000000 	nop
 
 Disassembly of section .text._on_bootstrap:
 
-9d002420 <_on_bootstrap>:
-9d002420:	03e00008 	jr	ra
-9d002424:	00000000 	nop
+9d002450 <_on_bootstrap>:
+9d002450:	03e00008 	jr	ra
+9d002454:	00000000 	nop
