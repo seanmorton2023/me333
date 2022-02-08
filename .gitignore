@@ -3167,3 +3167,6 @@ hw3/pic32-libs/pic32m-libs/pic32m-libs/proc/USB72XXA0/pUSB72XXA0_div.S
 hw3/pic32-libs/pic32m-libs/pic32m-libs/proc/USB72XXA0/pUSB72XXA0_pic.ld
 hw3/pic32-libs/pic32m-libs/pic32m-libs/proc/XC32.LanguageToolSuite
 *.mp4
+.vs/22W_MECH_ENG_333/v16/.suo
+.vs/22W_MECH_ENG_333/v16/Browse.VC.db
+.vs/slnx.sqlite

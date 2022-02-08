@@ -22,7 +22,10 @@ For each datatype, test out x3 = x1<op>x2, where
 a) Combinations of datatypes and operations that cause a jump to a 
 	subroutine:
 	
-	- Division of a long long double:
+	- Float math: addition, subtraction, multiplication, division
+	- Double-precision: addition, subtraction, multiplication, division
+	
+	- Division of a long long double: example shown below
 		j4 = j2 / j3;
 		9d002fc4:	8f828020 	lw	v0,-32736(gp)
 		9d002fc8:	8f838024 	lw	v1,-32732(gp)
@@ -33,10 +36,11 @@ a) Combinations of datatypes and operations that cause a jump to a
 		9d002fdc:	00402025 	move	a0,v0
 		9d002fe0:	00602825 	move	a1,v1
 		9d002fe4:	0f4008ae 	jal	9d0022b8 <__divdi3>
-		...
+		9d002fe8:	00000000 	nop
+		9d002fec:	af828060 	sw	v0,-32672(gp)
+		9d002ff0:	af838064 	sw	v1,-32668(gp)
+				
 		
-	- Float math: addition, subtraction, multiplication, division
-	- Double-precision: addition, subtraction, multiplication, division
 	
 b) In cases where there isn't a jump to a subroutine, these are
 	the fastest ways to execute commands, in terms of lines of XC32 Assembly:
@@ -49,9 +53,21 @@ b) In cases where there isn't a jump to a subroutine, these are
 		- Fastest: int * (4 lines)
 		- Slowest: long * (14 lines)
 		
+	In char math, the extra Assembly commands are there to convert
+	the char datatype to ints, then carry out the math. The "andi 
+	v1, v0, 0xFF"-like commands are there to take an int, and then apply
+	a bitwise AND to store the 8 bits of a char into the int.
+		
 c) 
 
-Table: attach later
+Table: ratio of execution time to execution time of fastest datatype
+
+ ____| char   | int    | long long | float | long double }
+  +  | 2.0(8) | 1.0(4) | 2.8(11)   | J     | J           |
+  -  | 2.0(8) | 1.0(4) | 2.8(11)   | J     | J           |
+  *  | 2.0(8) | 1.0(4) | 3.5(14)   | J     | J           |
+  /  | 1.3(9) | 1.0(7) | J         | J     | J           |
+
 
 
 d) Math subroutine: code for long double division
@@ -280,7 +296,7 @@ Sub-priority: IPC2<25:24>
 IEC0SET = 0b1 << 11; //enable INT2 interrupt
 IFS0CLR = 0b1 << 11; //set flag status to 0
 IPC2SET = 0x3 << 26; //set priority to 3
-IPC2SET = 0x2 <<  24; //set subpriority to 2\
+IPC2SET = 0x2 <<  24; //set subpriority to 2
 
 INTCONSET = 0b1 << 2; //using INT2EP, set polarity control so that
 						it is triggered on a rising edge (1 = rising edge)
@@ -291,7 +307,7 @@ _____________________
 the SFRs. In other words, the left-hand sides of the statements should use a form similar to 
 that used in step 5, except using INTCONbits, IPC0bits, and IEC0bits.
 
-See INT_timing code
+See INT_timing.c code
 _____________________
 
 16. Modify Code Sample 6.2 (INT_ext_int.c) so the USER button is debounced. How can you change 
@@ -310,8 +326,10 @@ _CP0_SET_COUNT(0);
 while(_CP0_GET_COUNT() < 400,000) {;}
 
 This delay "debounces" the switch press. This code is already implemented in the version
-of INT_ext_int.c so I didn't modify it. The only difference: the provided code uses a
-delay of 0.25s, or 10M core timer ticks.
+of INT_ext_int.c The only difference: the provided code uses a delay of 0.25s, or 10M 
+core timer ticks, so I changed this delay to 10ms / 400k count.
+
+(see INT_ext_int)
 
 _____________________
 
@@ -337,3 +355,8 @@ timer’s rollover time.
 You could also try using polling in your main function to write out the current elapsed
 time (when the program is in the “timing state”) to the user’s screen every second so the
 user can see the running time.
+
+__
+
+see stopwatch.c code
+__

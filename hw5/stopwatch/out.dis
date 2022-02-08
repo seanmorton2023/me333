@@ -503,7 +503,7 @@ Disassembly of section .rodata:
 9d001e70:	6e696d69 	0x6e696d69
 9d001e74:	0a0d2e67 	j	9834b99c <_bmxdudba_address+0x9832b99c>
 9d001e78:	0c000000 	jal	90000000 <_bmxdudba_address+0x8ffe0000>
-9d001e7c:	4a742400 	c2	0x742400
+9d001e7c:	4b189680 	c2	0x1189680
 9d001e80:	004e614e 	0x4e614e
 9d001e84:	666e492d 	0x666e492d
 9d001e88:	00000000 	nop
@@ -3122,9 +3122,9 @@ Disassembly of section .text.fp32div:
 Disassembly of section .text:
 
 9d004328 <Ext2ISR>:
-  NU32_LED2 = 1;
-  IFS0bits.INT0IF = 0;            // clear interrupt flag IFS0<3>
-} */
+static char writestring[MAX_LEN];
+int sec = 40000000; //in core timer counts
+
 
 //ISR for taking an interrupt from the button press from INT2
 void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
@@ -3159,8 +3159,8 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
 		timing = 1;
 9d004384:	24020001 	li	v0,1
 9d004388:	af828020 	sw	v0,-32736(gp)
+		NU32_WriteUART3("Press USER button to begin timing.\r\n");
 		timing = 0;
-		
 	}
 	
 	//set the flag status back to 0
@@ -3170,13 +3170,13 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
 9d004394:	7c035ac4 	ins	v1,zero,0xb,0x1
 9d004398:	ac431030 	sw	v1,4144(v0)
 	
-	//delay for debounce. wait for 100ms after the button press
+	//delay for debounce. wait for 250ms after the button press
 	count = _CP0_GET_COUNT();
 9d00439c:	40044800 	mfc0	a0,c0_count
 9d0043a0:	0f401575 	jal	9d0055d4 <__floatunsisf>
 9d0043a4:	00000000 	nop
 9d0043a8:	af82801c 	sw	v0,-32740(gp)
-	while (_CP0_GET_COUNT() < count + 4000000) {;} 
+	while (_CP0_GET_COUNT() < count + 10000000) {;} 
 9d0043ac:	3c029d00 	lui	v0,0x9d00
 9d0043b0:	8c521e7c 	lw	s2,7804(v0)
 9d0043b4:	40044800 	mfc0	a0,c0_count
@@ -3255,11 +3255,7 @@ int main(void) {
   __builtin_disable_interrupts(); // step 2: disable interrupts
 9d0044a0:	41626000 	di	v0
 9d0044a4:	000000c0 	ehb
-  IEC0bits.INT0IE = 1;            // step 6: enable INT0 by setting IEC0<3>
-  __builtin_enable_interrupts();  // step 7: enable interrupts
-                                  // Connect RD7 (USER button) to INT0 (RD0)
-								   */
-		
+  
 	INTCONbits.INT2EP = 0; //falling edge
 9d0044a8:	3c02bf88 	lui	v0,0xbf88
 9d0044ac:	8c431000 	lw	v1,4096(v0)
