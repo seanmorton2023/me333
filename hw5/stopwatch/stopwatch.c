@@ -1,10 +1,12 @@
 #include "NU32.h"          // constants, funcs for startup and UART
-#define MAX_LEN 100;
+#include <stdio.h>
+#define MAX_LEN 100
 
 //global variable to determine whether our button was pressed to start timing
 static volatile int timing = 0;
 static volatile float count;
-static volatile char[MAX_LEN] writestring;
+static char writestring[MAX_LEN];
+int sec = 40000000; //in core timer counts
 
 /* void __ISR(_EXTERNAL_0_VECTOR, IPL2SOFT) Ext0ISR(void) { // step 1: the ISR
   NU32_LED1 = 0;                  // LED1 and LED2 on
@@ -22,7 +24,7 @@ static volatile char[MAX_LEN] writestring;
 void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
 	
 	//if button was pressed to start timing, clear core timer and start the count
-	if (timing = 0) {
+	if (timing == 0) {
 		_CP0_SET_COUNT(0);
 		NU32_WriteUART3("Press USER button to stop timing.\r\n");
 		timing = 1;
@@ -30,18 +32,19 @@ void __ISR(_EXTERNAL_2_VECTOR, IPL6SRS) Ext2ISR(void) {
 	//if button was pressed to access time, get the count and revert back
 	} else {
 		count = _CP0_GET_COUNT();
-		sprintf(writestring, "Current count of the clock: %.3f \r\n\n",count);
+		sprintf(writestring, "Current count of the clock: %.3f seconds \r\n\n",count/sec);
 		NU32_WriteUART3(writestring);
-		timing = 0;
 		NU32_WriteUART3("Press USER button to begin timing.\r\n");
+		timing = 0;
 		
 	}
 	
 	//set the flag status back to 0
 	IFS0bits.INT2IF = 0;
 	
-	//delay for debounce. wait for 10ms after the button press
-	while (_CP0_GET_COUNT() < count + 400000) {;} 
+	//delay for debounce. wait for 100ms after the button press
+	count = _CP0_GET_COUNT();
+	while (_CP0_GET_COUNT() < count + 4000000) {;} 
 }
 
 
