@@ -1,0 +1,80 @@
+Sean Morton
+ME333
+2/12/22
+
+
+
+
+Chapter 24.1.2, 24.2.1 and 2, 24.3.1 and 2.
+
+24.1 Wiring and Testing the Circuit
+1. LED diode drop. Connect the LED anode to 3.3 V, the cathode to a 330  resistor, and
+the other end of the resistor to ground. This is the LED at its maximum brightness. Use
+your multimeter to record the forward bias voltage drop across the LED. Calculate or
+measure the current through the LED. Is this current safe for the PIC32 to provide?
+
+2. Choose R. Wire the circuit as shown in Figure 24.2, except for the connection
+from the LED to OC1. The LED and phototransistor should be pointing toward each
+other, with approximately one inch separation, as shown in Figure 24.4. Now choose R to
+be as small as possible while ensuring that the voltage Vout at the phototransistor emitter is
+close to 3 V when the LED anode is connected to 3.3 V (maximum LED brightness) and
+close to 0 V when the LED anode is disconnected (the LED is off). (Something in the
+10 k range may work, but use a smaller resistance if you can still get the same voltage
+swing.) Record your value of R. Now connect the anode of the LED to OC1 for the rest of
+the project.
+
+
+_____
+
+24.2 Powering the LED with OC1
+1. PWM calculation. You will use Timer3 as the timer base for OC1. You want a 20 kHz
+PWM on OC1. Timer3 takes the PBCLK as input and uses a prescaler of 1. What should
+PR3 be?
+
+PBCLK = 80MHz
+PWM = 20kHz
+
+PWM = PBCLK / PRE / PR
+PR = PBCLK/PWM/PRE
+PR = 80E6 / 20E3 / 1
+PR = 4000
+
+We should set PR3 to 4000. This is less than 65,000 so it's a reasonable value.
+
+_____
+
+
+2. PWM program. Write a program that uses your previous result to create a 20 kHz PWM
+output on OC1 (with no fault pin) using Timer3. Set the duty cycle to 75%. Get the
+following screenshots from your oscilloscope:
+
+a. The OC1 waveform. Verify that this waveform matches your expectations.
+
+b. The sensor voltage Vout.
+
+Components I used:
+ - bright red LED
+ - phototransistor
+ - 300 Ohm resistor hooked up to LED anode
+ - 1M Ohm resistor hooked up to phototransistor emitter. got 
+	V_R to be very close to 3.3V using this
+ - 3.3V and GND hooked up to PIC32, not to NScope
+ - 102 capacitor for damping oscillations
+
+
+c. Now remove the 1 µF capacitor and get another screenshot of Vout. Explain the
+difference from the previous waveform.
+
+The difference between V_out with the capacitor, versus without, is that Vout is
+a fairly noisy signal without the capacitor. This could be due to oscillations from
+the wall current, or due to oscillations due to other things hooked up to the PIC32.
+The capacitor damps the oscillations and "averages" out the variability of the signal.
+
+
+Insert the 1 µF capacitor back into the circuit for the rest of the project.
+
+_____
+
+24.3
+
+See textbook
