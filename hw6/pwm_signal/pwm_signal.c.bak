@@ -1,6 +1,6 @@
 
 #include "NU32.h"
-#define NUMSAMPS = 1000;
+#define NUMSAMPS 1000
 static volatile int Waveform[NUMSAMPS];
 
 
@@ -17,11 +17,11 @@ void makeWaveform() {
 
 }
 
-void _ _ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) { // _TIMER_2_VECTOR = 8
+void __ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) { // _TIMER_2_VECTOR = 8
 	static int counter = 0; // initialize counter once
 	
 	// insert line(s) to set OC1RS
-	OC1RS = Waveform[i];
+	OC1RS = Waveform[counter];
 	
 	counter++; // add one to counter every time ISR is entered
 	if (counter == NUMSAMPS) {
@@ -37,18 +37,20 @@ void _ _ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) { // _TIMER_2_VECTOR = 8
 int main(void) {
 
 	NU32_Startup();
+	__builtin_disable_interrupts();
+	
+	makeWaveform();
 	
 	//setup timer2 interrupt
-	IEC0bits.T2IE = 1;
 	IFS0bits.T2IF = 0;
-	
+	IPC2bits.T2IP = 5;
+	IPC2bits.T2IS = 0;
 	
 	
 	//configure timer2 for the waveform ISR
-	TC2CONbits.TCKPS = 0b110; //prescaler of 64
+	T2CONbits.TCKPS = 0b110; //prescaler of 64
 	PR2 = 1249; //to get ISR frequency of 1kHz
 	TMR2 = 0;
-	
 	
 	//setup timer 3 prescaler and period
 	T3CONbits.TCKPS = 000; //prescaler of 1
@@ -68,6 +70,8 @@ int main(void) {
 	T2CONbits.ON = 1;
 	T3CONbits.ON = 1;
 	OC1CONbits.ON = 1;
+
+	__builtin_enable_interrupts();
 
 	//75% duty cycle
 	while (1) {
