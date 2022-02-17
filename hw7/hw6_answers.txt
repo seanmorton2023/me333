@@ -1,0 +1,137 @@
+Sean Morton
+ME333
+2/12/22
+
+Homework 6
+
+Chapter 24.1.2, 24.2.1 and 2, 24.3.1 and 2.
+
+_____________________
+
+24.1 Wiring and Testing the Circuit
+
+1. LED diode drop. Connect the LED anode to 3.3 V, the cathode to a 330  resistor, and
+the other end of the resistor to ground. This is the LED at its maximum brightness. Use
+your multimeter to record the forward bias voltage drop across the LED. Calculate or
+measure the current through the LED. Is this current safe for the PIC32 to provide?
+
+Forward bias voltage drop across (bright red) LED: 1.853V
+Voltage drop across 330 Ohm resistor: 1.405V
+Current through each: I = V_r/R = 1.405V / 330 Ohm = 4.25mA
+
+This current is safe for the PIC32 to provide, as the max safe current to output from the
+PIC32 is between 10mA (for standard VOH/VOL pins, according to the datasheet) and 22mA (for 
+non-standard VOH1 pins).
+
+_____
+
+2. Choose R. Wire the circuit as shown in Figure 24.2, except for the connection
+from the LED to OC1. The LED and phototransistor should be pointing toward each
+other, with approximately one inch separation, as shown in Figure 24.4. Now choose R to
+be as small as possible while ensuring that the voltage Vout at the phototransistor emitter is
+close to 3 V when the LED anode is connected to 3.3 V (maximum LED brightness) and
+close to 0 V when the LED anode is disconnected (the LED is off). (Something in the
+10 k range may work, but use a smaller resistance if you can still get the same voltage
+swing.) Record your value of R. Now connect the anode of the LED to OC1 for the rest of
+the project.
+
+I increased R up to 1M Ohms, and only then did the phototransistor output close
+to 3V when the LED was hooked up to 3.3V. This may be a bit high, especially if 
+this circuit connects back into the PIC32 (low Z feeds high Z? if this is an issue,
+this light sensor circuit definitely is not low Z)
+
+
+__________________________
+
+24.2 Powering the LED with OC1
+
+1. PWM calculation. You will use Timer3 as the timer base for OC1. You want a 20 kHz
+PWM on OC1. Timer3 takes the PBCLK as input and uses a prescaler of 1. What should
+PR3 be?
+
+PBCLK = 80MHz
+PWM = 20kHz
+
+PWM = PBCLK / PRE / PR
+PR = PBCLK/PWM/PRE
+PR = 80E6 / 20E3 / 1
+PR = 4000
+
+We should set PR3 to 4000. This is less than 65,000 so it's a reasonable value. 
+
+_____
+
+2. PWM program. Write a program that uses your previous result to create a 20 kHz PWM
+output on OC1 (with no fault pin) using Timer3. Set the duty cycle to 75%. Get the
+following screenshots from your oscilloscope:
+
+a. The OC1 waveform. Verify that this waveform matches your expectations.
+
+See attached images
+
+b. The sensor voltage Vout.
+
+See attached
+
+Components I used:
+ - bright red LED
+ - phototransistor
+ - 300 Ohm resistor hooked up to LED anode
+ - 1M Ohm resistor hooked up to phototransistor emitter. got 
+	V_R to be very close to 3.3V using this
+ - 3.3V and GND hooked up to PIC32, not to NScope
+ - 102 capacitor for damping oscillations
+
+
+c. Now remove the 1 µF capacitor and get another screenshot of Vout. Explain the
+difference from the previous waveform.
+
+The difference between V_out with the capacitor, versus without, is that Vout is
+a fairly noisy signal without the capacitor. This could be due to oscillations from
+the wall current, or due to oscillations due to other things hooked up to the PIC32.
+The capacitor damps the oscillations and "averages" out the variability of the signal.
+
+(see attached image)
+
+Insert the 1 µF capacitor back into the circuit for the rest of the project.
+
+_____________________
+
+24.3
+
+Now you will modify your program to generate a waveform stored in an int array. This array
+will eventually be the reference brightness waveform for your feedback controller (the square
+wave in Figure 24.1), but not yet; here this array will represent a PWM duty cycle as a
+function of time. Modify your program to deIne a constant NUMSAMPS and the global volatile
+int array Waveform by putting the following code near the top of the C Ile (outside of main):
+
+#define NUMSAMPS 1000 // number of points in waveform
+static volatile int Waveform[NUMSAMPS]; // waveform
+
+Then create a function makeWaveform() to store a square wave in Waveform[] and call
+it near the beginning of main. The square wave has amplitude A centered about the value
+center. Initialize center as (PR3+1)/2 and A as for the PR3 you calculated in the previous
+section.
+
+
+Now configure Timer2 to call an ISR at a frequency of 1 kHz.
+
+In addition to clearing the interrupt flag (which we did not show in our example), your
+Controller ISR should set OC1RS to be equal to Waveform[counter]. Since your ISR is called
+every 1 ms, and the period of the square wave in Waveform[] is 1000 cycles, your PWM duty
+cycle will undergo one square wave period every 1 s. You should see your LED become bright
+and dim once per second.
+
+1. Get a screenshot of your oscilloscope trace of Vout showing 2-4 periods of what should be
+an approximately square-wave sensor reading.
+2. Turn in your code.
+
+_____
+
+
+NOTES: the 102 capacitor causes the time constant to be a little too slow: it takes
+about 2ms for the voltage across the 1M ohm resistor to transition from 0V to 3.3V.
+This means I need to decrease the time constant tau = RC, which I could do with a 101 capacitor.
+
+Since I can't get a good Vout with this phototransistor with less than 1M Ohms, I
+suspect I may need to get a different phototransistor.

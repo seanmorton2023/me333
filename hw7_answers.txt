@@ -1,0 +1,51 @@
+Sean Morton
+ME333
+Homework 7
+
+Chapter 24.5, 24.7, and 24.8. Make a demo video for 24.8 for the Demonstration assignment.
+
+_____
+
+24.5 Plotting Data in MATLAB
+Now that you have MATLAB communication working, you will build on your code from
+Section 24.3 by sending your controller’s reference and sensed ADC data to MATLAB for
+plotting. This information will help you see how well your controller is working, allowing you
+to tune the PI gains empirically.
+
+Nick mentioned that he might want us to do this in Python instead. I'll confirm with him
+in class--seemed like he wanted us to use pyserial and matplotlib
+
+_____
+
+24.7 Reading the ADC
+
+1. Read the ADC value in your ISR, just before the if (StoringData) line of code. The
+value should be called adcval, so it will be stored in ADCarray. Turn in a MATLAB plot
+showing the measured ADCarray and the REFArray. You may wish to use manual sampling
+and automatic conversion to read the ADC.
+
+_____
+
+24.8 PI Control
+
+Now you will implement the PI controller. Change makeWaveform so that center is 500 and the
+amplitude A is 300, making a square wave swinging between 200 and 800. This waveform is
+now the desired brightness of the LED, in ADC counts. Use the adcval read from the ADC
+and the reference waveform as inputs to the PI controller. Call u the output of the PI controller.
+
+The output u may be positive or negative, but the PWM duty cycle can only be between 0 and
+PR3. If we treat the value u as a percentage, we can make it centered at 50% by adding 50 to
+the value, then saturate it at 0% and 100%, by the following code:
+
+Finally we must convert the control effort unew into a value in the range 0 to PR3 so that it can
+be stored in OC1RS:
+
+OC1RS = (unsigned int) ((unew/100.0) * PR3);
+
+We recommend that you deIne the integral of the control error, Eint, as a global static
+volatile int. Then reset Eint to zero in main every time a new Kp and Ki are received from
+MATLAB. This ensures that this new controller starts fresh, without a potentially large error
+integral from the previous controller.
+
+1. Using your MATLAB interface, tune your gains Kp and Ki until you get good tracking of
+the square wave reference. Turn in a plot of the performance.
