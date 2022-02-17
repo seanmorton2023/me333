@@ -1,0 +1,51 @@
+Building the MPLAB XC32 Libraries
+
+Requirements:
+- MPLAB XC32 with both tools and peripheral library source installed
+- MSYS (MinGW - Minimal SYStem) [http://www.mingw.org/msys.shtml]
+- Knowledge of Bash
+
+The following steps document how to build the libraries provided with
+MPLAB XC32.  Steps 1-8 are only required the first time:
+ 1) Install MPLAB XC32
+ 2) Download MSYS from http://www.mingw.org/download.shtml
+ 3) Install MSYS 
+ 4) Start MSYS 
+ 5) Make an mplab-xc32 directory at the root
+    $ mkdir /mplab-xc32
+ 6) Edit /etc/fstab (c:\msys\1.0\etc\fstab) by adding the line below 
+    to define a new mount point
+    (NOTE 1:  This assumes you installed the tools in the standard
+    installation directory.  The DOS short path is required.  Use dir /x
+    to show short path names.)
+    (NOTE 2: There MUST be at least one blank between the DOS pathname and
+
+    the MSYS mount point.)
+
+    (NOTE 3: The path might vary because of the 64 bit platform and/or the 
+    new location for MPLAB XC32 installation)
+
+    examples:
+
+    32 bit:
+    c:/PROGRA~1/MICROC~1/MPLABX~1            /mplab-xc32
+    or
+    c:/PROGRA~1/MICROC~1/mplabxc32/v1.00      /mplab-xc32
+
+    64 bit:
+    c:/PROGRA~2/MICROC~2/MPLABX~1            /mplab-xc32
+    or
+    c:/PROGRA~2/MICROC~2/mplabxc32/v1.00      /mplab-xc32
+
+ 7) Save /etc/fstab
+ 8) Exit MSYS
+ 9) Restart MSYS to add the new mount point
+10) Add /mplab-xc32/bin to your path
+    $ export PATH=/mplab-xc32/bin:$PATH
+11) Change to the library source directory
+    $ cd /mplab-xc32/pic32-libs/peripheral
+    - It would be a good idea to make a backup of this folder, in case the compilation fails
+12) Run make utility
+    $ make SUBDIRS=peripheral
+13) Install the libraries into MPLAB XC32 directory structure
+    $ make DESTROOT=/mplab-xc32 install
