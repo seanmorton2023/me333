@@ -1,42 +1,38 @@
 
 #include "NU32.h"
+#include <stdio.h>
+
 #define NUMSAMPS 1000
 #define PLOTPTS 200
 #define DECIMATION 10
+#define MAXSIZE 100
 
 //arrays for storing + plotting wave data
 static volatile int Waveform[NUMSAMPS];
 static volatile int ADCarray[NUMSAMPS];
-static volatile int REFarray[NUMPSAMPS];
+static volatile int REFarray[NUMSAMPS];
 
 static volatile int StoringData = 0;
 static volatile float Kp = 0, Ki = 0;
 
-void makeWaveform() {
-	
-	//waveform should be between 0 and PR--determines the 
-	//PWM duty cycle at any given time to create an "analog" square
-	//wave of variable peak/valley values
-	
-	int i = 0, center = 600, A = 300; // square wave, fill in center value and amplitude
-	for (i = 0; i < NUMSAMPS; ++i) {
-		if ( i < NUMSAMPS/2) {
-			Waveform[i] = center + A;
-		} else {
-			Waveform[i] = center - A;
-		}
-	}
+static float kitemp, kptemp;
+static char message[MAXSIZE];
+static volatile int adcval = 0;
 
-}
+unsigned int adc_sample_convert(int pin);
+void makeWaveform();
 
-void _ _ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) {
+
+void __ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) {
 	static int counter = 0; // initialize counter once
 	static int plotind = 0; // index for data arrays; counts up to PLOTPTS
 	static int decctr = 0; // counts to store data one every DECIMATION
-	static int adcval = 0; //
 	
 	// insert line(s) to set OC1RS
 	OC1RS = Waveform[counter]; //for now--later there will be PID control
+	
+	//read value from analog input pin
+	adcval = ADC1BUF0;
 	
 	if (StoringData) {
 		decctr++;
@@ -97,8 +93,8 @@ int main(void) {
 	//setup pin RB5/AN5 as an analog input
 	TRISBbits.TRISB5 = 1; //input
 	AD1PCFGbits.PCFG5 = 0; //analog
-	
-	
+	AD1CON1bits.ON = 1; //turn on ADC
+	AD1CON1bits.FORM = 0b000; //16 bit output
 	
 	//turn it on and see what we get
 	T2CONbits.ON = 1;
@@ -113,21 +109,56 @@ int main(void) {
 		NU32_ReadUART3(message, sizeof(message)); // wait for a message from MATLAB
 		sscanf(message, "%f %f" , &kptemp, &kitemp);
 		
-		_ _builtin_disable_interrupts(); // keep ISR disabled as briefly as possible
+		__builtin_disable_interrupts(); // keep ISR disabled as briefly as possible
 		Kp = kptemp; // copy local variables to globals used by ISR
 		Ki = kitemp;
-		_ _builtin_enable_interrupts(); // only 2 simple C commands while ISRs disabled
+		__builtin_enable_interrupts(); // only 2 simple C commands while ISRs disabled
 		
 		StoringData = 1; // message to ISR to start storing data
 		while (StoringData) { // wait until ISR says data storing is done
 		; // do nothing
 		}
-		for (i=0; i<PLOTPTS; i++) { // send plot data to MATLAB
+		for (int j=0; j<PLOTPTS; j++) { // send plot data to MATLAB
 			// when first number sent = 1, MATLAB knows we’re done
-			sprintf(message, "%d %d %d\r\n", PLOTPTS-i, ADCarray[i], REFarray[i]);
+			sprintf(message, "%d %d %d\r\n", PLOTPTS-j, ADCarray[j], REFarray[j]);
 			NU32_WriteUART3(message);
-	}
+		}
 	}
 
+
+}
+
+unsigned int adc_sample_convert(int pin) { // sample & convert the value on the given 
+                                           // adc pin the pin should be configured as an 
+                                           // analog input in AD1PCFG
+    unsigned int elapsed = 0, finish_time = 0;
+    AD1CHSbits.CH0SA = pin;                // connect chosen pin to MUXA for sampling
+    AD1CON1bits.SAMP = 1;                  // start sampling
+    elapsed = _CP0_GET_COUNT();
+    finish_time = elapsed + SAMPLE_TIME;
+    while (_CP0_GET_COUNT() < finish_time) { 
+      ;                                   // sample for more than 250 ns
+    }
+    AD1CON1bits.SAMP = 0;                 // stop sampling and start converting
+    while (!AD1CON1bits.DONE) {
+      ;                                   // wait for the conversion process to finish
+    }
+    return ADC1BUF0;                      // read the buffer with the result
+}
+
+void makeWaveform() {
+	
+	//waveform should be between 0 and PR--determines the 
+	//PWM duty cycle at any given time to create an "analog" square
+	//wave of variable peak/valley values
+	
+	int i = 0, center = 600, A = 300; // square wave, fill in center value and amplitude
+	for (i = 0; i < NUMSAMPS; ++i) {
+		if ( i < NUMSAMPS/2) {
+			Waveform[i] = center + A;
+		} else {
+			Waveform[i] = center - A;
+		}
+	}
 
 }
