@@ -6,6 +6,8 @@
 #define PLOTPTS 200
 #define DECIMATION 10
 #define MAXSIZE 100
+#define SAMPLE_TIME 10       // 10 core timer ticks = 250 ns
+
 
 //arrays for storing + plotting wave data
 static volatile int Waveform[NUMSAMPS];
@@ -32,7 +34,7 @@ void __ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) {
 	OC1RS = Waveform[counter]; //for now--later there will be PID control
 	
 	//read value from analog input pin
-	adcval = ADC1BUF0;
+	adcval = adc_sample_convert(5);
 	
 	if (StoringData) {
 		decctr++;
@@ -93,8 +95,9 @@ int main(void) {
 	//setup pin RB5/AN5 as an analog input
 	TRISBbits.TRISB5 = 1; //input
 	AD1PCFGbits.PCFG5 = 0; //analog
-	AD1CON1bits.ON = 1; //turn on ADC
 	AD1CON1bits.FORM = 0b000; //16 bit output
+	AD1CON1bits.ON = 1; //turn on ADC
+
 	
 	//turn it on and see what we get
 	T2CONbits.ON = 1;

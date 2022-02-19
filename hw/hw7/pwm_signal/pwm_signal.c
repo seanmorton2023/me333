@@ -34,7 +34,7 @@ void __ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) {
 	OC1RS = Waveform[counter]; //for now--later there will be PID control
 	
 	//read value from analog input pin
-	adcval = ADC1BUF0;
+	adcval = adc_sample_convert(5);
 	
 	if (StoringData) {
 		decctr++;
@@ -95,8 +95,9 @@ int main(void) {
 	//setup pin RB5/AN5 as an analog input
 	TRISBbits.TRISB5 = 1; //input
 	AD1PCFGbits.PCFG5 = 0; //analog
-	AD1CON1bits.ON = 1; //turn on ADC
 	AD1CON1bits.FORM = 0b000; //16 bit output
+	AD1CON1bits.ON = 1; //turn on ADC
+
 	
 	//turn it on and see what we get
 	T2CONbits.ON = 1;
@@ -154,7 +155,7 @@ void makeWaveform() {
 	//PWM duty cycle at any given time to create an "analog" square
 	//wave of variable peak/valley values
 	
-	int i = 0, center = 600, A = 300; // square wave, fill in center value and amplitude
+	int i = 0, center = 500, A = 300; // square wave, fill in center value and amplitude
 	for (i = 0; i < NUMSAMPS; ++i) {
 		if ( i < NUMSAMPS/2) {
 			Waveform[i] = center + A;
