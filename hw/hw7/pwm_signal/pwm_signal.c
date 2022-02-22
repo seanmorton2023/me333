@@ -9,32 +9,53 @@
 #define SAMPLE_TIME 10       // 10 core timer ticks = 250 ns
 
 
-//arrays for storing + plotting wave data
+//arrays for storing + plotting wave data; communicating with UART
 static volatile int Waveform[NUMSAMPS];
 static volatile int ADCarray[NUMSAMPS];
 static volatile int REFarray[NUMSAMPS];
+static char message[MAXSIZE];
 
+//PI controller variables
 static volatile int StoringData = 0;
 static volatile float Kp = 0, Ki = 0;
-
 static float kitemp, kptemp;
-static char message[MAXSIZE];
 static volatile int adcval = 0;
+static volatile float u = 50.0, u_new; //initialize PWM at 50%
+static volatile int e; //error (ref - adcval)
+static volatile int eint = 0;
 
+//counter stuff for ISR
+static volatile int counter = 0; // initialize counter once
+static volatile int plotind = 0; // index for data arrays; counts up to PLOTPTS
+static volatile int decctr = 0; // counts to store data one every DECIMATION
+
+//function protoypes
 unsigned int adc_sample_convert(int pin);
 void makeWaveform();
 
 
 void __ISR(_TIMER_2_VECTOR, IPL5SOFT) Controller(void) {
-	static int counter = 0; // initialize counter once
-	static int plotind = 0; // index for data arrays; counts up to PLOTPTS
-	static int decctr = 0; // counts to store data one every DECIMATION
-	
-	// insert line(s) to set OC1RS
-	OC1RS = Waveform[counter]; //for now--later there will be PID control
 	
 	//read value from analog input pin
 	adcval = adc_sample_convert(5);
+	
+	// insert line(s) to set OC1RS
+	// OC1RS = Waveform[counter]; //for now--later there will be PID control
+	
+	//P control: make u_new related to U first
+	e = Waveform[counter] - adcval;
+	u_new = u + Kp * e + Ki * eint;            
+	
+	if (u_new > 100.0) {
+		u_new = 100.0;
+	} else if (u_new < 0.0) {
+		u_new = 0.0;
+	}
+	
+	//transform % duty cycle into a new value of oc1rs
+	OC1RS = (unsigned int) (u_new / 100)* (PR3 + 1);
+	u = u_new; //for next loop of cycle
+	eint += e;
 	
 	if (StoringData) {
 		decctr++;
@@ -87,8 +108,8 @@ int main(void) {
 	OC1CONbits.OC32 = 0; //32 bit timer off
 	
 	//set OC1R and OC1RS to create periodic signal
-	OC1R = 3000;
-	OC1RS = 3000; //75% of (PR = 1500)
+	OC1R = 2000;
+	OC1RS = 2000; //50% of (PR = 4000)
 	
 	//-----------//
 	
@@ -115,6 +136,7 @@ int main(void) {
 		__builtin_disable_interrupts(); // keep ISR disabled as briefly as possible
 		Kp = kptemp; // copy local variables to globals used by ISR
 		Ki = kitemp;
+		eint = 0;
 		__builtin_enable_interrupts(); // only 2 simple C commands while ISRs disabled
 		
 		StoringData = 1; // message to ISR to start storing data

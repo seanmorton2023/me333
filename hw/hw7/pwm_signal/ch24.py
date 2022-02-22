@@ -9,7 +9,9 @@ ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ')
 print(ser.name)
 
-ser.write(b'1.0 1.0\n') # Kp Ki
+#ser.write(b'0.01 0.0001\n') # Kp Ki, good gains
+ser.write(b'1.0 0.1\n') # Kp Ki, bad gains
+
 
 sampnum = 0
 read_samples = 10
