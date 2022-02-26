@@ -1,0 +1,96 @@
+Sean Morton
+ME333 HW8
+
+28.4.9 PWM and the H-Bridge
+In this section you will implement the menu items “f” (Set PWM (-100 to 100)) and “p”
+(Unpower the motor).
+
+By now you should have control of both the current sensor and the encoder. The next step is to
+provide low-level motor control. First you will implement part of the software associated with
+the current control loop. Next you will connect the H-bridge and the motor. When you finish
+this section you will be able to control the motor PWM signal from the client.
+
+
+1. The current controller uses a timer for the 5 kHz ISR, another timer and an output
+compare to generate a 20 kHz PWM signal, and a digital output to control the motor
+direction. Write a PIC32 function that initializes these peripherals and call it from main.
+
+2. Write the 5 kHz ISR. It should set the PWM duty cycle to 25% and invert the motor
+direction digital output. Look at the digital output and the PWM output on an oscilloscope
+and confirm that you see a 2.5 kHz “heartbeat” square wave for the ISR and a 25% duty
+cycle 20 kHz PWM signal. Remember to clear the interrupt flag.
+
+
+3. Now modify the ISR to choose the PWM duty cycle and direction bit depending on the
+operating mode. You should use a switch-case construct, similar to the switch–case in
+main, except the value in question here is the operating mode, as returned by the
+mode-querying function developed in Section 28.4.6. There will eventually be five modes
+to handle—IDLE, PWM, ITEST, HOLD, and TRACK—but in this section we focus on
+IDLE and PWM. If the operating mode is IDLE, the PWM duty cycle and direction bit
+should put the H-bridge in brake mode. If the operating mode is PWM, the duty cycle and
+direction bit are set according to the value −100 to 100 speciUed by the user through the
+client. This leads to the next action item. . .
+
+
+4. Implement the menu item “f” (Set PWM (-100 to 100)). The PIC32 switches to PWM
+mode, and in this mode the 5 kHz ISR creates a 20 kHz PWM pulse train of the speciUed
+duty cycle and a digital output with the correct direction bit.
+
+5. Implement the menu item “p” (Unpower the motor). The PIC32 switches to IDLE mode.
+
+6. Test whether the mode is being changed properly in response to the new “f” and “p”
+commands by using the menu item “r” (Get mode).
+
+7. Set the PWM to 80%. Verify the duty cycle with an oscilloscope and record the value of
+the direction pin. Then set the PWM to −40%. Verify the new duty cycle and that the
+direction pin has changed.
+
+8. Now that the PWM output appears to be working, it is time to wire up the DRV8835
+H-bridge circuit, as discussed in Chapter 27.1.1, to the motor and the PIC32 outputs
+(Figure 28.8). Notice that the 15 m resistor on the current-sense PCB is in series with
+the motor. Turn in a circuit diagram showing all connections of the H-bridge to the
+NU32, motor, and current sensor PCB.
+
+_____
+
+9. Verify the following:
+
+a. Set the PWM to 100%. Make sure that the motor rotates counterclockwise, that the
+angle returned by the encoder is increasing, and that the measured current is positive.
+You may have to swap the motor terminals or the encoder channels if not.
+
+b. Stall the motor at 100% PWM and see that the current is greater than during free
+running, and check that the measured current is consistent with your estimate of the
+resistance of the motor. (Note that the voltage at the H-bridge outputs will be somewhat
+lower than the voltage of the battery, due to voltage drops at the output MOSFETs.)
+
+c. Set the PWM to 50% and make sure that the motor spins slower than at 100%.
+
+d. Repeat the steps above for negative values of PWM.
+
+e. Make sure the motor stops when you issue the “p” (Unpower the motor) command.
+
+f. Attach the bar to the motor to increase the inertia, if it
+was not attached already. Get the motor spinning at its max negative speed with PWM
+set at −100%. Then change the PWM to 100% and quickly query the motor current
+(“a”) several times as the motor slows down and then reverses direction on its way
+to its max positive speed. You should see the motor current is initially very large due
+to the negative back-emf, and drops continuously as the back-emf increases toward
+its maximum positive value (when the motor is at full speed in the forward direction).
+You now have full control of the low-level features of the hardware!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

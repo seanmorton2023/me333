@@ -87,7 +87,7 @@ Motor: self explanatory
 ----> motor position output is read by the encoder
 
 Encoder/tachometer: external circuitboard attached to motor
-
+----> sends position data to PIC32 via SPI communications pins
 
 __
 

@@ -1,0 +1,93 @@
+Sean Morton
+ME333 HW8
+
+
+28.4.7 Current Sensor Wiring and Calibration
+
+The current sensor detects the amount of current flowing through the motor. We use a PCB
+breaking out the MAX9918 current-sense amplifier and an onboard 15 m current-sense
+resistor, as described in Chapter 21.10.1.
+
+In this section, you will first use the information in Chapter 21.10.1 to set up and calibrate
+your current sensor, independent of the NU32 and the motor. The questions refer to the circuit
+in Figure 21.22.
+
+1. Choose the voltage divider resistors R3 to be a few hundred ohms (e.g., 330 ).
+
+_____
+
+2. Find the maximum current you expect to sense. If the H-bridge’s battery voltage is V and
+the motor resistance is Rmotor, then the maximum current you can expect to see is
+approximately Imax = 2V/Rmotor. This occurs when the motor is spinning at no-load
+speed in reverse, with essentially zero current and −V across the motor terminals,
+
+−V = ktωrev → ωrev = −V/kt
+
+and then the control voltage switches suddenly to V, yielding (ignoring inductance)
+
+V = ktωrev + ImaxRmotor → Imax = 2V/Rmotor.
+
+Record your calculated Imax for your battery and motor.
+
+_____
+
+3. Calculate the voltage across the 15 m sense resistor if Imax flows through it. Call this
+Vmax.
+
+4. Choose resistors R1 and R2 so the current-sense ampliUer gain G = 1 + (R2/R1)
+approximately satisfies
+
+1.65 V = G × Vmax.
+
+This ensures that the maximum positive motor current yields a 3.3 V output from the
+current sensor and the maximum negative motor current yields a 0 V output from the
+current sensor, utilizing the full range of the ADC input. Choose R1 and R2 to be in the
+range of 104-106 .
+
+5. Choose a resistor R and a capacitor C to make an RC Ulter on the MAX9918 output with a
+cutoff frequency fc = 1/(2πRC) in the neighborhood of 200 Hz, to suppress
+high-frequency components due to the 20 kHz PWM.
+
+_____
+
+6. Build the circuit as shown in Figure 21.22, but do not connect to the motor or the PIC32.
+You will calibrate the circuit using resistors, an ammeter, and an oscilloscope or voltmeter.
+Figure 28.7 shows how to use a resistor R0 to provide controlled positive and negative test
+currents to the current sensor. You will choose different values of R0 to create test currents
+over the range of likely currents. For example, if you have two 20 resistors, you can use
+them to create an R0 of 20 , 40 (two resistors in series), or 10 (two resistors in
+parallel). If the battery voltage V is 6 V, this results in expected currents of ±300, ±150,
+and ±600 mA, respectively.
+
+
+Important: The calibration resistors must be rated to handle high currents without
+burning up. For example, a 20 resistor with 300 mA through it dissipates
+(300 mA)2(20 ) = 1.8 W, more than a typical 1/4 W resistor can dissipate.
+
+With different resistances R0, use an ammeter to measure the actual current and a
+voltmeter or oscilloscope to measure the output of the current sensor. Fill out a table
+similar to the table below, for your particular resistances and battery. If you
+built your current sensor circuit correctly, zero current should give approximately 1.65 V
+at the sensor output, and the data points (sensor voltage as a function of the measured
+current) should agree with the amplifier gain G you designed. If not, time to fix your
+circuit.
+
+R0 ( ) 	   | Expected I (mA) Measured I (mA) Sensor (V) ADC (counts)
+---------------------------------------------------------------------
+10 (to RS+)|               |                |          |            |  
+20 (to RS+)|               |                |          |            |   
+40 (to RS+)|               |                |          |            |   
+Open circuit 0 0 1.63
+40 (to RS−) |              |                |          |            |
+20 (to RS−) |              |                |          |            |
+10 (to RS−) |              |                |          |            |
+
+
+Leave the column “ADC (counts)” blank; you will fill in that column in the next section.
+As a sanity check, you can replace R0 with your motor, stalled, and make sure that the
+sensor voltage makes sense.
+
+7. Turn in your answers for items 2-6.
+
+
+
