@@ -1,0 +1,283 @@
+Sean Morton
+ME333
+Homework 8
+
+
+First half of Chapter 28, through 28.4.9. 
+Turn in your responses to 28.4.1 #7, 28.4.7 #7, 28.4.9 #8
+
+Make a demo video for the Demonstration assignment.
+
+___________________________
+
+28.4.1 Decisions, Decisions
+
+Before writing any code, you must decide which peripherals you will use in the context of the
+controller block diagram in Figure 27.7. The PIC32 will connect to three external circuit
+boards: the H-bridge, the motor encoder counter, and the motor current sensor. Record your
+answers to the following questions:
+
+1. The NU32 communicates with the encoder counter by an SPI channel. Which SPI channel
+will you use? Which NU32 pins does it use?
+
+I will start by using SPI channel 4--I'm not sure what the difference between 
+SPIxCON and SPIxACON is, but SPI4 is the only channel that doesn't have the extra "a".
+SPI4 uses the following NU32 pins:
+
+ - SS4: ?? (can't find this)
+ - SCK4: pin B14
+ - SDI4: pin F4
+ - SDO4: pin F5
+ 
+--
+
+2. The NU32 reads the MAX9918 current sensor using an ADC input. Which ADC input
+will you use? Which NU32 pin is it?
+
+I will use ADC input AN5. This is pin B5 on the NU32.
+
+--
+
+3. The NU32 controls the DRV8835 H-bridge using a direction bit (a digital output) and
+PWM (an output compare and a timer). Which peripherals will you use, and which NU32
+pins?
+
+Digital output pin: peripheral RD4, or pin D4 on the NU32.
+PWM output compare: OC3, or pin D2 on the NU32
+Timer that the PWM will use: Timer 2
+
+--
+
+4. Which timers will you use to implement the 200 Hz position control ISR and the 5 kHz
+current control ISR? What priorities will you use?
+
+I will use Timer 3 to control the position control ISR and Timer 4 to control the current
+control ISR. I think I'll use priority 4 for the 200Hz position conrol ISR and priority 5 
+for the 5 KHz current control ISR, since the current control ISR is both faster than and 
+nested within the position control ISR. This means the current control ISR can interrupt the
+position control ISR (which is okay, as position can't change as quickly as current so it
+can wait)
+
+--
+
+5. Based on your answers to these questions, and your understanding of the project, annotate
+the block diagram of Figure 27.7. Each block should clearly indicate which devices or
+peripherals perform the operation in the block, and each signal line should clearly indicate
+how the signal is carried from one block to the other. (After this step, there should be no
+question about the hardware involved in the project. The details of wiring the H-bridge,
+current sensor, and encoder are left to later.)
+
+Trajectory generator: PIC32 generates a desired motor position in a preset waveform
+
+Motion controller: 200Hz ISR that changes the motor/torque command sent to the current controller
+every iteration of the outer control loop
+
+Current controller: 5000Hz ISR that changes the current command sent to the H-bridge
+
+H-bridge: external circuitboard
+
+Current sensor: Analog input pin on the PIC32
+
+Motor: self explanatory
+
+Encoder/tachometer: external circuitboard attached to motor
+
+__
+
+6. Based on which circuit boards need to be connected to which pins of the NU32, and the
+connections of the circuit boards to the motor and encoder, sketch a proposed layout of the
+circuit boards relative to the NU32 so that wire crossing is approximately minimized. (Do
+not make a full circuit diagram at this time.)
+
+See attached disgram
+
+7. Turn in your answers for items 1-6.
+
+
+___________________________
+
+28.4.7 Current Sensor Wiring and Calibration
+
+The current sensor detects the amount of current flowing through the motor. We use a PCB
+breaking out the MAX9918 current-sense amplifier and an onboard 15 m current-sense
+resistor, as described in Chapter 21.10.1.
+
+In this section, you will first use the information in Chapter 21.10.1 to set up and calibrate
+your current sensor, independent of the NU32 and the motor. The questions refer to the circuit
+in Figure 21.22.
+
+1. Choose the voltage divider resistors R3 to be a few hundred ohms (e.g., 330 ).
+
+_____
+
+2. Find the maximum current you expect to sense. If the H-bridge’s battery voltage is V and
+the motor resistance is Rmotor, then the maximum current you can expect to see is
+approximately Imax = 2V/Rmotor. This occurs when the motor is spinning at no-load
+speed in reverse, with essentially zero current and −V across the motor terminals,
+
+−V = ktωrev → ωrev = −V/kt
+
+and then the control voltage switches suddenly to V, yielding (ignoring inductance)
+
+V = ktωrev + ImaxRmotor → Imax = 2V/Rmotor.
+
+Record your calculated Imax for your battery and motor.
+
+_____
+
+3. Calculate the voltage across the 15 m sense resistor if Imax flows through it. Call this
+Vmax.
+
+4. Choose resistors R1 and R2 so the current-sense ampliUer gain G = 1 + (R2/R1)
+approximately satisfies
+
+1.65 V = G × Vmax.
+
+This ensures that the maximum positive motor current yields a 3.3 V output from the
+current sensor and the maximum negative motor current yields a 0 V output from the
+current sensor, utilizing the full range of the ADC input. Choose R1 and R2 to be in the
+range of 104-106 .
+
+5. Choose a resistor R and a capacitor C to make an RC Ulter on the MAX9918 output with a
+cutoff frequency fc = 1/(2πRC) in the neighborhood of 200 Hz, to suppress
+high-frequency components due to the 20 kHz PWM.
+
+_____
+
+6. Build the circuit as shown in Figure 21.22, but do not connect to the motor or the PIC32.
+You will calibrate the circuit using resistors, an ammeter, and an oscilloscope or voltmeter.
+Figure 28.7 shows how to use a resistor R0 to provide controlled positive and negative test
+currents to the current sensor. You will choose different values of R0 to create test currents
+over the range of likely currents. For example, if you have two 20 resistors, you can use
+them to create an R0 of 20 , 40 (two resistors in series), or 10 (two resistors in
+parallel). If the battery voltage V is 6 V, this results in expected currents of ±300, ±150,
+and ±600 mA, respectively.
+
+
+Important: The calibration resistors must be rated to handle high currents without
+burning up. For example, a 20 resistor with 300 mA through it dissipates
+(300 mA)2(20 ) = 1.8 W, more than a typical 1/4 W resistor can dissipate.
+
+With different resistances R0, use an ammeter to measure the actual current and a
+voltmeter or oscilloscope to measure the output of the current sensor. Fill out a table
+similar to the table below, for your particular resistances and battery. If you
+built your current sensor circuit correctly, zero current should give approximately 1.65 V
+at the sensor output, and the data points (sensor voltage as a function of the measured
+current) should agree with the amplifier gain G you designed. If not, time to Ux your
+circuit.
+
+R0 ( ) 	   | Expected I (mA) Measured I (mA) Sensor (V) ADC (counts)
+---------------------------------------------------------------------
+10 (to RS+)|               |                |          |            |  
+20 (to RS+)|               |                |          |            |   
+40 (to RS+)|               |                |          |            |   
+Open circuit 0 0 1.63
+40 (to RS−) |              |                |          |            |
+20 (to RS−) |              |                |          |            |
+10 (to RS−) |              |                |          |            |
+
+
+Leave the column “ADC (counts)” blank; you will fill in that column in the next section.
+As a sanity check, you can replace R0 with your motor, stalled, and make sure that the
+sensor voltage makes sense.
+
+7. Turn in your answers for items 2-6.
+
+___________________________
+
+
+28.4.9 PWM and the H-Bridge
+In this section you will implement the menu items “f” (Set PWM (-100 to 100)) and “p”
+(Unpower the motor).
+
+By now you should have control of both the current sensor and the encoder. The next step is to
+provide low-level motor control. First you will implement part of the software associated with
+the current control loop. Next you will connect the H-bridge and the motor. When you finish
+this section you will be able to control the motor PWM signal from the client.
+
+
+1. The current controller uses a timer for the 5 kHz ISR, another timer and an output
+compare to generate a 20 kHz PWM signal, and a digital output to control the motor
+direction. Write a PIC32 function that initializes these peripherals and call it from main.
+
+2. Write the 5 kHz ISR. It should set the PWM duty cycle to 25% and invert the motor
+direction digital output. Look at the digital output and the PWM output on an oscilloscope
+and confirm that you see a 2.5 kHz “heartbeat” square wave for the ISR and a 25% duty
+cycle 20 kHz PWM signal. Remember to clear the interrupt flag.
+
+
+3. Now modify the ISR to choose the PWM duty cycle and direction bit depending on the
+operating mode. You should use a switch-case construct, similar to the switch–case in
+main, except the value in question here is the operating mode, as returned by the
+mode-querying function developed in Section 28.4.6. There will eventually be five modes
+to handle—IDLE, PWM, ITEST, HOLD, and TRACK—but in this section we focus on
+IDLE and PWM. If the operating mode is IDLE, the PWM duty cycle and direction bit
+should put the H-bridge in brake mode. If the operating mode is PWM, the duty cycle and
+direction bit are set according to the value −100 to 100 speciUed by the user through the
+client. This leads to the next action item. . .
+
+
+4. Implement the menu item “f” (Set PWM (-100 to 100)). The PIC32 switches to PWM
+mode, and in this mode the 5 kHz ISR creates a 20 kHz PWM pulse train of the speciUed
+duty cycle and a digital output with the correct direction bit.
+
+5. Implement the menu item “p” (Unpower the motor). The PIC32 switches to IDLE mode.
+
+6. Test whether the mode is being changed properly in response to the new “f” and “p”
+commands by using the menu item “r” (Get mode).
+
+7. Set the PWM to 80%. Verify the duty cycle with an oscilloscope and record the value of
+the direction pin. Then set the PWM to −40%. Verify the new duty cycle and that the
+direction pin has changed.
+
+8. Now that the PWM output appears to be working, it is time to wire up the DRV8835
+H-bridge circuit, as discussed in Chapter 27.1.1, to the motor and the PIC32 outputs
+(Figure 28.8). Notice that the 15 m resistor on the current-sense PCB is in series with
+the motor. Turn in a circuit diagram showing all connections of the H-bridge to the
+NU32, motor, and current sensor PCB.
+
+_____
+
+9. Verify the following:
+
+a. Set the PWM to 100%. Make sure that the motor rotates counterclockwise, that the
+angle returned by the encoder is increasing, and that the measured current is positive.
+You may have to swap the motor terminals or the encoder channels if not.
+
+b. Stall the motor at 100% PWM and see that the current is greater than during free
+running, and check that the measured current is consistent with your estimate of the
+resistance of the motor. (Note that the voltage at the H-bridge outputs will be somewhat
+lower than the voltage of the battery, due to voltage drops at the output MOSFETs.)
+
+c. Set the PWM to 50% and make sure that the motor spins slower than at 100%.
+
+d. Repeat the steps above for negative values of PWM.
+
+e. Make sure the motor stops when you issue the “p” (Unpower the motor) command.
+
+f. Attach the bar to the motor to increase the inertia, if it
+was not attached already. Get the motor spinning at its max negative speed with PWM
+set at −100%. Then change the PWM to 100% and quickly query the motor current
+(“a”) several times as the motor slows down and then reverses direction on its way
+to its max positive speed. You should see the motor current is initially very large due
+to the negative back-emf, and drops continuously as the back-emf increases toward
+its maximum positive value (when the motor is at full speed in the forward direction).
+You now have full control of the low-level features of the hardware!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
