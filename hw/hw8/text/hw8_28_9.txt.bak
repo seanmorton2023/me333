@@ -10,6 +10,7 @@ provide low-level motor control. First you will implement part of the software a
 the current control loop. Next you will connect the H-bridge and the motor. When you finish
 this section you will be able to control the motor PWM signal from the client.
 
+_____
 
 1. The current controller uses a timer for the 5 kHz ISR, another timer and an output
 compare to generate a 20 kHz PWM signal, and a digital output to control the motor
@@ -20,6 +21,7 @@ direction digital output. Look at the digital output and the PWM output on an os
 and confirm that you see a 2.5 kHz “heartbeat” square wave for the ISR and a 25% duty
 cycle 20 kHz PWM signal. Remember to clear the interrupt flag.
 
+_____
 
 3. Now modify the ISR to choose the PWM duty cycle and direction bit depending on the
 operating mode. You should use a switch-case construct, similar to the switch–case in
