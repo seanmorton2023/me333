@@ -33,6 +33,8 @@ should put the H-bridge in brake mode. If the operating mode is PWM, the duty cy
 direction bit are set according to the value −100 to 100 speciUed by the user through the
 client. This leads to the next action item. . .
 
+_____
+
 
 4. Implement the menu item “f” (Set PWM (-100 to 100)). The PIC32 switches to PWM
 mode, and in this mode the 5 kHz ISR creates a 20 kHz PWM pulse train of the speciUed
