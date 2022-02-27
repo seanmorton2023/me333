@@ -6,14 +6,14 @@
 
 
 //200Hz ISR to control torque/motor commands
-void __ISR(_TIMER_4_VECTOR, IPL4SRS) PositionControl(void) {
+void __ISR(_TIMER_2_VECTOR, IPL4SRS) PositionControl(void) {
 
 	//TODO
 
 }
 
 //5KHz ISR to control current going to motor
-void __ISR(_TIMER_3_VECTOR, IPL5SRS) CurrentControl(void) {
+void __ISR(vector_number, IPLnXXX) CurrentControl(void) {
 
 }
 
@@ -120,7 +120,7 @@ void initialize_sfrs(void) {
 	T4CONbits.TCKPS = 0b110; //prescaler of 64, use PR = 3125
 	T4CONbits.T32 = 0;
 	T3CONbits.TCS = 0;
-	PR4 = 3125;
+	PR4 = 3125
 	
 	//OC PWM for H-bridge operation
 	OC3CONbits.ON = 1;
