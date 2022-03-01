@@ -53,7 +53,7 @@ main, except the value in question here is the operating mode, as returned by th
 mode-querying function developed in Section 28.4.6. 
 
 There will eventually be five modes to handle—IDLE, PWM, ITEST, HOLD, and TRACK—but in
-this section we focus onIDLE and PWM. 
+this section we focus on IDLE and PWM. 
 
 If the operating mode is IDLE, the PWM duty cycle and direction bit
 should put the H-bridge in brake mode. 
@@ -66,7 +66,7 @@ _____
 
 
 4. Implement the menu item “f” (Set PWM (-100 to 100)). The PIC32 switches to PWM
-mode, and in this mode the 5 kHz ISR creates a 20 kHz PWM pulse train of the speciUed
+mode, and in this mode the 5 kHz ISR creates a 20 kHz PWM pulse train of the specified
 duty cycle and a digital output with the correct direction bit.
 
 5. Implement the menu item “p” (Unpower the motor). The PIC32 switches to IDLE mode.

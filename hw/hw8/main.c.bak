@@ -75,8 +75,8 @@ void __ISR(_TIMER_3_VECTOR, IPL5SRS) CurrentControl(void) {
 			//the PWM duty cycle and direction bit
 			//should put the H-bridge in brake mode.
 
-			//in phase/enable mode: send a 0 to enable bit to brake
-			LATDbits.LATD5 = 0;
+			//set PWM duty cycle to 0 so the motor is always in brake mode
+			OC3RS = 0;
 			
 			break;
 		}
@@ -86,21 +86,16 @@ void __ISR(_TIMER_3_VECTOR, IPL5SRS) CurrentControl(void) {
 			//If the operating mode is PWM, the duty cycle and direction bit are set according to 
 			//the value −100 to 100 specified by the user through the client
 			
-			//enable bit
-			LATDbits.LATD5 = 1
-			
 			//phase bit
 			if (client_input < 1) {
 				LATDbits.LATD4 = 0;
+				client_input = -client_input;
 			} else {
 				LATDbits.LATD4 = 1;
 			}
 			
 			//set PWM
-			OC3RS = (unsigned int) client_input * PR3/100;
-			
-			
-			
+			OC3RS = (unsigned int) client_input * PR3/100;			
 			break;
 		}
 		
@@ -158,21 +153,38 @@ int main()
 	  case 'p':
 	  {
 		  //unpower the motor
-		  //TODO
+		  mode = IDLE;
 		  break;
 	  }
 	  
 	  case 'f':
 	  {
 		  //Set PWM (-100 to 100)
-		  //TODO
+		  mode = PWM;
+		  
+		  NU32_ReadUART3(buffer, BUF_SIZE);
+		  sscanf(buffer,"%d", &client_input);
+		  sprintf(buffer, "PWM set as: %d \r\n", client_input);
+		  NU32_WriteUART3(buffer);
 		  break;
 	  }
 	  
 	  case 'r':
 	  {
 		  //read what mode the motor is in
-		  //TODO
+		  sprintf(buffer, "Current mode of PIC32: %d \r\n", mode);
+		  NU32_WriteUART3(buffer);
+		  
+		  sprintf(buffer,
+			"\nGuide to modes of the PIC32: \r\n"
+			"IDLE Mode: %d \r\n" 
+			"PWM Mode: %d \r\n"
+			"ITEST Mode: %d \r\n"
+			"HOLD Mode: %d \r\n"
+			"TRACK Mode: %d \r\n",
+			IDLE, PWM, ITEST, HOLD, TRACK
+		  );
+		  NU32_WriteUART3(buffer);
 	  }
 	  
       case 'q':
@@ -208,11 +220,6 @@ void initialize_sfrs(void) {
 	TRISDbits.TRISD4 = 0;
 	LATDbits.LATD4 = 0; //direction of motor
 	
-	//digital output for setting enable pin for H-bridge braking?
-	//wasn't in the instructions but I wanted to add it
-	TRISDbits.TRISD5 = 0;
-	LATDbits.LATD5 = 1;
-	
 	//Timer initialization (3 timers)
 	T2CONbits.ON = 1; //for 20KHz OC PWM
 	T2CONbits.SIDL = 1;
@@ -247,10 +254,6 @@ void initialize_sfrs(void) {
 	IEC0bits.T4IE = 1;
 	IPC4bits.T4IP = 0x4;
 	IPC4bits.T4IS = 0x0;
-	
-	
-	
-	
 
 }
 

@@ -7,7 +7,7 @@ First half of Chapter 28, through 28.4.9.
 Turn in your responses to 28.4.1 #7, 28.4.7 #7, 28.4.9 #8
 
 Make a demo video for the Demonstration assignment.
-
+Turn in diagrams for 28.4.5 and 28.4.7
 ___________________________
 
 28.4.1 Decisions, Decisions
@@ -67,27 +67,7 @@ how the signal is carried from one block to the other. (After this step, there s
 question about the hardware involved in the project. The details of wiring the H-bridge,
 current sensor, and encoder are left to later.)
 
-Trajectory generator: PIC32 generates a desired motor position in a preset waveform
-----> signal carried through PIC32 memory to another location within PIC32
-
-Motion controller: 200Hz ISR that changes the motor/torque command sent to the current controller
-every iteration of the outer control loop
-----> volatile variables manipulated, to be accessed later in current controller ISR
-
-Current controller: 5000Hz ISR that changes the current command sent to the H-bridge
-----> edit the PWM signal duty cycle that's sent to the H-Bridge
-
-H-bridge: external circuitboard for motor commands
-----> delivers current to the motor
-
-Current sensor: MAX9918 current sensor reads present value of current coming from H-Bridge
-----> sends value of current to analog input pin on the PIC32
-
-Motor: self explanatory
-----> motor position output is read by the encoder
-
-Encoder/tachometer: external circuitboard attached to motor
-----> sends position data to PIC32 via SPI communications pins
+See annotated figure
 
 __
 
