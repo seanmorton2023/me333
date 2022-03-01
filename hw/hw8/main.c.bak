@@ -6,6 +6,19 @@
 #define BUF_SIZE 200
 #define SAMPLE_TIME 10       // 10 core timer ticks = 250 ns
 
+//operating modes for PIC
+enum picMode {
+	IDLE,
+	PWM,
+	ITEST,
+	HOLD,
+	TRACK
+} mode; //variable to set mode with
+
+//for initializing modules + SFRS on the PIC all at once
+void initialize_sfrs(void);	
+unsigned int adc_sample_convert(int pin);
+
 
 //control variables for position control
 static volatile float Kp = 0, Ki = 0, Kd = 0;
@@ -19,7 +32,7 @@ static volatile float f, fint = 0;
 static volatile float  v;
 
 //reference position/velocity, controlled by user input
-int posn;
+int client_input;
 static volatile int adcval;
 
 
@@ -51,19 +64,70 @@ void __ISR(_TIMER_3_VECTOR, IPL5SRS) CurrentControl(void) {
 	OC3RS = 500;
 	
 	//invert directional output of motor
-	LATDINV = 0b1 << 4; //invert pin 4
+	LATDINV = 0b1 << 4; //invert digital output at pin 4
+	
+	
+	//set PWM and motor direction based on mode flag
+	switch (mode) {
+		
+		case IDLE:
+		{
+			//the PWM duty cycle and direction bit
+			//should put the H-bridge in brake mode.
+
+			//in phase/enable mode: send a 0 to enable bit to brake
+			LATDbits.LATD5 = 0;
+			
+			break;
+		}
+		
+		case PWM:
+		{
+			//If the operating mode is PWM, the duty cycle and direction bit are set according to 
+			//the value −100 to 100 specified by the user through the client
+			
+			//enable bit
+			LATDbits.LATD5 = 1
+			
+			//phase bit
+			if (client_input < 1) {
+				LATDbits.LATD4 = 0;
+			} else {
+				LATDbits.LATD4 = 1;
+			}
+			
+			//set PWM
+			OC3RS = (unsigned int) client_input * PR3/100;
+			
+			
+			
+			break;
+		}
+		
+		case ITEST:
+		{
+			break;
+		}
+		
+		case HOLD:
+		{
+			break;
+		}
+		
+		case TRACK:
+		{
+			break;
+		}
+		
+		
+	}
+	
 	
 	//clear interrupt flag
 	IEC0bits.T2IE = 0;
 
 }
 
-
-
-
-//for initializing modules + SFRS on the PIC all at once
-void initialize_sfrs(void);	
-unsigned int adc_sample_convert(int pin);
 
 int main() 
 {
@@ -142,7 +206,12 @@ void initialize_sfrs(void) {
 	
 	//Digital output for H-bridge control: D4
 	TRISDbits.TRISD4 = 0;
-	LATFbits.LATD4 = 0; //direction of motor
+	LATDbits.LATD4 = 0; //direction of motor
+	
+	//digital output for setting enable pin for H-bridge braking?
+	//wasn't in the instructions but I wanted to add it
+	TRISDbits.TRISD5 = 0;
+	LATDbits.LATD5 = 1;
 	
 	//Timer initialization (3 timers)
 	T2CONbits.ON = 1; //for 20KHz OC PWM
