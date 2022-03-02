@@ -37,7 +37,7 @@ static volatile int adcval;
 
 
 //200Hz ISR to control torque/motor commands
-void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
+void __ISR(_TIMER_4_VECTOR, IPL4SRS) PositionControl(void) {
 
 	//TODO
 	
@@ -46,12 +46,12 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 
 
 	//clear interrupt flag
-	IFS0bits.T4IF = 0;
+	IEC0bits.T4IE = 0;
 
 }
 
 //5KHz ISR to control current going to motor
-void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
+void __ISR(_TIMER_3_VECTOR, IPL5SRS) CurrentControl(void) {
 
 	//TODO
 	
@@ -60,7 +60,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 	
 	//PI controller for current
 	
- 	//set OC3RS at 25% of PR at first, modify later
+	//set OC3RS at 25% of PR at first, modify later
 	OC3RS = 500;
 	
 	//invert directional output of motor
@@ -112,14 +112,14 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 		case TRACK:
 		{
 			break;
-		} 
+		}
 		
 		
 	}
 	
 	
 	//clear interrupt flag
-	IFS0bits.T3IF = 0;
+	IEC0bits.T2IE = 0;
 
 }
 
@@ -162,7 +162,7 @@ int main()
 		  //Set PWM (-100 to 100)
 		  mode = PWM;
 		  
-		  NU32_WriteUART3("\nSet PWM (-100 to 100): ");
+		  NU32_WriteUART3("Set PWM (-100 to 100): ");
 		  NU32_ReadUART3(buffer, BUF_SIZE);
 		  sscanf(buffer,"%d", &client_input);
 		  sprintf(buffer, "\r\nPWM set as: %d \r\n", client_input);
@@ -173,7 +173,7 @@ int main()
 	  case 'r':
 	  {
 		  //read what mode the motor is in
-		  sprintf(buffer, "\nCurrent mode of PIC32: %d \r\n", mode);
+		  sprintf(buffer, "Current mode of PIC32: %d \r\n", mode);
 		  NU32_WriteUART3(buffer);
 		  
 		  sprintf(buffer,
@@ -182,7 +182,7 @@ int main()
 			"PWM Mode: %d \r\n"
 			"ITEST Mode: %d \r\n"
 			"HOLD Mode: %d \r\n"
-			"TRACK Mode: %d \r\n\n",
+			"TRACK Mode: %d \r\n",
 			IDLE, PWM, ITEST, HOLD, TRACK
 		  );
 		  NU32_WriteUART3(buffer);
@@ -212,53 +212,49 @@ void initialize_sfrs(void) {
 	encoder_init(); //SPI comms enabled in external function
 	
 	//ADC input for current sensor: AN5
- 	AD1CON1bits.ON = 1;
+	AD1CON1bits.ON = 1;
 	AD1CON1bits.SIDL = 1;
 	AD1PCFGbits.PCFG5 = 0; //pin 5 analog
 	TRISDbits.TRISD5 = 1; //pin 5 input
 	
- 	//Digital output for H-bridge control: D4
+	//Digital output for H-bridge control: D4
 	TRISDbits.TRISD4 = 0;
-	LATDbits.LATD4 = 0; //direction of motor 
+	LATDbits.LATD4 = 0; //direction of motor
 	
 	//Timer initialization (3 timers)
-	
+	T2CONbits.ON = 1; //for 20KHz OC PWM
 	T2CONbits.SIDL = 1;
 	T2CONbits.TCKPS = 0b000; //prescaler of 1, use PR = 2000
 	T2CONbits.T32 = 0;
 	PR2 = 2000;
 
+	T3CONbits.ON = 1; //for 5KHz current control ISR
 	T3CONbits.SIDL = 1;
 	T3CONbits.TCKPS = 0b010; //prescaler of 4, use PR = 2000
 	PR3 = 2000;
 	
+	T4CONbits.ON = 1; //for 200Hz position control ISR
 	T4CONbits.SIDL = 1;
 	T4CONbits.TCKPS = 0b011; //prescaler of 8, use PR = 25000
 	T4CONbits.T32 = 0;
 	PR4 = 25000;
 	
- 	//OC PWM for H-bridge operation
+	//OC PWM for H-bridge operation
 	OC3CONbits.ON = 1;
 	OC3CONbits.SIDL = 1;
 	OC3CONbits.OCTSEL = 0; //timer2
 	OC3CONbits.OCM = 0b110; //PWM mode; fault pin disabled
 	OC3CONbits.OC32 = 0; //16 bit mode
-	OC3R = 500; //initialize at 25% PR4 
+	OC3R = 500; //initialize at 25% PR4
 	
 	//Interrupt setup for ISRs on timers 3 and 4
-	IPC3bits.T3IP = 5;
-	IPC3bits.T3IS = 0;
-		
-	IPC4bits.T4IP = 4;
-	IPC4bits.T4IS = 0;
-	
-	T2CONbits.ON = 1; //for 20KHz OC PWM
-	T3CONbits.ON = 1; //for 5KHz current control ISR
-	T4CONbits.ON = 1; //for 200Hz position control ISR
-
-	
 	IEC0bits.T3IE = 1;
+	IPC3bits.T3IP = 0x5;
+	IPC3bits.T3IS = 0x0;
+	
 	IEC0bits.T4IE = 1;
+	IPC4bits.T4IP = 0x4;
+	IPC4bits.T4IS = 0x0;
 
 }
 
