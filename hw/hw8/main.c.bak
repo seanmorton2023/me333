@@ -64,7 +64,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 	OC3RS = 500;
 	
 	//invert directional output of motor
-	LATDINV = 0b1 << 4; //invert digital output at pin 4
+	//LATDINV = 0b1 << 4; //invert digital output at pin 4
 	
 	
 	//set PWM and motor direction based on mode flag
@@ -87,15 +87,17 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			//the value −100 to 100 specified by the user through the client
 			
 			//phase bit
-			if (client_input < 1) {
+			if (client_input < 0) {
 				LATDbits.LATD4 = 0;
-				client_input = -client_input;
+				OC3RS = (unsigned int) -client_input * PR2/100;			
+
 			} else {
 				LATDbits.LATD4 = 1;
+				OC3RS = (unsigned int) client_input * PR2/100;			
+
 			}
 			
 			//set PWM
-			OC3RS = (unsigned int) client_input * PR3/100;			
 			break;
 		}
 		
@@ -153,6 +155,7 @@ int main()
 	  case 'p':
 	  {
 		  //unpower the motor
+		  NU32_WriteUART3("\nPIC32 mode set to IDLE.\r\n\n");
 		  mode = IDLE;
 		  break;
 	  }
@@ -182,7 +185,7 @@ int main()
 			"PWM Mode: %d \r\n"
 			"ITEST Mode: %d \r\n"
 			"HOLD Mode: %d \r\n"
-			"TRACK Mode: %d \r\n",
+			"TRACK Mode: %d \r\n\n",
 			IDLE, PWM, ITEST, HOLD, TRACK
 		  );
 		  NU32_WriteUART3(buffer);
@@ -223,27 +226,23 @@ void initialize_sfrs(void) {
 	
 	//Timer initialization (3 timers)
 	
-	T2CONbits.SIDL = 1;
-	T2CONbits.TCKPS = 0b000; //prescaler of 1, use PR = 2000
+	T2CONbits.TCKPS = 0b001; //prescaler of 2, use PR = 2000
 	T2CONbits.T32 = 0;
 	PR2 = 2000;
 
-	T3CONbits.SIDL = 1;
-	T3CONbits.TCKPS = 0b010; //prescaler of 4, use PR = 2000
+	T3CONbits.TCKPS = 0b011; //prescaler of 8, use PR = 2000
 	PR3 = 2000;
 	
-	T4CONbits.SIDL = 1;
-	T4CONbits.TCKPS = 0b011; //prescaler of 8, use PR = 25000
+	T4CONbits.TCKPS = 0b100; //prescaler of 16, use PR = 25000
 	T4CONbits.T32 = 0;
 	PR4 = 25000;
 	
  	//OC PWM for H-bridge operation
-	OC3CONbits.ON = 1;
 	OC3CONbits.SIDL = 1;
 	OC3CONbits.OCTSEL = 0; //timer2
 	OC3CONbits.OCM = 0b110; //PWM mode; fault pin disabled
 	OC3CONbits.OC32 = 0; //16 bit mode
-	OC3R = 500; //initialize at 25% PR4 
+	OC3R = 0; //initialize at 25% PR2 
 	
 	//Interrupt setup for ISRs on timers 3 and 4
 	IPC3bits.T3IP = 5;
@@ -252,6 +251,7 @@ void initialize_sfrs(void) {
 	IPC4bits.T4IP = 4;
 	IPC4bits.T4IS = 0;
 	
+	OC3CONbits.ON = 1;
 	T2CONbits.ON = 1; //for 20KHz OC PWM
 	T3CONbits.ON = 1; //for 5KHz current control ISR
 	T4CONbits.ON = 1; //for 200Hz position control ISR
