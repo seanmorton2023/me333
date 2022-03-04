@@ -56,7 +56,7 @@ direction pin has changed.
 
 8. Now that the PWM output appears to be working, it is time to wire up the DRV8835
 H-bridge circuit, as discussed in Chapter 27.1.1, to the motor and the PIC32 outputs
-(Figure 28.8). Notice that the 15 m resistor on the current-sense PCB is in series with
+(Figure 28.8). Notice that the 15 Ohm resistor on the current-sense PCB is in series with
 the motor. Turn in a circuit diagram showing all connections of the H-bridge to the
 NU32, motor, and current sensor PCB.
 

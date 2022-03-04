@@ -21,30 +21,6 @@ direction digital output. Look at the digital output and the PWM output on an os
 and confirm that you see a 2.5 kHz “heartbeat” square wave for the ISR and a 25% duty
 cycle 20 kHz PWM signal. Remember to clear the interrupt flag.
 
-
-
-
-
-
-
-
-TODO: redo the control diagram question with the stuff we talked about
-in the chap 27 quiz
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 _____
 
 3. Now modify the ISR to choose the PWM duty cycle and direction bit depending on the

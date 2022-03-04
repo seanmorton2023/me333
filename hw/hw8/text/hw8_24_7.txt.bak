@@ -33,12 +33,17 @@ Record your calculated Imax for your battery and motor.
 
 H-bridge we are using: DRV8835
 Per the datasheet, the voltage supply to the DRV8835 can be up to 11V
+Reasonably, V will never be more than the supplied battery voltage 6V
 
+In lecture, we found the motor resistance to be ~6 Ohms
+Imax = 12V/6Ohms = 2 Amps
 
 _____
 
-3. Calculate the voltage across the 15 m sense resistor if Imax flows through it. Call this
+3. Calculate the voltage across the 15 mOhm sense resistor if Imax flows through it. Call this
 Vmax.
+
+Vmax = IR = (2 Amps) (15 mOhms) = 30 mV
 
 4. Choose resistors R1 and R2 so the current-sense amplifier gain G = 1 + (R2/R1)
 approximately satisfies
@@ -49,6 +54,17 @@ This ensures that the maximum positive motor current yields a 3.3 V output from 
 current sensor and the maximum negative motor current yields a 0 V output from the
 current sensor, utilizing the full range of the ADC input. Choose R1 and R2 to be in the
 range of 10^4-10^6 .
+
+G = 1.65V/Vmax
+G = 1.65V/ 30mV = 55
+
+Let R1 = 10k Ohms
+1 + R2/R1 = 55
+R2 = 54 * R1
+R2 = 540,000 Ohms
+R2 ~ 530,000 Ohms. We can make this with a 330k Ohm resistor in series with
+two 100k Ohm resistor.
+
 
 _____
 
@@ -62,6 +78,9 @@ fc = 1/(2piRC)
 R = 1 / (2piCfc)
 R = 1/(2pi)/(10^-7 F) /200Hz
 R = 8000Ohms ~ 10k Ohms
+
+Using R = 10k Ohms and C = 10^-7 F, we get a cutoff
+frequency Fc = 1/(2pi)/(10^-7 F)/(10k Ohms) = 159Hz
 
 _____
 
