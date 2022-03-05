@@ -1,6 +1,7 @@
 Sean Morton
 ME333 HW8
 
+Turn in: questions, table at end
 
 28.4.7 Current Sensor Wiring and Calibration
 
@@ -81,6 +82,12 @@ R = 8000Ohms ~ 10k Ohms
 Using R = 10k Ohms and C = 10^-7 F, we get a cutoff
 frequency Fc = 1/(2pi)/(10^-7 F)/(10k Ohms) = 159Hz
 
+
+
+can't do this yet bc current sense resistor is giving too-high values
+
+
+
 _____
 
 6. Build the circuit as shown in Figure 21.22, but do not connect to the motor or the PIC32.
@@ -96,6 +103,14 @@ and ±600 mA, respectively.
 Important: The calibration resistors must be rated to handle high currents without
 burning up. For example, a 20 resistor with 300 mA through it dissipates
 (300 mA)2(20 ) = 1.8 W, more than a typical 1/4 W resistor can dissipate.
+
+
+
+cannot do this yet because we're using the INA219, not the MAX9918
+
+
+
+_____
 
 With different resistances R0, use an ammeter to measure the actual current and a
 voltmeter or oscilloscope to measure the output of the current sensor. Fill out a table

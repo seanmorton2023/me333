@@ -154,7 +154,7 @@ int main()
 	  case 'p':
 	  {
 		  //unpower the motor
-		  NU32_WriteUART3("\nPIC32 mode set to IDLE.\r\n\n");
+		  NU32_WriteUART3("\Motor set to IDLE mode.\r\n\n");
 		  mode = IDLE;
 		  break;
 	  }
@@ -175,11 +175,11 @@ int main()
 	  case 'r':
 	  {
 		  //read what mode the motor is in
-		  sprintf(buffer, "\nCurrent mode of PIC32: %d \r\n", mode);
+		  sprintf(buffer, "\nCurrent mode of program: %d \r\n", mode);
 		  NU32_WriteUART3(buffer);
 		  
 		  sprintf(buffer,
-			"\nGuide to modes of the PIC32: \r\n"
+			"\nGuide to program modes: \r\n"
 			"IDLE Mode: %d \r\n" 
 			"PWM Mode: %d \r\n"
 			"ITEST Mode: %d \r\n"

@@ -94,7 +94,6 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			} else {
 				LATDbits.LATD4 = 1;
 				OC3RS = (unsigned int) client_input * PR2/100;			
-
 			}
 			
 			//set PWM
@@ -155,7 +154,7 @@ int main()
 	  case 'p':
 	  {
 		  //unpower the motor
-		  NU32_WriteUART3("\nPIC32 mode set to IDLE.\r\n\n");
+		  NU32_WriteUART3("\Motor set to IDLE mode.\r\n\n");
 		  mode = IDLE;
 		  break;
 	  }
