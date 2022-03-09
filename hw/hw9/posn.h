@@ -1,17 +1,15 @@
 
-#ifndef __POSN__H_
-#define __POSN__H_
+#ifndef POSN__H__
+#define POSN__H__
 
 #include <xc.h>
 #include "NU32.h"
 #include <sys/attribs.h> // __ISR macro
 
-
-//control variables for position control
-static volatile float Kp = 0, Ki = 0, Kd = 0;
-static volatile float e, eint = 0, edot;
-static volatile float u, unew;
-static volatile float u_out = 0; //torque/current command passed to current controller
+extern volatile float e, eint, edot;
+extern volatile float Kp, Ki, Kd;
+extern volatile float u, unew;
+extern volatile float u_out; //torque/current command passed to current controller
 
 //ISR defined in posn.c only
 

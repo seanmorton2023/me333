@@ -1,6 +1,6 @@
 
-#ifndef __PICMODES__H_
-#define __PICMODES__H_
+#ifndef PICMODES__H__
+#define PICMODES__H__
 
 //operating modes for PIC
 enum picMode {

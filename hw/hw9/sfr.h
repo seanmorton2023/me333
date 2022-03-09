@@ -1,7 +1,6 @@
 
-#ifndef __SFR__H_
-#define __SFR__H_
-
+#ifndef SFR__H_
+#define SFR__H_
 
 #include <xc.h>
 #include "NU32.h"
