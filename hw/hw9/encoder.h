@@ -1,9 +1,16 @@
-#ifndef __ENCODER_H__
-#define __ENCODER_H__
+#ifndef ENCODER__H__
+#define ENCODER__H__
 
-static int encoder_command(int read); // send a command to the encoder chip
-int encoder_counts(void); //returns count of the encoder
-void encoder_init(void); //SPI initialization
+#include <xc.h> // processor SFR definitions
+#include <sys/attribs.h> // __ISR macro
+
+#include "NU32.h"
+
+void UART2_Statup();
+void WriteUART2(const char * string);
+int get_encoder_flag();
+void set_encoder_flag();
+int get_encoder_count();
 
 
-#endif
+#endif // ENCODER__H__
