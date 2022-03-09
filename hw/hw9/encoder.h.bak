@@ -1,9 +1,0 @@
-#IFNDEF __ENCODER_H__
-#DEFINE __ENCODER_H__
-
-static int encoder_command(int read); // send a command to the encoder chip
-int encoder_counts(void); //returns count of the encoder
-void encoder_init(void); //SPI initialization
-
-
-#ENDIF
