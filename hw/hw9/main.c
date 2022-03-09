@@ -151,14 +151,7 @@ int main()
         break;
       }
 	  
-	  case 'p':
-	  {
-		  //unpower the motor
-		  NU32_WriteUART3("\Motor set to IDLE mode.\r\n\n");
-		  mode = IDLE;
-		  break;
-	  }
-	  
+
 	  case 'f':
 	  {
 		  //Set PWM (-100 to 100)
@@ -171,6 +164,27 @@ int main()
 		  NU32_WriteUART3(buffer);
 		  break;
 	  }
+  
+	  case 'p':
+	  {
+		  //unpower the motor
+		  NU32_WriteUART3("\nMotor set to IDLE mode.\r\n\n");
+		  mode = IDLE;
+		  break;
+	  }
+	  
+	  case 'q':
+      {
+        // handle q for quit. Later you may want to return to IDLE mode here.
+		mode = IDLE;
+		
+		//delay a short amount of time to make sure ISR hits
+		for (int i = 0; i < 4000000; ++i){
+			//nothing
+		}
+		
+        return 0;
+      }
 	  
 	  case 'r':
 	  {
@@ -190,11 +204,6 @@ int main()
 		  NU32_WriteUART3(buffer);
 	  }
 	  
-      case 'q':
-      {
-        // handle q for quit. Later you may want to return to IDLE mode here. 
-        break;
-      }
       default:
       {
         NU32_LED2 = 0;  // turn on LED2 to indicate an error

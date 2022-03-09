@@ -154,7 +154,7 @@ int main()
 	  case 'p':
 	  {
 		  //unpower the motor
-		  NU32_WriteUART3("\Motor set to IDLE mode.\r\n\n");
+		  NU32_WriteUART3("\nMotor set to IDLE mode.\r\n\n");
 		  mode = IDLE;
 		  break;
 	  }
