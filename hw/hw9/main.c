@@ -10,7 +10,7 @@
 
 #define ADC_PIN 5           // pin 5 on the PIC/NU32
 #define BUF_SIZE 200
-
+#define conversion 360/344/4 //convert from counts to angles
 
 //control variables for position control
 volatile float e, eint = 0, edot;
@@ -44,16 +44,21 @@ int main()
     NU32_ReadUART3(buffer,BUF_SIZE); // we expect the next character to be a menu command
     NU32_LED2 = 1;                   // clear the error LED
     switch (buffer[0]) {
-		case 'd':                      // dummy command for demonstration purposes
+
+		case 'd':
 		{
-			int n = 0;
-			NU32_ReadUART3(buffer,BUF_SIZE);
-			sscanf(buffer, "%d", &n);
-			sprintf(buffer,"%d\r\n", n + 1); // return the number + 1
-			NU32_WriteUART3(buffer);
+			//read encoder value
+			WriteUART2("a");
+			while (!get_encoder_flag()) {
+				//delay until encoder/PICO are done sending insructions
+			}
+			set_encoder_flag(0); //prepare for new instructions
+			char m[50];
+			int p = get_encoder_count();
+			sprintf(m, "%f \r\n", p * 360 /(4*334) );
+			NU32_WriteUART3(m);
 			break;
 		}
-	  
 
 		case 'f':
 		{
@@ -130,6 +135,17 @@ int main()
 			NU32_WriteUART3(buffer);
 			break;
 		}
+
+		case 'x':                      // dummy command for demonstration purposes
+		{
+			int n = 0;
+			NU32_ReadUART3(buffer,BUF_SIZE);
+			sscanf(buffer, "%d", &n);
+			sprintf(buffer,"%d\r\n", n + 1); // return the number + 1
+			NU32_WriteUART3(buffer);
+			break;
+		}
+	  
 
 		default:
 		{
