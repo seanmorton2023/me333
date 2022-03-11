@@ -37,6 +37,7 @@ int main()
   __builtin_disable_interrupts();
   // in future, initialize modules or peripherals here
   initialize_sfrs();
+  UART2_Startup();
   __builtin_enable_interrupts();
 
   while(1)
@@ -45,9 +46,24 @@ int main()
     NU32_LED2 = 1;                   // clear the error LED
     switch (buffer[0]) {
 
+		case 'c':
+		{
+			//read encoder value in counts
+			WriteUART2("a");
+			while (!get_encoder_flag()) {
+				//delay until encoder/PICO are done sending insructions
+			}
+			set_encoder_flag(0); //prepare for new instructions
+			char m[50];
+			int p = get_encoder_count();
+			sprintf(m, "%f \r\n", p);
+			NU32_WriteUART3(m);
+			break;
+		}
+
 		case 'd':
 		{
-			//read encoder value
+			//read encoder value in degrees
 			WriteUART2("a");
 			while (!get_encoder_flag()) {
 				//delay until encoder/PICO are done sending insructions
@@ -57,6 +73,18 @@ int main()
 			int p = get_encoder_count();
 			sprintf(m, "%f \r\n", p * 360 /(4*334) );
 			NU32_WriteUART3(m);
+			break;
+		}
+		
+		case 'e':
+		{
+			//reset encoder count
+			WriteUART2("b");
+			// while (!get_encoder_flag()) {
+				//delay until encoder/PICO are done sending insructions
+			// }
+			// set_encoder_flag(0); //prepare for new instructions
+			
 			break;
 		}
 
@@ -84,7 +112,8 @@ int main()
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer, "%f", &Ji);			
 			
-			sprintf(buffer, "\r\nNew P + I gains: %f, %f", Jp, Ji);
+			sprintf(buffer, "\r\nNew P + I gains: %.3f, %.3f \r\n\n", Jp, Ji);
+			NU32_WriteUART3(buffer);
 			
 			break;
 		}
@@ -92,6 +121,9 @@ int main()
 		case 'h':
 		{
 			//get current gains
+			sprintf(buffer, "Current gains (Kp, Ki): %.3f %.3f \r\n\n", Jp, Ji);
+			NU32_WriteUART3(buffer);
+			
 			break;
 		}
   
@@ -113,6 +145,8 @@ int main()
 			for (int i = 0; i < 4000000; ++i){
 				//nothing
 			}
+			
+			NU32_WriteUART3("Exiting. Goodbye!");
 
 			return 0;
 		}

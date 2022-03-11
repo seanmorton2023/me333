@@ -6,7 +6,7 @@
 
 #include "NU32.h"
 
-void UART2_Statup();
+void UART2_Startup();
 void WriteUART2(const char * string);
 int get_encoder_flag();
 void set_encoder_flag();
