@@ -50,12 +50,14 @@ int main()
 		{
 			//read encoder value in counts
 			WriteUART2("a");
+
 			while (!get_encoder_flag()) {
 				//delay until encoder/PICO are done sending insructions
 			}
+			
 			set_encoder_flag(0); //prepare for new instructions
 			char m[50];
-			int p = get_encoder_count();
+			float p = get_encoder_count();
 			sprintf(m, "%f \r\n", p);
 			NU32_WriteUART3(m);
 			break;
@@ -65,12 +67,14 @@ int main()
 		{
 			//read encoder value in degrees
 			WriteUART2("a");
+			
 			while (!get_encoder_flag()) {
 				//delay until encoder/PICO are done sending insructions
 			}
+			
 			set_encoder_flag(0); //prepare for new instructions
 			char m[50];
-			int p = get_encoder_count();
+			float p = get_encoder_count();
 			sprintf(m, "%f \r\n", p * 360 /(4*334) );
 			NU32_WriteUART3(m);
 			break;
