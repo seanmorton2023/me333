@@ -31,7 +31,6 @@ int main()
 {
   char buffer[BUF_SIZE];
   NU32_Startup(); // cache on, min flash wait, interrupts on, LED/button init, UART init
-  INA219_Startup();
   
   NU32_LED1 = 1;  // turn off the LEDs
   NU32_LED2 = 1; 
@@ -40,6 +39,7 @@ int main()
   // in future, initialize modules or peripherals here
   initialize_sfrs();
   UART2_Startup();
+  INA219_Startup();
   __builtin_enable_interrupts();
 
   while(1)
@@ -47,6 +47,15 @@ int main()
     NU32_ReadUART3(buffer,BUF_SIZE); // we expect the next character to be a menu command
     NU32_LED2 = 1;                   // clear the error LED
     switch (buffer[0]) {
+
+		case 'b':
+		{
+			//read current sensor in milli-amps
+			float ma = INA219_read_current();
+			sprintf(buffer, "Current value in mA: %.2f \r\n", ma);
+			NU32_WriteUART3(buffer);
+			break;
+		}
 
 		case 'c':
 		{
