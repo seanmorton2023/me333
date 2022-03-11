@@ -1,12 +1,12 @@
 #include "NU32.h"          // config bits, constants, funcs for startup and UART
 #include <stdio.h>
 #include "encoder.h"
+#include "ina219.h"
 
 //user-added header files for different functionalities
 #include "sfr.h"
 #include "posn.h"
 #include "current.h"
-//#include "picmodes.h"
 
 #define ADC_PIN 5           // pin 5 on the PIC/NU32
 #define BUF_SIZE 200
@@ -31,6 +31,8 @@ int main()
 {
   char buffer[BUF_SIZE];
   NU32_Startup(); // cache on, min flash wait, interrupts on, LED/button init, UART init
+  INA219_Startup();
+  
   NU32_LED1 = 1;  // turn off the LEDs
   NU32_LED2 = 1; 
   
@@ -57,8 +59,8 @@ int main()
 			
 			set_encoder_flag(0); //prepare for new instructions
 			char m[50];
-			float p = get_encoder_count();
-			sprintf(m, "%f \r\n", p);
+			int p = get_encoder_count();
+			sprintf(m, "%d \r\n", p);
 			NU32_WriteUART3(m);
 			break;
 		}
@@ -75,7 +77,7 @@ int main()
 			set_encoder_flag(0); //prepare for new instructions
 			char m[50];
 			float p = get_encoder_count();
-			sprintf(m, "%f \r\n", p * 360 /(4*334) );
+			sprintf(m, "%.1f \r\n", p * 360 /4/334 );
 			NU32_WriteUART3(m);
 			break;
 		}
@@ -84,11 +86,6 @@ int main()
 		{
 			//reset encoder count
 			WriteUART2("b");
-			// while (!get_encoder_flag()) {
-				//delay until encoder/PICO are done sending insructions
-			// }
-			// set_encoder_flag(0); //prepare for new instructions
-			
 			break;
 		}
 
