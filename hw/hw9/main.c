@@ -104,11 +104,11 @@ int main()
 			//Set PWM (-100 to 100)
 			mode = PWM;
 
-			NU32_WriteUART3("\nSet PWM (-100 to 100): ");
+			//NU32_WriteUART3("\nSet PWM (-100 to 100): ");
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer,"%d", &client_input);
-			sprintf(buffer, "\r\nPWM set as: %d \r\n", client_input);
-			NU32_WriteUART3(buffer);
+			//sprintf(buffer, "\r\nPWM set as: %d \r\n", client_input);
+			//NU32_WriteUART3(buffer);
 			break;
 		}
   
@@ -165,19 +165,20 @@ int main()
 		case 'r':
 		{
 			//read what mode the motor is in
-			sprintf(buffer, "\nCurrent mode of program: %d \r\n", mode);
+			sprintf(buffer, "%d \r\n", mode);
+			// sprintf(buffer, "\nCurrent mode of program: %d \r\n", mode);
 			NU32_WriteUART3(buffer);
 
-			sprintf(buffer,
-			"\nGuide to program modes: \r\n"
-			"IDLE Mode: %d \r\n" 
-			"PWM Mode: %d \r\n"
-			"ITEST Mode: %d \r\n"
-			"HOLD Mode: %d \r\n"
-			"TRACK Mode: %d \r\n\n",
-			IDLE, PWM, ITEST, HOLD, TRACK
-			);
-			NU32_WriteUART3(buffer);
+			// sprintf(buffer,
+			// "\nGuide to program modes: \r\n"
+			// "IDLE Mode: %d \r\n" 
+			// "PWM Mode: %d \r\n"
+			// "ITEST Mode: %d \r\n"
+			// "HOLD Mode: %d \r\n"
+			// "TRACK Mode: %d \r\n\n",
+			// IDLE, PWM, ITEST, HOLD, TRACK
+			// );
+			// NU32_WriteUART3(buffer);
 			break;
 		}
 
