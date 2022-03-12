@@ -58,7 +58,6 @@ while not has_quit:
 		ser.write(serial_text)
 		print(f'New value of PWM: {pwm} \n')
 
-		pass
 
 	elif (selection == 'g'):
 
@@ -75,8 +74,6 @@ while not has_quit:
 		ser.write(serial_text)
 		print()
 
-		#print(f'New values of Kp and Ki for current: {gain1} {gain2} \n')
-
 	elif (selection == 'h'):
 
 		#gets into an infinite loop during the reading portion
@@ -89,21 +86,10 @@ while not has_quit:
 		gain = float(bytes)
 		print(f'Value of current gain Ki: {gain} \n')
 
-		#finally fixed this for "read" and "set PWM" modes, still gotta look
-		#through the formatting with this h command
-
-		#error I get: you can read the mode of the PIC as much as you want, 
-		#but immediately after you set the PWM with 'f' it sends back a b\n
-		#which can't be interpreted as a PIC mode
-
-		#this also happens with the 'p' command, which (like this one) doesn't
-		#read any data from the serial, just sends commands
-
 	elif (selection == 'k'):
 		pass
 
 	elif (selection == 'p'):
-		#bytes = ser.read_until('\n')
 		print("PIC mode set to IDLE.\n")
 
 	elif (selection == 'r'):

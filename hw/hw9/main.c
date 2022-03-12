@@ -52,7 +52,6 @@ int main()
 		{
 			//read current sensor in milli-amps
 			float ma = INA219_read_current();
-			//sprintf(buffer, "Current value in mA: %.2f \r\n", ma);
 			sprintf(buffer, "%f\r\n", ma);
 			NU32_WriteUART3(buffer);
 			break;
@@ -104,38 +103,25 @@ int main()
 			//Set PWM (-100 to 100)
 			mode = PWM;
 
-			//NU32_WriteUART3("\nSet PWM (-100 to 100): ");
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer,"%d", &client_input);
-			//sprintf(buffer, "\r\nPWM set as: %d \r\n", client_input);
-			//NU32_WriteUART3(buffer);
 			break;
 		}
   
 		case 'g':
 		{
 			//set current gains
-			//NU32_WriteUART3("r\nEnter new current gain Kp: ");
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer, "%f", &Jp);
 			
-			//NU32_WriteUART3("\r\nEnter new current gain Ki: ");
 			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%f", &Ji);			
-			
-			// sprintf(buffer, "\r\nNew P + I gains: %.3f, %.3f \r\n\n", Jp, Ji);
-			// sprintf(buffer, "%f \n", Jp);
-			// NU32_WriteUART3(buffer);
-			// sprintf(buffer, "%f \n", Ji);
-			// NU32_WriteUART3(buffer);
-			
+			sscanf(buffer, "%f", &Ji);						
 			break;
 		}
 		
 		case 'h':
 		{
 			//get current gains
-			//sprintf(buffer, "Current gains (Kp, Ki): %.3f %.3f \r\n\n", Jp, Ji);
 			sprintf(buffer, "%f\r\n",Jp);
 			NU32_WriteUART3(buffer);
 			
@@ -149,7 +135,6 @@ int main()
 		case 'p':
 		{
 			//unpower the motor
-			//NU32_WriteUART3("\nMotor set to IDLE mode.\r\n\n");
 			mode = IDLE;
 			break;
 		}
@@ -163,8 +148,6 @@ int main()
 			for (int i = 0; i < 4000000; ++i){
 				//nothing
 			}
-			
-			//NU32_WriteUART3("Exiting. Goodbye!");
 
 			return 0;
 		}
@@ -173,19 +156,7 @@ int main()
 		{
 			//read what mode the motor is in
 			sprintf(buffer, "%d\r\n", mode);
-			// sprintf(buffer, "\nCurrent mode of program: %d \r\n", mode);
 			NU32_WriteUART3(buffer);
-
-			// sprintf(buffer,
-			// "\nGuide to program modes: \r\n"
-			// "IDLE Mode: %d \r\n" 
-			// "PWM Mode: %d \r\n"
-			// "ITEST Mode: %d \r\n"
-			// "HOLD Mode: %d \r\n"
-			// "TRACK Mode: %d \r\n\n",
-			// IDLE, PWM, ITEST, HOLD, TRACK
-			// );
-			// NU32_WriteUART3(buffer);
 			break;
 		}
 
