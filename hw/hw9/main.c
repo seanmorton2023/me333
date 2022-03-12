@@ -53,7 +53,7 @@ int main()
 			//read current sensor in milli-amps
 			float ma = INA219_read_current();
 			//sprintf(buffer, "Current value in mA: %.2f \r\n", ma);
-			sprintf(buffer, "%f\n", ma);
+			sprintf(buffer, "%f\r\n", ma);
 			NU32_WriteUART3(buffer);
 			break;
 		}
@@ -164,7 +164,7 @@ int main()
 				//nothing
 			}
 			
-			NU32_WriteUART3("Exiting. Goodbye!");
+			//NU32_WriteUART3("Exiting. Goodbye!");
 
 			return 0;
 		}
@@ -172,7 +172,7 @@ int main()
 		case 'r':
 		{
 			//read what mode the motor is in
-			sprintf(buffer, "%d \r\n", mode);
+			sprintf(buffer, "%d\r\n", mode);
 			// sprintf(buffer, "\nCurrent mode of program: %d \r\n", mode);
 			NU32_WriteUART3(buffer);
 
