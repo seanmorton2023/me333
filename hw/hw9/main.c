@@ -53,7 +53,7 @@ int main()
 			//read current sensor in milli-amps
 			float ma = INA219_read_current();
 			//sprintf(buffer, "Current value in mA: %.2f \r\n", ma);
-			sprintf(buffer, "%f \r\n", ma);
+			sprintf(buffer, "%f\n", ma);
 			NU32_WriteUART3(buffer);
 			break;
 		}
@@ -70,7 +70,7 @@ int main()
 			set_encoder_flag(0); //prepare for new instructions
 			char m[50];
 			int p = get_encoder_count();
-			sprintf(m, "%d \r\n", p);
+			sprintf(m, "%d\r\n", p);
 			NU32_WriteUART3(m);
 			break;
 		}
@@ -87,7 +87,7 @@ int main()
 			set_encoder_flag(0); //prepare for new instructions
 			char m[50];
 			float p = get_encoder_count();
-			sprintf(m, "%.1f \r\n", p * 360 /4/334 );
+			sprintf(m, "%f\r\n", p * 360 /4/334 );
 			NU32_WriteUART3(m);
 			break;
 		}
@@ -115,16 +115,19 @@ int main()
 		case 'g':
 		{
 			//set current gains
-			NU32_WriteUART3("r\nEnter new current gain Kp: ");
+			//NU32_WriteUART3("r\nEnter new current gain Kp: ");
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer, "%f", &Jp);
 			
-			NU32_WriteUART3("\r\nEnter new current gain Ki: ");
+			//NU32_WriteUART3("\r\nEnter new current gain Ki: ");
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer, "%f", &Ji);			
 			
-			sprintf(buffer, "\r\nNew P + I gains: %.3f, %.3f \r\n\n", Jp, Ji);
-			NU32_WriteUART3(buffer);
+			// sprintf(buffer, "\r\nNew P + I gains: %.3f, %.3f \r\n\n", Jp, Ji);
+			// sprintf(buffer, "%f \n", Jp);
+			// NU32_WriteUART3(buffer);
+			// sprintf(buffer, "%f \n", Ji);
+			// NU32_WriteUART3(buffer);
 			
 			break;
 		}
@@ -132,7 +135,11 @@ int main()
 		case 'h':
 		{
 			//get current gains
-			sprintf(buffer, "Current gains (Kp, Ki): %.3f %.3f \r\n\n", Jp, Ji);
+			//sprintf(buffer, "Current gains (Kp, Ki): %.3f %.3f \r\n\n", Jp, Ji);
+			sprintf(buffer, "%f\r\n",Jp);
+			NU32_WriteUART3(buffer);
+			
+			sprintf(buffer, "%f\r\n", Ji);
 			NU32_WriteUART3(buffer);
 			
 			break;
@@ -142,7 +149,7 @@ int main()
 		case 'p':
 		{
 			//unpower the motor
-			NU32_WriteUART3("\nMotor set to IDLE mode.\r\n\n");
+			//NU32_WriteUART3("\nMotor set to IDLE mode.\r\n\n");
 			mode = IDLE;
 			break;
 		}

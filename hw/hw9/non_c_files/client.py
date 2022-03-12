@@ -42,10 +42,14 @@ while not has_quit:
 		print(f'Encoder reading: {count} \n')
 
 	elif (selection == 'd'):
-		pass
+
+		bytes = ser.read_until(b'\n')
+		degs = float(bytes)
+		print(f'Encoder reading (degrees) {degs} \n')	
 
 	elif (selection == 'e'):
-		pass
+		#no data to read here; just sends data to the PICO
+		print('Sent command to reset the encoder count.\n')
 
 	elif (selection == 'f'):
 		
@@ -54,15 +58,42 @@ while not has_quit:
 		ser.write(serial_text)
 		print(f'New value of PWM: {pwm}')
 
-
 		#error I get: you can read the mode of the PIC as much as you want, 
+		#but immediately after you set the PWM with 'f' it sends back a b\n
+		#which can't be interpreted as a PIC mode
+
+		#this also happens with the 'p' command, which (like this one) doesn't
+		#read any data from the serial, just sends commands
 		pass
 
 	elif (selection == 'g'):
-		pass
+
+		#make this use just one variable for faster execution time
+
+		gain1 = input('Enter new gain Kp for current: ')
+		gain1 = float(gain1)
+		serial_text = (str(gain1) + '\n').encode()
+		ser.write(serial_text)
+
+		gain2 = input('Enter new gain Ki for current: ')
+		gain2 = float(gain2)
+		serial_text = (str(gain2) + '\n').encode()
+		ser.write(serial_text)
+		print()
+
+		#print(f'New values of Kp and Ki for current: {gain1} {gain2} \n')
 
 	elif (selection == 'h'):
-		pass
+
+		#gets into an infinite loop during the reading portion
+
+		bytes = ser.read_until('b\n')
+		gain = float(bytes)
+		print('Value of current gain Kp: {gain}')
+
+		bytes = ser.read_until(b'\n')
+		gain = float(bytes)
+		print('Value of current gain Ki: {gain}')
 
 	elif (selection == 'k'):
 		pass
@@ -85,10 +116,6 @@ while not has_quit:
 		"HOLD Mode: 3 \n" + 
 		"TRACK Mode: 4 \n\n",
 		)
-
-
-		pass
-
 
 	elif (selection == 'x'):
 		# example operation
