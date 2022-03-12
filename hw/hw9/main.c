@@ -52,7 +52,8 @@ int main()
 		{
 			//read current sensor in milli-amps
 			float ma = INA219_read_current();
-			sprintf(buffer, "Current value in mA: %.2f \r\n", ma);
+			//sprintf(buffer, "Current value in mA: %.2f \r\n", ma);
+			sprintf(buffer, "%f \r\n", ma);
 			NU32_WriteUART3(buffer);
 			break;
 		}
