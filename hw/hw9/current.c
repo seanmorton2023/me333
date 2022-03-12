@@ -4,19 +4,6 @@
 //5KHz ISR to control current going to motor
 void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 
-	//TODO
-	
-	//takes current data from the ADC
-	//adcval = adc_sample_convert(ADC_PIN);
-	
-	//PI controller for current
-	
- 	//set OC3RS at 25% of PR at first, modify later
-	OC3RS = 500;
-	
-	//invert directional output of motor
-	//LATDINV = 0b1 << 4; //invert digital output at pin 4
-	
 	
 	//set PWM and motor direction based on mode flag
 	switch (mode) {
@@ -53,6 +40,48 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 		
 		case ITEST:
 		{
+
+			static int refval;
+			static float current;
+				
+			//PI controller for current
+			if (count < 25) {
+				refval = 200;
+			} else if (count < 50) {
+				refval = -200;
+			} else if (count < 75) {
+				refval = 200;
+			} else if (count < 100) {
+				refval = -200;
+			} else {
+				count = 0;
+			}
+			
+			//carry out PI controller for current
+			f = refval - current;
+			v = v + Jp * f + Ji * fint;
+			
+			//bounds on PI controller output
+			if (v > 100.0) {
+				v = 100.0; 
+			} else if (v < -100.0) {
+				v = -100.0;
+			}
+			
+			//convert output of PI controller to PWM out - adjust the 
+			//current through the system by adjusting voltages
+
+			if (v < 0) {	
+				//deal with "negative" direction
+				LATDbits.LATD4 = 0;
+				OC3RS = (unsigned int) -v * PR2/100;
+			} else {
+				LATDbits.LATD4 = 1;
+				OC3RS = (unsigned int) v * PR2/100;		
+			}
+	
+			fint += f;
+			count++;
 			break;
 		}
 		

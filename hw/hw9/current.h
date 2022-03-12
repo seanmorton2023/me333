@@ -10,6 +10,7 @@
 extern volatile float f, fint;
 extern volatile float  v;
 extern volatile float Jp, Ji;
+static volatile int count = 0;
 
 extern int client_input;
 //ISR function is defined in the .c file only

@@ -7,3 +7,8 @@ hw3/pic32-libs
 *.sqlite
 *.sqlite-journal
 .vs/22W_MECH_ENG_333/v16/Browse.VC.opendb
+*.o
+*.dis
+*.elf
+*.hex
+*.map
