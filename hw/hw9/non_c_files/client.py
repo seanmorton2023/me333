@@ -1,10 +1,7 @@
-# chapter 28 in python
-
-# sudo apt-get install python3-pip
-# python3 -m pip install pyserial
-# sudo apt-get install python3-matplotlib
 
 import serial
+import matplotlib.pyplot as plt
+
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ')
 print(ser.name)
@@ -12,6 +9,7 @@ print(ser.name)
 has_quit = False
 # menu loop
 while not has_quit:
+
 	print('PIC32 MOTOR DRIVER INTERFACE')
 	# display the menu options; this list will grow
 	print('\tb: read current (mA) \tc: read encoder (counts) \td: read encoder (deg)')
@@ -87,7 +85,32 @@ while not has_quit:
 		print(f'Value of current gain Ki: {gain} \n')
 
 	elif (selection == 'k'):
-		pass
+
+		curr_array = []
+		ref_array = []
+
+		print('Running ITEST mode now. Check plot of datapoints.')
+		bytes = ser.read_until(b'\n')
+		num_samps = int(bytes)
+		print(f'Number of ITEST samples: {num_samps} \n')
+
+		for i in range(num_samps):
+			#read until binary space char
+			bytes = ser.read_until(b' ')
+			current = float(bytes)
+			#print(current, end=' ')
+			curr_array.append(current)
+
+			#read until binary newline char
+			bytes = ser.read_until(b'\n')
+			refval = float(bytes)
+			#print(refval)
+			ref_array.append(refval)
+
+
+		xvals = list(range(0,num_samps))
+		plt.plot(xvals, ref_array, curr_array)
+		plt.show()
 
 	elif (selection == 'p'):
 		print("PIC mode set to IDLE.\n")
