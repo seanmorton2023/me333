@@ -54,8 +54,19 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			} else if (count < 100) {
 				refval = -200;
 			} else {
-				count = 0;
+				set_mode(IDLE);
+				break;
 			}
+			
+			current = INA219_read_current();
+			
+			//integrator anti windup
+			if (fint > EINT_MAX) {
+				fint = EINT_MAX;
+			else if (fint < EINT_MIN) {
+				fint = EINT_MIN;
+			}
+			
 			
 			//carry out PI controller for current
 			f = refval - current;
@@ -80,8 +91,14 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 				OC3RS = (unsigned int) v * PR2/100;		
 			}
 	
+			//store values of current in arrays. send them in a separate
+			//function because sprintf() takes a while
+			curr_array[count] = current;
+			ref_array[count] = refval;
+	
 			fint += f;
 			count++;
+
 			break;
 		}
 		

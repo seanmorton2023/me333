@@ -11,6 +11,7 @@
 #define ADC_PIN 5           // pin 5 on the PIC/NU32
 #define BUF_SIZE 200
 #define conversion 360/344/4 //convert from counts to angles
+#define NUM_SAMPS 200
 
 //control variables for position control
 volatile float e, eint = 0, edot;
@@ -23,9 +24,13 @@ volatile float Jp = 0, Ji = 0;
 volatile float f, fint = 0;
 volatile float  v;
 
+//for sending data in ITEST
+volatile int count = 0;
+volatile float curr_array[NUM_SAMPS];
+volatile float ref_array[NUM_SAMPS];
+
 //reference position/velocity, controlled by user input
 int client_input;
-static volatile int adcval;
 
 int main() 
 {
@@ -129,6 +134,20 @@ int main()
 			NU32_WriteUART3(buffer);
 			
 			break;
+		}
+		
+		case 'k':
+		{
+			count = 0;
+			NU32_WriteUART3("%d\r\n", NUM_SAMPS);
+			
+			//current control ISR at 5KHz times 200 samples
+			//should take 0.04 seconds. wait til done
+			while (get_mode() == ITEST) {
+				//nothing
+			}
+			
+			
 		}
   
   

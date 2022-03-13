@@ -12,4 +12,12 @@ enum picMode {
 } mode; //variable to set mode with
 
 
+int get_mode() {
+	return mode;
+}
+
+void set_mode(int newmode) {
+	mode = newmode;
+}
+
 #endif
