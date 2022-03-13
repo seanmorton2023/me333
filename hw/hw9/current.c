@@ -57,7 +57,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 				set_mode(IDLE);
 				break;
 			}
-			
+					
 			current = INA219_read_current();
 			
 			//integrator anti windup
@@ -110,9 +110,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 		case TRACK:
 		{
 			break;
-		} 
-		
-		
+		} 		
 	}
 	
 	
@@ -124,9 +122,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 //take every entry of current vs. expected val, and 
 //send to client over UART
 void send_current_arrays() {
-	
-	char m[BUF_SIZE];
-	
+		
 	for (int i = 0; i < NUM_SAMPS; ++i) {
 		sprintf(m, "%f %f\r\n", curr_array[i], ref_array[i]);
 		NU32_WriteUART3(m);	

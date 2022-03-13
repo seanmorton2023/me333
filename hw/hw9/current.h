@@ -11,7 +11,7 @@
 
 #define EINT_MAX 100
 #define EINT_MIN -100
-#define NUM_SAMPS 200
+#define NUM_SAMPS 100
 #define BUF_SIZE 200
 
 extern volatile float f, fint;
@@ -24,7 +24,8 @@ extern int client_input;
 //arrays for storing data
 extern volatile float curr_array[NUM_SAMPS];
 extern volatile float ref_array[NUM_SAMPS];
-
+	
+char m[BUF_SIZE];
 void send_current_arrays(void);
 
 //ISR function is defined in the .c file only

@@ -11,7 +11,7 @@
 #define ADC_PIN 5           // pin 5 on the PIC/NU32
 #define BUF_SIZE 200
 #define conversion 360/344/4 //convert from counts to angles
-#define NUM_SAMPS 200
+#define NUM_SAMPS 100
 
 //control variables for position control
 volatile float e, eint = 0, edot;
@@ -141,6 +141,8 @@ int main()
 			count = 0;
 			sprintf(buffer, "%d\r\n", NUM_SAMPS); 
 			NU32_WriteUART3(buffer);
+			
+			set_mode(ITEST);
 			
 			//current control ISR at 5KHz times 200 samples
 			//should take 0.04 seconds. wait til done
