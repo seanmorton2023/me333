@@ -11,13 +11,7 @@ enum picMode {
 	TRACK
 } mode; //variable to set mode with
 
-
-int get_mode() {
-	return mode;
-}
-
-void set_mode(int newmode) {
-	mode = newmode;
-}
+int get_mode(void);
+void set_mode(int);
 
 #endif

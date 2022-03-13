@@ -63,7 +63,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			//integrator anti windup
 			if (fint > EINT_MAX) {
 				fint = EINT_MAX;
-			else if (fint < EINT_MIN) {
+			} else if (fint < EINT_MIN) {
 				fint = EINT_MIN;
 			}
 			
@@ -119,4 +119,16 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 	//clear interrupt flag
 	IFS0bits.T3IF = 0;
 
+}
+
+//take every entry of current vs. expected val, and 
+//send to client over UART
+void send_current_arrays() {
+	
+	char m[BUF_SIZE];
+	
+	for (int i = 0; i < NUM_SAMPS; ++i) {
+		sprintf(m, "%f %f\r\n", curr_array[i], ref_array[i]);
+		NU32_WriteUART3(m);	
+	}
 }

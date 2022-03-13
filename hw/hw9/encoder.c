@@ -1,5 +1,4 @@
 #include "encoder.h"
-#include <stdio.h>
 
 #define UART2_DESIRED_BAUD 230400
 #define MAX_RX_MESSAGE 100

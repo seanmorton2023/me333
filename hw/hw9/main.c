@@ -139,7 +139,8 @@ int main()
 		case 'k':
 		{
 			count = 0;
-			NU32_WriteUART3("%d\r\n", NUM_SAMPS);
+			sprintf(buffer, "%d\r\n", NUM_SAMPS); 
+			NU32_WriteUART3(buffer);
 			
 			//current control ISR at 5KHz times 200 samples
 			//should take 0.04 seconds. wait til done
@@ -147,7 +148,7 @@ int main()
 				//nothing
 			}
 			
-			
+			send_current_arrays();			
 		}
   
   

@@ -3,6 +3,7 @@
 
 #include <xc.h> // processor SFR definitions
 #include <sys/attribs.h> // __ISR macro
+#include <stdio.h>
 
 #include "NU32.h"
 
