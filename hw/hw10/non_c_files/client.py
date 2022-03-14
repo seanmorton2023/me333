@@ -1,7 +1,7 @@
 
 import serial
 import matplotlib.pyplot as plt
-from hw/hw10/non_c_files import genref.py
+#from hw/hw10/non_c_files import genref.py
 
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ', end = '')
@@ -160,19 +160,21 @@ while not has_quit:
 	elif (selection == 'l'):
 		
 		#gp to a position
-		posn = input('Enter a position to move to: ')
-		posn = float(posn)
-		serial_text = (str(posn) + '\n').encode()
-		ser.write(serial_text)
-
-		#print('Running HOLD mode now. Check motor movement.\n')
-		#bytes = ser.read_until(b'\n')
-		#code = int(bytes)
-		#print("Finished with HOLD mode: " + str(code))
+		#posn = input('Enter a position to move to: ')
+		#posn = float(posn)
+		#serial_text = (str(posn) + '\n').encode()
+		#ser.write(serial_text)
+		pass
 
 	elif (selection == 'm'):
 		#load step trajectory
+		print('Sending step trajectory to PIC.\n')
 		ref = genRef('step')
+
+		#send length of the array to the PIC so we know how much data there is
+		length = len(ref)
+		serial_text = (str(length) + '\n').encode()
+		ser.write(serial_text)
 
 		#take every element in the ref array and send it to the PIC
 		for i in range(len(ref)):
@@ -182,23 +184,32 @@ while not has_quit:
 
 	elif (selection == 'n'):
 		#load cubic trajectory
+		print('Sending cubic trajectory to PIC.\n')
 		ref = genRef('cubic')
+
+		#send length of the array to the PIC so we know how much data there is
+		length = len(ref)
+		serial_text = (str(length) + '\n').encode()
+		ser.write(serial_text)
 
 		#take every element in the ref array and send it to the PIC
 		for i in range(len(ref)):
 			val = str(ref[i])
 			serial_text = (val + '\n').encode()
+			ser.write(serial_text)
 
-		pass
 
 	elif (selection == 'o'):
-		#execute trajectory
+		#execute trajectory. wait for PIC to do all the computations
+		#and retrieve the values
+
+
 
 		pass
-
 
 	elif (selection == 'p'):
 		print("PIC mode set to IDLE.\n")
+		pass
 
 	elif (selection == 'r'):
 

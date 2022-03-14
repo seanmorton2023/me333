@@ -12,7 +12,7 @@
 #define BUF_SIZE 200
 #define conversion 360/344/4 //convert from counts to angles
 #define NUM_SAMPS 100
-#define TRAJ_BUF 2000
+#define TRAJ_BUF 3000
 
 //control variables for position control
 volatile float e, e_old = 0;
@@ -37,9 +37,11 @@ int client_input; //for PWM percentage
 volatile float ref_curr = 0;
 volatile float ref_posn = 0;
 
-//for executing trajectories in m and n
+//for executing trajectories in l/m/n/o
 volatile float traj_array[TRAJ_BUF];
+volatile float posn_array[TRAJ_BUF];
 volatile float traj;
+volatile int traj_length;
 
 int main() 
 {
@@ -115,7 +117,7 @@ int main()
 		case 'f':
 		{
 			//Set PWM (-100 to 100)
-			mode = PWM;
+			set_mode(PWM);
 
 			NU32_ReadUART3(buffer, BUF_SIZE);
 			sscanf(buffer,"%d", &client_input);
@@ -187,10 +189,7 @@ int main()
 		case 'k':
 		{
 			//go into ITEST mode for gain testing
-			curr_count = 0;
-			sprintf(buffer, "%d\r\n", NUM_SAMPS); 
-			NU32_WriteUART3(buffer);
-			
+			curr_count = 0;			
 			set_mode(ITEST);
 			
 			//current control ISR at 5KHz times 200 samples
@@ -199,12 +198,16 @@ int main()
 				//nothing
 			}
 			
+			sprintf(buffer, "%d\r\n", NUM_SAMPS); 
+			NU32_WriteUART3(buffer);
+			
 			send_current_arrays();		
 			break;
 		}
 		
 		case 'l':
 		{
+			/*
 			//go to a position
 			posn_count = 0;
 			NU32_ReadUART3(buffer, BUF_SIZE);
@@ -223,58 +226,76 @@ int main()
 			//send a basic signal saying "HOLD mode is done"
 			//NU32_WriteUART3("1\r\n");
 				
+				*/
+				
 			break;
 		}
 		
 		case 'm':
 		{
 			//load step trajectory
-			for (int i = 0; i < TRAJ_BUF; ++i) {
+
+			//get the length of the array
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%d", traj_length);
+			
+			//read each individual trajectory command
+			for (int i = 0; i < traj_length; ++i) {
 				NU32_ReadUART3(buffer, BUF_SIZE);
 				sscanf(buffer, "%f", &traj);
 				traj_array[i] = traj;
 			}
-			
 			
 			break;
 		}
 		
 		case 'n':
 		{
-			//load cubic trajectory
-			for (int i = 0; i < TRAJ_BUF; ++i) {
+			//get the length of the array
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%d", traj_length);
+			
+			//read each individual trajectory command
+			for (int i = 0; i < traj_length; ++i) {
 				NU32_ReadUART3(buffer, BUF_SIZE);
 				sscanf(buffer, "%f", &traj);
 				traj_array[i] = traj;
 			}
-			
-			
+					
 			break;
 		}
   
 		case 'o':
 		{
-			//execute trajectory
+			//execute trajectory set by m or n
+			posn_count = 0;
 			set_mode(TRACK);
 
 			//wait for the mode to change
 			while (get_mode() == TRACK) {
 				//nothing	
 			}
-
+			
+			//send number of datapoints to client
+			sprintf(buffer, "%f\r\n", traj_length);
+			NU32_WriteUART3(buffer);
+			
+			//send data to client
+			send_posn_arrays();
+			break;
 		}
 		
 		case 'p':
 		{
 			//unpower the motor
-			mode = IDLE;
+			set_mode(IDLE);
 			break;
 		}
 	  
 		case 'q':
 		{
 			// handle q for quit. Later you may want to return to IDLE mode here.
-			mode = IDLE;
+			set_mode(IDLE);
 
 			//delay a short amount of time to make sure ISR hits
 			for (int i = 0; i < 4000000; ++i){

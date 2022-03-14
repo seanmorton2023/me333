@@ -2,10 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\hw",
+    "\\hw\\hw10",
+    "\\hw\\hw10\\non_c_files",
     "\\hw\\hw7",
     "\\hw\\hw9",
     "\\hw\\hw9\\non_c_files"
   ],
-  "SelectedNode": "\\hw\\hw9\\non_c_files\\client.py",
+  "SelectedNode": "\\hw\\hw10\\non_c_files\\genref.py",
   "PreviewInSolutionExplorer": false
 }

@@ -106,6 +106,60 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 		
 		case HOLD:
 		{
+			/*
+			//same formulation as ITEST, but we're not
+			//plotting current values this time
+					
+			current = INA219_read_current();
+			
+			//integrator anti windup
+			if (fint > EINT_MAX) {
+				fint = EINT_MAX;
+			} else if (fint < EINT_MIN) {
+				fint = EINT_MIN;
+			}
+			
+			
+			//carry out PI controller for current
+			f = ref_curr - current;
+			v = Jp * f + Ji * fint - Jd * fdot;
+			
+			//bounds on PI controller output
+			if (v > 100.0) {
+				v = 100.0; 
+			} else if (v < -100.0) {
+				v = -100.0;
+			}
+			
+			//convert output of PI controller to PWM out - adjust the 
+			//current through the system by adjusting voltages
+
+			if (v < 0) {	
+				//deal with "negative" direction
+				LATDbits.LATD4 = 0;
+				OC3RS = (unsigned int) -v * PR2/100;
+			} else {
+				LATDbits.LATD4 = 1;
+				OC3RS = (unsigned int) v * PR2/100;		
+			}
+	
+			//store values of current in arrays. send them in a separate
+			//function because sprintf() takes a while
+			curr_array[curr_count] = current;
+			ref_array[curr_count] = ref_curr;
+	
+			//setup calcs for next pass of ISR
+			fdot = f - f_old;
+			fint += f;
+			f_old = f;
+			*/
+			
+			break;
+		}
+		
+		case TRACK:
+		{
+			
 			//same formulation as ITEST, but we're not
 			//plotting current values this time
 					
@@ -152,11 +206,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			fint += f;
 			f_old = f;
 			
-			break;
-		}
-		
-		case TRACK:
-		{
+			
 			break;
 		} 		
 	}

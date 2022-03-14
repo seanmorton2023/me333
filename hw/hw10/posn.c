@@ -78,7 +78,61 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 		case TRACK:
 		{
 			
+			//read encoder value in degrees
+			WriteUART2("a");
 			
+			while (!get_encoder_flag()) {
+				//delay until encoder/PICO are done sending insructions
+			}
+			
+			set_encoder_flag(0); //prepare for new instructions
+			float posn = get_encoder_count();
+			posn = posn * 360/4/334;
+			
+			ref_posn = traj_array[posn_count];
+			
+			//PID control: calculate errors and calculate next ref val
+			//of current/PWM output
+			e = ref_posn - posn;
+			
+			//integrator anti windup
+			if (eint > POSN_EINT_MAX) {
+				eint = POSN_EINT_MAX;
+			} else if (eint < POSN_EINT_MIN) {
+				eint = POSN_EINT_MIN;
+			}
+	
+			u = Kp * e + Ki * eint + Kd * edot;
+			
+			//bounds on PWM
+			if (u > 100) {
+				u = 100;
+			} else if (u < -100) {
+				u = -100;
+			}
+			
+			//store value of position in array
+			posn_array[posn_count] = posn;			
+			
+			//send this new value of position PID control
+			//output to the current PID controller. we don't
+			//want to set refval before this b/c the current
+			//ISR can interrupt this one and grab refval too early
+			ref_curr = u;
+			
+			
+			//end condition: we get to the end of the 
+			//reference array
+			if (posn_count >= traj_length) {
+				set_mode(IDLE);
+				break;
+			}
+			
+			//setup next iteration of PID
+			edot =  e - e_old;
+			eint += e;
+			e_old = e;
+			posn_count++;
 			
 			break;
 		}
@@ -86,16 +140,20 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 		default:
 		{
 			break;
-		}
-		
-		
-		
-		
-		
+		}		
 	}
-
 
 	//clear interrupt flag
 	IFS0bits.T4IF = 0;
 
+}
+
+
+
+void send_posn_arrays(void) {
+	
+	for (int i = 0; i < traj_length; ++i) {
+		sprintf(m, "%f %f\r\n", traj_array[i], posn_array[i]);
+		NU32_WriteUART3(m);	
+	}	
 }
