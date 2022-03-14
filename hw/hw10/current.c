@@ -175,7 +175,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			
 			//carry out PI controller for current
 			f = ref_curr - current;
-			v = Jp * f + Ji * fint - Jd * fdot;
+			v = Jp * f + Ji * fint + Jd * fdot;
 			
 			//bounds on PI controller output
 			if (v > 100.0) {
