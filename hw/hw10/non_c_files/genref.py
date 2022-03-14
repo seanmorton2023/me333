@@ -78,3 +78,9 @@ def genRef(method):
                 refCtr = refCtr + 1
 
     return ref
+
+
+#if __name__ == '__main__':
+#    ref = genRef('cubic')
+#    print(ref)
+#    print(len(ref))

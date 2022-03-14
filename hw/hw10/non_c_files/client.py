@@ -1,7 +1,7 @@
 
 import serial
 import matplotlib.pyplot as plt
-import gen
+from hw/hw10/non_c_files import genref.py
 
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ', end = '')
@@ -159,6 +159,7 @@ while not has_quit:
 
 	elif (selection == 'l'):
 		
+		#gp to a position
 		posn = input('Enter a position to move to: ')
 		posn = float(posn)
 		serial_text = (str(posn) + '\n').encode()
@@ -170,12 +171,29 @@ while not has_quit:
 		#print("Finished with HOLD mode: " + str(code))
 
 	elif (selection == 'm'):
-		pass
+		#load step trajectory
+		ref = genRef('step')
+
+		#take every element in the ref array and send it to the PIC
+		for i in range(len(ref)):
+			val = str(ref[i])
+			serial_text = (val + '\n').encode()
+			ser.write(serial_text)
 
 	elif (selection == 'n'):
+		#load cubic trajectory
+		ref = genRef('cubic')
+
+		#take every element in the ref array and send it to the PIC
+		for i in range(len(ref)):
+			val = str(ref[i])
+			serial_text = (val + '\n').encode()
+
 		pass
 
 	elif (selection == 'o'):
+		#execute trajectory
+
 		pass
 
 

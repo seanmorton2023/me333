@@ -12,6 +12,7 @@
 #define BUF_SIZE 200
 #define conversion 360/344/4 //convert from counts to angles
 #define NUM_SAMPS 100
+#define TRAJ_BUF 2000
 
 //control variables for position control
 volatile float e, e_old = 0;
@@ -35,6 +36,10 @@ volatile float ref_array[NUM_SAMPS];
 int client_input; //for PWM percentage
 volatile float ref_curr = 0;
 volatile float ref_posn = 0;
+
+//for executing trajectories in m and n
+volatile float traj_array[TRAJ_BUF];
+volatile float traj;
 
 int main() 
 {
@@ -195,7 +200,7 @@ int main()
 			}
 			
 			send_current_arrays();		
-			//break;
+			break;
 		}
 		
 		case 'l':
@@ -211,12 +216,12 @@ int main()
 			//at a position
 			while (get_mode() == HOLD){
 				//nothing
-				NU32_WriteUART3("Inside loop for HOLD mode\r\n");
+				//NU32_WriteUART3("Inside loop for HOLD mode\r\n");
 
 			}
 			
 			//send a basic signal saying "HOLD mode is done"
-			NU32_WriteUART3("1\r\n");
+			//NU32_WriteUART3("1\r\n");
 				
 			break;
 		}
@@ -224,18 +229,39 @@ int main()
 		case 'm':
 		{
 			//load step trajectory
+			for (int i = 0; i < TRAJ_BUF; ++i) {
+				NU32_ReadUART3(buffer, BUF_SIZE);
+				sscanf(buffer, "%f", &traj);
+				traj_array[i] = traj;
+			}
+			
+			
 			break;
 		}
 		
 		case 'n':
 		{
 			//load cubic trajectory
+			for (int i = 0; i < TRAJ_BUF; ++i) {
+				NU32_ReadUART3(buffer, BUF_SIZE);
+				sscanf(buffer, "%f", &traj);
+				traj_array[i] = traj;
+			}
+			
+			
 			break;
 		}
   
 		case 'o':
 		{
 			//execute trajectory
+			set_mode(TRACK);
+
+			//wait for the mode to change
+			while (get_mode() == TRACK) {
+				//nothing	
+			}
+
 		}
 		
 		case 'p':
