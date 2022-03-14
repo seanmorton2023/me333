@@ -26,7 +26,8 @@ volatile float Jp = 0, Ji = 0, Jd = 0;
 volatile float  v;
 
 //for sending data in ITEST
-volatile int count = 0;
+volatile int curr_count = 0;
+volatile int posn_count = 0;
 volatile float curr_array[NUM_SAMPS];
 volatile float ref_array[NUM_SAMPS];
 
@@ -181,7 +182,7 @@ int main()
 		case 'k':
 		{
 			//go into ITEST mode for gain testing
-			count = 0;
+			curr_count = 0;
 			sprintf(buffer, "%d\r\n", NUM_SAMPS); 
 			NU32_WriteUART3(buffer);
 			
@@ -199,6 +200,21 @@ int main()
 		case 'l':
 		{
 			//go to a position
+			posn_count = 0;
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%f", ref_posn);
+			
+			set_mode(HOLD);
+			
+			//wait for HOLD mode to be done, i.e. to settle
+			//at a position
+			while (get_mode() == HOLD){
+				//nothing
+			}
+			
+			//send a basic signal saying "HOLD mode is done"
+			NU32_WriteUART3("1\r\n");
+				
 			break;
 		}
 		

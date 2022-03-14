@@ -157,7 +157,16 @@ while not has_quit:
 		plt.show()
 
 	elif (selection == 'l'):
-		pass
+		
+		posn = input('Enter a position to move to: ')
+		posn = float(posn)
+		serial_text = (str(posn) + '\n').encode()
+		ser.write(serial_text)
+
+		print('Running HOLD mode now. Check motor movement.\n')
+		bytes = ser.read_until(b'\n')
+		code = int(bytes)
+		print("Finished with HOLD mode: " + str(code))
 
 	elif (selection == 'm'):
 		pass

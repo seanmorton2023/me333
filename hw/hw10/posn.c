@@ -43,6 +43,19 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 				u = -100;
 			}
 			
+			//end condition: maybe when edot goes to zero?
+			//do "if end_condition -> set_mode(IDLE" so this
+			//doesn't go forever
+			if (-POSN_EDOT_THRES < edot < POSN_EDOT_THRES) {
+				if (-POSN_E_THRES < e < POSN_E_THRES) {	
+					set_mode(IDLE);
+					break;
+				}
+			} else if (posn_count > POSN_DATASIZE) {
+				set_mode(IDLE);
+				break;
+			}
+			
 			//send this new value of position PID control
 			//output to the current PID controller. we don't
 			//want to set refval before this b/c the current
@@ -53,6 +66,7 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 			edot =  e - e_old;
 			eint += e;
 			e_old = e;
+			posn_count++;
 
 			break;
 		}

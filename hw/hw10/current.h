@@ -18,7 +18,7 @@ extern volatile float f, f_old;
 extern volatile float fint, fdot;
 extern volatile float Jp, Ji, Jd;
 extern volatile float  v; //used to set OC1RS to edit PWM
-extern volatile int count; //for counting up in ITEST
+extern volatile int curr_count; //for counting up in ITEST
 
 extern int client_input;
 
