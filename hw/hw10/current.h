@@ -28,6 +28,9 @@ extern volatile float ref_array[NUM_SAMPS];
 char m[BUF_SIZE];
 void send_current_arrays(void);
 
+extern volatile float ref_curr;
+static volatile float current;
+
 //ISR function is defined in the .c file only
 
 

@@ -30,7 +30,9 @@ volatile float curr_array[NUM_SAMPS];
 volatile float ref_array[NUM_SAMPS];
 
 //reference position/velocity, controlled by user input
-int client_input;
+int client_input; //for PWM percentage
+volatile float ref_curr = 0;
+volatile float ref_posn = 0;
 
 int main() 
 {
