@@ -12,6 +12,10 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 			//user inputs a position to main.c via ref_posn
 			//and we have to navigate to that position
 			
+			//check: do we enter the ISR?
+			NU32_WriteUART3("Entered HOLD mode in posn.c\r\n");
+			
+			
 			//read encoder value in degrees
 			WriteUART2("a");
 			

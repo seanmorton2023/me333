@@ -1,6 +1,7 @@
 
 import serial
 import matplotlib.pyplot as plt
+import gen
 
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ', end = '')
@@ -163,10 +164,10 @@ while not has_quit:
 		serial_text = (str(posn) + '\n').encode()
 		ser.write(serial_text)
 
-		print('Running HOLD mode now. Check motor movement.\n')
-		bytes = ser.read_until(b'\n')
-		code = int(bytes)
-		print("Finished with HOLD mode: " + str(code))
+		#print('Running HOLD mode now. Check motor movement.\n')
+		#bytes = ser.read_until(b'\n')
+		#code = int(bytes)
+		#print("Finished with HOLD mode: " + str(code))
 
 	elif (selection == 'm'):
 		pass

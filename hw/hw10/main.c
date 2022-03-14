@@ -194,7 +194,8 @@ int main()
 				//nothing
 			}
 			
-			send_current_arrays();			
+			send_current_arrays();		
+			//break;
 		}
 		
 		case 'l':
@@ -210,6 +211,8 @@ int main()
 			//at a position
 			while (get_mode() == HOLD){
 				//nothing
+				NU32_WriteUART3("Inside loop for HOLD mode\r\n");
+
 			}
 			
 			//send a basic signal saying "HOLD mode is done"

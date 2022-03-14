@@ -41,6 +41,8 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 		case ITEST:
 		{
 		
+			NU32_WriteUART3("Entered ITEST mode in current.c\r\n");
+		
 			//PI controller for current
 			if (curr_count < 25) {
 				ref_curr = 200;
