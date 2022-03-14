@@ -27,16 +27,33 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 			//of current/PWM output
 			e = ref_posn - posn;
 			
-			//u = u + Kp * //I think I realized my mistake. 
-			//the present value of u should be independent of the
-			//past one, and instead be based on e, eint, edot only
+			//integrator anti windup
+			if (eint > POSN_EINT_MAX) {
+				eint = POSN_EINT_MAX;
+			} else if (eint < POSN_EINT_MIN) {
+				eint = POSN_EINT_MIN;
+			}
+	
+			u = Kp * e + Ki * eint + Kd * edot;
 			
+			//bounds on PWM
+			if (u > 100) {
+				u = 100;
+			} else if (u < -100) {
+				u = -100;
+			}
 			
+			//send this new value of position PID control
+			//output to the current PID controller. we don't
+			//want to set refval before this b/c the current
+			//ISR can interrupt this one and grab refval too early
+			ref_curr = u;
 			
-			//send 
-			
-			
-			
+			//setup next iteration of PID
+			edot =  e - e_old;
+			eint += e;
+			e_old = e;
+
 			break;
 		}
 		

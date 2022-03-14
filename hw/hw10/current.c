@@ -94,9 +94,9 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			ref_array[count] = ref_curr;
 	
 			//setup calcs for next pass of ISR
-			fdot = v - v_old;
+			fdot = f - f_old;
 			fint += f;
-			v_old = v;
+			f_old = f;
 			count++;
 
 			break;

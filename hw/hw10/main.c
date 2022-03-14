@@ -14,15 +14,16 @@
 #define NUM_SAMPS 100
 
 //control variables for position control
-volatile float e, eint = 0, edot;
+volatile float e, e_old = 0;
+volatile float eint = 0, edot = 0;
 volatile float Kp = 0, Ki = 0, Kd = 0;
-volatile float u, u_old = 0;
-volatile float u_out = 0; //torque/current command passed to current controller
+volatile float u; //torque/current command sent to the current ISR
 
 //control variables for current control
-volatile float f, fint = 0, fdot = 0;
+volatile float f, f_old = 0;
+volatile float fint = 0, fdot = 0;
 volatile float Jp = 0, Ji = 0, Jd = 0;
-volatile float  v, v_old = 0;
+volatile float  v;
 
 //for sending data in ITEST
 volatile int count = 0;
