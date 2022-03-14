@@ -142,8 +142,42 @@ int main()
 			break;
 		}
 		
+		case 'i':
+		{
+			//set position gains
+			
+			//set position Kp
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%f", &Kp);
+			
+			//set position Ki
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%f", &Ki);		
+			
+			//set position Kd
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%f", &Kd);			
+			break;
+		}
+		
+		case 'j':
+		{
+			//get position gains
+			sprintf(buffer, "%f\r\n", Kp);
+			NU32_WriteUART3(buffer);
+			
+			sprintf(buffer, "%f\r\n", Ki);
+			NU32_WriteUART3(buffer);			
+
+			sprintf(buffer, "%f\r\n", Kd);
+			NU32_WriteUART3(buffer);			
+			
+			break;
+		}
+		
 		case 'k':
 		{
+			//go into ITEST mode for gain testing
 			count = 0;
 			sprintf(buffer, "%d\r\n", NUM_SAMPS); 
 			NU32_WriteUART3(buffer);
@@ -158,8 +192,30 @@ int main()
 			
 			send_current_arrays();			
 		}
+		
+		case 'l':
+		{
+			//go to a position
+			break;
+		}
+		
+		case 'm':
+		{
+			//load step trajectory
+			break;
+		}
+		
+		case 'n':
+		{
+			//load cubic trajectory
+			break;
+		}
   
-  
+		case 'o':
+		{
+			//execute trajectory
+		}
+		
 		case 'p':
 		{
 			//unpower the motor

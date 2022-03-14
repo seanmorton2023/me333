@@ -15,11 +15,14 @@ while not has_quit:
 	# display the menu options; this list will grow
 	print('\tb: read current (mA) \tc: read encoder (counts) \td: read encoder (deg)')
 	print('\te: reset encoder \tf: set PWM, -100 to 100 \tg: set current gains')
-	print('\th: get current gains \tp: power off PWM \t\tr: read PIC32 mode')
-	print('\tx: Dummy Command \tq: Quit');
+	print('\th: get current gains \ti: set position gains \t\tj: get position gains')
+	print('\tk: test current gains \tl: go to position \t\tm: load step traj.')
+	print('\tn: load cubic traj. \to: execute traj. \t\tp: power off PWM')
+	print('\t' + '_' * 90)
+	print('\tq: quit \t\tr: read PIC32 mode \t\tx: example command \n')
 
 	# read the user's choice
-	selection = input('\nENTER COMMAND: ')
+	selection = input('ENTER COMMAND: ')
 	selection_endline = selection+'\n'
 	 
 	# send the command to the PIC32
@@ -60,8 +63,7 @@ while not has_quit:
 
 	elif (selection == 'g'):
 
-		#make this use just one variable for faster execution time
-
+		#enter new values of position gains
 		gain = input('Enter new gain Kp for current: ')
 		gain = float(gain)
 		serial_text = (str(gain) + '\n').encode()
@@ -80,8 +82,7 @@ while not has_quit:
 
 	elif (selection == 'h'):
 
-		#gets into an infinite loop during the reading portion
-
+		#read values of current gains from UART
 		bytes = ser.read_until(b'\n')
 		gain = float(bytes)
 		print(f'Value of current gain Kp: {gain}')
@@ -93,6 +94,41 @@ while not has_quit:
 		bytes = ser.read_until(b'\n')
 		gain = float(bytes)
 		print(f'Value of current gain Kd: {gain} \n')
+
+	elif (selection == 'i'):
+
+		#set new values of position gains
+		gain = input('Enter a new value for position gain Kp: ')
+		gain = float(gain)
+		serial_text = (str(gain) + '\n').encode()
+		ser.write(serial_text)
+
+		gain = input('Enter a new value for position gain Ki: ')
+		gain = float(gain)
+		serial_text = (str(gain) + '\n').encode()
+		ser.write(serial_text)
+
+		gain = input('Enter a new value for position gain Kd: ')
+		gain = float(gain)
+		serial_text = (str(gain) + '\n').encode()
+		ser.write(serial_text)
+		print()
+
+	elif (selection == 'j'):
+
+		#read values of position gains from UART
+		bytes = ser.read_until(b'\n')
+		gain = float(bytes)
+		print(f'Value of position gain Kp: {gain}')
+
+		bytes = ser.read_until(b'\n')
+		gain = float(bytes)
+		print(f'Value of position gain Ki: {gain}')
+
+		bytes = ser.read_until(b'\n')
+		gain = float(bytes)
+		print(f'Value of position gain Kd: {gain} \n')	
+
 
 	elif (selection == 'k'):
 
@@ -108,19 +144,30 @@ while not has_quit:
 			#read until binary space char
 			bytes = ser.read_until(b' ')
 			current = float(bytes)
-			#print(current, end=' ')
 			curr_array.append(current)
 
 			#read until binary newline char
 			bytes = ser.read_until(b'\n')
 			refval = float(bytes)
-			#print(refval)
 			ref_array.append(refval)
 
 
 		xvals = list(range(0,num_samps))
 		plt.plot(xvals, ref_array, curr_array)
 		plt.show()
+
+	elif (selection == 'l'):
+		pass
+
+	elif (selection == 'm'):
+		pass
+
+	elif (selection == 'n'):
+		pass
+
+	elif (selection == 'o'):
+		pass
+
 
 	elif (selection == 'p'):
 		print("PIC mode set to IDLE.\n")
