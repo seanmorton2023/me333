@@ -3,8 +3,9 @@ import serial
 import matplotlib.pyplot as plt
 
 ser = serial.Serial('COM3',230400,rtscts=1)
-print('Opening port: ')
+print('Opening port: ', end = '')
 print(ser.name)
+print()
 
 has_quit = False
 # menu loop
@@ -61,14 +62,19 @@ while not has_quit:
 
 		#make this use just one variable for faster execution time
 
-		gain1 = input('Enter new gain Kp for current: ')
-		gain1 = float(gain1)
-		serial_text = (str(gain1) + '\n').encode()
+		gain = input('Enter new gain Kp for current: ')
+		gain = float(gain)
+		serial_text = (str(gain) + '\n').encode()
 		ser.write(serial_text)
 
-		gain2 = input('Enter new gain Ki for current: ')
-		gain2 = float(gain2)
-		serial_text = (str(gain2) + '\n').encode()
+		gain = input('Enter new gain Ki for current: ')
+		gain = float(gain)
+		serial_text = (str(gain) + '\n').encode()
+		ser.write(serial_text)
+
+		gain = input('Enter new gain Kd for current: ')
+		gain = float(gain)
+		serial_text = (str(gain) + '\n').encode()
 		ser.write(serial_text)
 		print()
 
@@ -82,7 +88,11 @@ while not has_quit:
 
 		bytes = ser.read_until(b'\n')
 		gain = float(bytes)
-		print(f'Value of current gain Ki: {gain} \n')
+		print(f'Value of current gain Ki: {gain}')
+
+		bytes = ser.read_until(b'\n')
+		gain = float(bytes)
+		print(f'Value of current gain Kd: {gain} \n')
 
 	elif (selection == 'k'):
 

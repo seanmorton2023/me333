@@ -16,13 +16,13 @@
 //control variables for position control
 volatile float e, eint = 0, edot;
 volatile float Kp = 0, Ki = 0, Kd = 0;
-volatile float u, unew;
+volatile float u, u_old = 0;
 volatile float u_out = 0; //torque/current command passed to current controller
 
 //control variables for current control
-volatile float Jp = 0, Ji = 0;
-volatile float f, fint = 0;
-volatile float  v;
+volatile float f, fint = 0, fdot = 0;
+volatile float Jp = 0, Ji = 0, Jd = 0;
+volatile float  v, v_old = 0;
 
 //for sending data in ITEST
 volatile int count = 0;
@@ -120,7 +120,10 @@ int main()
 			sscanf(buffer, "%f", &Jp);
 			
 			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%f", &Ji);						
+			sscanf(buffer, "%f", &Ji);		
+
+			NU32_ReadUART3(buffer, BUF_SIZE);
+			sscanf(buffer, "%f", &Jd);			
 			break;
 		}
 		
@@ -131,6 +134,9 @@ int main()
 			NU32_WriteUART3(buffer);
 			
 			sprintf(buffer, "%f\r\n", Ji);
+			NU32_WriteUART3(buffer);
+			
+			sprintf(buffer, "%f\r\n", Jd);
 			NU32_WriteUART3(buffer);
 			
 			break;

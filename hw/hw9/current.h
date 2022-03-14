@@ -14,9 +14,9 @@
 #define NUM_SAMPS 100
 #define BUF_SIZE 200
 
-extern volatile float f, fint;
-extern volatile float  v;
-extern volatile float Jp, Ji;
+extern volatile float f, fint, fdot;
+extern volatile float  v, v_old;
+extern volatile float Jp, Ji, Jd;
 extern volatile int count; //for counting up in ITEST
 
 extern int client_input;
