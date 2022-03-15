@@ -30,6 +30,8 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 			//PID control: calculate errors and calculate next ref val
 			//of current/PWM output
 			e = ref_posn - posn;
+			edot =  e - e_old;
+
 			
 			//integrator anti windup
 			if (eint > POSN_EINT_MAX) {
@@ -67,7 +69,6 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 			ref_curr = u;
 			
 			//setup next iteration of PID
-			edot =  e - e_old;
 			eint += e;
 			e_old = e;
 			posn_count++;

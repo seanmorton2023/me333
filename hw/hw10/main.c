@@ -277,7 +277,7 @@ int main()
 			}
 			
 			//send number of datapoints to client
-			sprintf(buffer, "%f\r\n", traj_length);
+			sprintf(buffer, "%d\r\n", traj_length);
 			NU32_WriteUART3(buffer);
 			
 			//send data to client

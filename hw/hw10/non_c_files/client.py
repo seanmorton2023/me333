@@ -1,7 +1,10 @@
 
 import serial
 import matplotlib.pyplot as plt
-#from hw/hw10/non_c_files import genref.py
+import sys
+
+sys.path.append('/hw/hw10/non_c_files')
+from genref import genRef
 
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ', end = '')
@@ -172,15 +175,19 @@ while not has_quit:
 		ref = genRef('step')
 
 		#send length of the array to the PIC so we know how much data there is
+		print("Sending data to the PIC...")
 		length = len(ref)
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
+
 
 		#take every element in the ref array and send it to the PIC
 		for i in range(len(ref)):
 			val = str(ref[i])
 			serial_text = (val + '\n').encode()
 			ser.write(serial_text)
+
+		print("Data sent to the PIC!\n")
 
 	elif (selection == 'n'):
 		#load cubic trajectory
@@ -188,7 +195,11 @@ while not has_quit:
 		ref = genRef('cubic')
 
 		#send length of the array to the PIC so we know how much data there is
+		print("Sending data to the PIC...")
 		length = len(ref)
+		print('Length of ref: ' + length)
+
+
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
 
@@ -198,18 +209,37 @@ while not has_quit:
 			serial_text = (val + '\n').encode()
 			ser.write(serial_text)
 
+		print("Data sent to the PIC!\n")
+
 
 	elif (selection == 'o'):
-		#execute trajectory. wait for PIC to do all the computations
+		#execute trajectory
+		print('Executing trajectory...')
+
+		posn_list = []
+		traj_list = []
+
+		#wait for PIC to do all the computations
 		#and retrieve the values
+		bytes = ser.read_until(b'\n')
+		traj_length = int(bytes)
 
+		for i in range(traj_length):
+			bytes = ser.read_until(b' ')
+			traj = float(bytes)
+			traj_list.append(traj)
 
+			bytes = ser.read_until(b'\n')
+			posn = float(bytes)
+			posn_list.append(posn)
 
-		pass
+		x_ref = list(range(traj_length))
+		plt.plot(x_ref, posn_list, traj_list)
+		plt.show()
+
 
 	elif (selection == 'p'):
 		print("PIC mode set to IDLE.\n")
-		pass
 
 	elif (selection == 'r'):
 
