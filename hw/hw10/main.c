@@ -237,7 +237,7 @@ int main()
 
 			//get the length of the array
 			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%d", traj_length);
+			sscanf(buffer, "%d", &traj_length);
 			
 			//read each individual trajectory command
 			for (int i = 0; i < traj_length; ++i) {
@@ -253,7 +253,7 @@ int main()
 		{
 			//get the length of the array
 			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%d", traj_length);
+			sscanf(buffer, "%d", &traj_length);
 			
 			//read each individual trajectory command
 			for (int i = 0; i < traj_length; ++i) {
