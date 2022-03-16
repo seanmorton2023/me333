@@ -24,7 +24,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			//If the operating mode is PWM, the duty cycle and direction bit are set according to 
 			//the value −100 to 100 specified by the user through the client
 			
-			//phase bit
+			//set magnitude and direction of PWM
 			if (client_input < 0) {
 				LATDbits.LATD4 = 0;
 				OC3RS = (unsigned int) -client_input * PR2/100;			
@@ -34,7 +34,6 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 				OC3RS = (unsigned int) client_input * PR2/100;			
 			}
 			
-			//set PWM
 			break;
 		}
 		
@@ -56,50 +55,8 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 				set_mode(IDLE);
 				break;
 			}
-					
-			current = INA219_read_current();
 			
-			//integrator anti windup
-			if (fint > EINT_MAX) {
-				fint = EINT_MAX;
-			} else if (fint < EINT_MIN) {
-				fint = EINT_MIN;
-			}
-			
-			
-			//carry out PI controller for current
-			f = ref_curr - current;
-			v = Jp * f + Ji * fint - Jd * fdot;
-			
-			//bounds on PI controller output
-			if (v > 100.0) {
-				v = 100.0; 
-			} else if (v < -100.0) {
-				v = -100.0;
-			}
-			
-			//convert output of PI controller to PWM out - adjust the 
-			//current through the system by adjusting voltages
-
-			if (v < 0) {	
-				//deal with "negative" direction
-				LATDbits.LATD4 = 0;
-				OC3RS = (unsigned int) -v * PR2/100;
-			} else {
-				LATDbits.LATD4 = 1;
-				OC3RS = (unsigned int) v * PR2/100;		
-			}
-	
-			//store values of current in arrays. send them in a separate
-			//function because sprintf() takes a while
-			curr_array[curr_count] = current;
-			ref_array[curr_count] = ref_curr;
-	
-			//setup calcs for next pass of ISR
-			fdot = f - f_old;
-			fint += f;
-			f_old = f;
-			curr_count++;
+			current_PID();
 
 			break;
 		}
@@ -109,104 +66,19 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			/*
 			//same formulation as ITEST, but we're not
 			//plotting current values this time
-					
-			current = INA219_read_current();
-			
-			//integrator anti windup
-			if (fint > EINT_MAX) {
-				fint = EINT_MAX;
-			} else if (fint < EINT_MIN) {
-				fint = EINT_MIN;
-			}
-			
-			
-			//carry out PI controller for current
-			f = ref_curr - current;
-			v = Jp * f + Ji * fint - Jd * fdot;
-			
-			//bounds on PI controller output
-			if (v > 100.0) {
-				v = 100.0; 
-			} else if (v < -100.0) {
-				v = -100.0;
-			}
-			
-			//convert output of PI controller to PWM out - adjust the 
-			//current through the system by adjusting voltages
-
-			if (v < 0) {	
-				//deal with "negative" direction
-				LATDbits.LATD4 = 0;
-				OC3RS = (unsigned int) -v * PR2/100;
-			} else {
-				LATDbits.LATD4 = 1;
-				OC3RS = (unsigned int) v * PR2/100;		
-			}
-	
-			//store values of current in arrays. send them in a separate
-			//function because sprintf() takes a while
-			curr_array[curr_count] = current;
-			ref_array[curr_count] = ref_curr;
-	
-			//setup calcs for next pass of ISR
-			fdot = f - f_old;
-			fint += f;
-			f_old = f;
+				
+			current_PID();
 			*/
-			
 			break;
 		}
 		
 		case TRACK:
 		{
 			
-			//same formulation as ITEST, but we're not
-			//plotting current values this time
-					
-			current = INA219_read_current();
-			
-			//integrator anti windup
-			if (fint > EINT_MAX) {
-				fint = EINT_MAX;
-			} else if (fint < EINT_MIN) {
-				fint = EINT_MIN;
-			}
-			
-			
-			//carry out PI controller for current
-			f = ref_curr - current;
-			v = Jp * f + Ji * fint + Jd * fdot;
-			
-			//bounds on PI controller output
-			if (v > 100.0) {
-				v = 100.0; 
-			} else if (v < -100.0) {
-				v = -100.0;
-			}
-			
-			//convert output of PI controller to PWM out - adjust the 
-			//current through the system by adjusting voltages
+			//same formulation as ITEST, but refval comes
+			//from reference arrays
 
-			if (v < 0) {	
-				//deal with "negative" direction
-				LATDbits.LATD4 = 0;
-				OC3RS = (unsigned int) -v * PR2/100;
-			} else {
-				LATDbits.LATD4 = 1;
-				OC3RS = (unsigned int) v * PR2/100;		
-			}
-	
-			//store values of current in arrays. send them in a separate
-			//function because sprintf() takes a while
-			curr_array[curr_count] = current;
-			ref_array[curr_count] = ref_curr;
-	
-			//setup calcs for next pass of ISR
-			fdot = f - f_old;
-			fint += f;
-			f_old = f;
-			
-			
+			current_PID();	
 			break;
 		} 		
 	}
@@ -225,4 +97,54 @@ void send_current_arrays() {
 		sprintf(m, "%f %f\r\n", curr_array[i], ref_array[i]);
 		NU32_WriteUART3(m);	
 	}
+}
+
+
+void current_PID() {
+	
+	//refval varies for different cases
+	current = INA219_read_current();
+	
+	//integrator anti windup
+	if (fint > EINT_MAX) {
+		fint = EINT_MAX;
+	} else if (fint < -EINT_MAX) {
+		fint = -EINT_MAX;
+	}
+	
+	
+	//carry out PI controller for current
+	f = ref_curr - current;
+	v = Jp * f + Ji * fint + Jd * fdot;
+	
+	//bounds on PI controller output
+	if (v > 100.0) {
+		v = 100.0; 
+	} else if (v < -100.0) {
+		v = -100.0;
+	}
+	
+	//convert output of PI controller to PWM out - adjust the 
+	//current through the system by adjusting voltages
+
+	if (v < 0) {	
+		//deal with "negative" direction
+		LATDbits.LATD4 = 0;
+		OC3RS = (unsigned int) -v * PR2/100;
+	} else {
+		LATDbits.LATD4 = 1;
+		OC3RS = (unsigned int) v * PR2/100;		
+	}
+
+	//store values of current in arrays. send them in a separate
+	//function because sprintf() takes a while
+	curr_array[curr_count] = current;
+	ref_array[curr_count] = ref_curr;
+
+	//setup calcs for next pass of ISR
+	fdot = f - f_old;
+	fint += f;
+	f_old = f;
+	curr_count++;
+		
 }

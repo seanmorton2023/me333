@@ -189,7 +189,9 @@ int main()
 		case 'k':
 		{
 			//go into ITEST mode for gain testing
-			curr_count = 0;			
+			curr_count = 0;		
+			eint = 0;
+			fint = 0;
 			set_mode(ITEST);
 			
 			//current control ISR at 5KHz times 200 samples
@@ -269,6 +271,8 @@ int main()
 		{
 			//execute trajectory set by m or n
 			posn_count = 0;
+			eint = 0;
+			fint = 0;
 			set_mode(TRACK);
 
 			//wait for the mode to change

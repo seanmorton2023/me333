@@ -178,7 +178,8 @@ while not has_quit:
 		print("Sending data to the PIC...")
 		length = len(ref)
 		print('Length of ref: ' + str(length))
-
+		print('Printing ref array: ')
+		print(ref)
 
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
@@ -199,9 +200,12 @@ while not has_quit:
 
 		#send length of the array to the PIC so we know how much data there is
 		print("Sending data to the PIC...")
+		
+		
 		length = len(ref)
 		print('Length of ref: ' + str(length))
-
+		print('Printing ref trajectory: ')
+		print(ref)
 
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
