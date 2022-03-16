@@ -1,6 +1,28 @@
 
 #include "current.h"
 
+float Jp = 0, Ji = 0, Jd = 0;
+
+//control variables for current control
+volatile float f, f_old = 0;
+volatile float fint = 0, fdot = 0;
+volatile float  v; //used to set OC1RS to edit PWM
+
+volatile int curr_count = 0;
+volatile float ref_curr;
+volatile float current;
+
+//arrays for storing data
+volatile float curr_array[NUM_SAMPS];
+volatile float ref_array[NUM_SAMPS];
+char m[BUF_SIZE];
+
+extern volatile int curr_count; //for counting up in ITEST
+extern int client_input;
+
+
+	
+
 //5KHz ISR to control current going to motor
 void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 
@@ -57,7 +79,6 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			}
 			
 			current_PID();
-
 			break;
 		}
 		
@@ -78,7 +99,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			//same formulation as ITEST, but refval comes
 			//from reference arrays
 
-			current_PID();	
+			current_PID();			
 			break;
 		} 		
 	}
@@ -116,6 +137,7 @@ void current_PID() {
 	//carry out PI controller for current
 	f = ref_curr - current;
 	v = Jp * f + Ji * fint + Jd * fdot;
+
 	
 	//bounds on PI controller output
 	if (v > 100.0) {

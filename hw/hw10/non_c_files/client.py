@@ -155,7 +155,6 @@ while not has_quit:
 			refval = float(bytes)
 			ref_array.append(refval)
 
-
 		xvals = list(range(0,num_samps))
 		plt.plot(xvals, ref_array, curr_array)
 		plt.show()
@@ -230,6 +229,7 @@ while not has_quit:
 		#and retrieve the values
 		bytes = ser.read_until(b'\n')
 		traj_length = int(bytes)
+		print(f'Length of trajectory: {traj_length}')
 
 		for i in range(traj_length):
 			bytes = ser.read_until(b' ')
@@ -241,6 +241,9 @@ while not has_quit:
 			posn_list.append(posn)
 
 		x_ref = list(range(traj_length))
+
+		print(f'Trajectory list received: {traj_list}')
+
 		plt.plot(x_ref, posn_list, traj_list)
 		plt.show()
 

@@ -18,25 +18,11 @@
 #define BUF_SIZE 200
 #define TRAJ_BUF 3000
 
-extern volatile float e, e_old;
-extern volatile float eint, edot;
-extern volatile float Kp, Ki, Kd;
-extern volatile float u; //torque/current command passed to current controller
-
-extern volatile float ref_curr;
-extern volatile float ref_posn;
-extern volatile int posn_count;
-
-extern volatile int traj_length;
-extern volatile float traj_array[TRAJ_BUF];
-extern volatile float posn_array[TRAJ_BUF];
-
-
-char m[BUF_SIZE];
 
 //ISR defined in posn.c only
 
 void posn_PID(void);
 void send_posn_arrays(void);
+void read_posn_arrays(void);
 
 #endif //__POSN__H_

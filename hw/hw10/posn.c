@@ -1,6 +1,27 @@
 
 #include "posn.h"
 
+float Kp = 0, Ki = 0, Kd = 0;
+
+//control variables for position control
+volatile float e, e_old = 0;
+volatile float eint = 0, edot = 0;
+volatile float u; //torque/current command sent to the current ISR
+
+volatile int posn_count = 0;
+volatile float ref_posn;
+extern volatile float ref_curr;
+
+//for executing trajectories in l/m/n/o
+volatile float traj_array[TRAJ_BUF];
+volatile float posn_array[TRAJ_BUF];
+char m[BUF_SIZE];
+
+volatile float traj;
+volatile int traj_length;
+
+
+
 //200Hz ISR to control torque/motor commands
 void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 
@@ -15,8 +36,7 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 			//check: do we enter the ISR?
 			//NU32_WriteUART3("Entered HOLD mode in posn.c\r\n");
 			
-			posn_PID();
-			
+			posn_PID();	
 			
 			//end condition: maybe when edot goes to zero?
 			//do "if end_condition -> set_mode(IDLE" so this
@@ -37,7 +57,7 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 		case TRACK:
 		{
 			
-			posn_PID();
+			posn_PID();			
 			
 			//end condition: we get to the end of the 
 			//reference array
@@ -64,11 +84,32 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 
 void send_posn_arrays(void) {
 	
+	//send number of datapoints to client
+	sprintf(m, "%d\r\n", traj_length);
+	NU32_WriteUART3(m);
+	
 	for (int i = 0; i < traj_length; ++i) {
 		sprintf(m, "%f %f\r\n", traj_array[i], posn_array[i]);
 		NU32_WriteUART3(m);	
 	}	
 }
+
+void read_posn_arrays(void) {
+				
+	//get the length of the array
+	NU32_ReadUART3(m, BUF_SIZE);
+	sscanf(m, "%d", &traj_length);
+	
+	//read each individual trajectory command
+	for (int i = 0; i < traj_length; i++) {
+		NU32_ReadUART3(m, BUF_SIZE);
+		sscanf(m, "%f", &traj);
+		traj_array[i] = traj;
+	}
+	
+	
+}
+
 
 void posn_PID(void) {
 	

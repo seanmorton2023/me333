@@ -8,40 +8,22 @@
 #include "posn.h"
 #include "current.h"
 
-#define ADC_PIN 5           // pin 5 on the PIC/NU32
 #define BUF_SIZE 200
-#define conversion 360/344/4 //convert from counts to angles
 #define NUM_SAMPS 100
 #define TRAJ_BUF 3000
 
-//control variables for position control
-volatile float e, e_old = 0;
-volatile float eint = 0, edot = 0;
-volatile float Kp = 0, Ki = 0, Kd = 0;
-volatile float u; //torque/current command sent to the current ISR
+extern float Kp, Ki, Kd;
+extern float Jp, Ji, Jd;
 
-//control variables for current control
-volatile float f, f_old = 0;
-volatile float fint = 0, fdot = 0;
-volatile float Jp = 0, Ji = 0, Jd = 0;
-volatile float  v;
+extern volatile float e, e_old, eint, edot;
+extern volatile float f, f_old, fint, fdot;
 
-//for sending data in ITEST
-volatile int curr_count = 0;
-volatile int posn_count = 0;
-volatile float curr_array[NUM_SAMPS];
-volatile float ref_array[NUM_SAMPS];
+//for sending data in arrays (ITEST + TRACK)
+extern volatile int curr_count, posn_count;
+extern volatile float ref_posn, ref_curr;
 
 //reference position/velocity, controlled by user input
 int client_input; //for PWM percentage
-volatile float ref_curr = 0;
-volatile float ref_posn = 0;
-
-//for executing trajectories in l/m/n/o
-volatile float traj_array[TRAJ_BUF];
-volatile float posn_array[TRAJ_BUF];
-volatile float traj;
-volatile int traj_length;
 
 int main() 
 {
@@ -189,9 +171,16 @@ int main()
 		case 'k':
 		{
 			//go into ITEST mode for gain testing
-			curr_count = 0;		
 			eint = 0;
+			e_old = 0;
+			edot = 0;
+			
 			fint = 0;
+			f_old = 0;
+			fdot = 0;
+			
+			curr_count = 0;
+			
 			set_mode(ITEST);
 			
 			//current control ISR at 5KHz times 200 samples
@@ -236,54 +225,37 @@ int main()
 		case 'm':
 		{
 			//load step trajectory
-
-			//get the length of the array
-			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%d", &traj_length);
-			
-			//read each individual trajectory command
-			for (int i = 0; i < traj_length; ++i) {
-				NU32_ReadUART3(buffer, BUF_SIZE);
-				sscanf(buffer, "%f", &traj);
-				traj_array[i] = traj;
-			}
-			
+			read_posn_arrays();
 			break;
 		}
 		
 		case 'n':
 		{
-			//get the length of the array
-			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%d", &traj_length);
-			
-			//read each individual trajectory command
-			for (int i = 0; i < traj_length; ++i) {
-				NU32_ReadUART3(buffer, BUF_SIZE);
-				sscanf(buffer, "%f", &traj);
-				traj_array[i] = traj;
-			}
-					
+			//load cubic trajectory
+			read_posn_arrays();	
 			break;
 		}
   
 		case 'o':
 		{
 			//execute trajectory set by m or n
-			posn_count = 0;
 			eint = 0;
+			e_old = 0;
+			edot = 0;
+			
 			fint = 0;
+			f_old = 0;
+			fdot = 0;
+
+			posn_count = 0;
+			
 			set_mode(TRACK);
 
 			//wait for the mode to change
 			while (get_mode() == TRACK) {
 				//nothing	
 			}
-			
-			//send number of datapoints to client
-			sprintf(buffer, "%d\r\n", traj_length);
-			NU32_WriteUART3(buffer);
-			
+						
 			//send data to client
 			send_posn_arrays();
 			break;
