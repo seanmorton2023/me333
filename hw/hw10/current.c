@@ -20,9 +20,6 @@ char m[BUF_SIZE];
 extern volatile int curr_count; //for counting up in ITEST
 extern int client_input;
 
-
-	
-
 //5KHz ISR to control current going to motor
 void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 

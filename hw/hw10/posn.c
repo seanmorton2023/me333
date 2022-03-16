@@ -17,10 +17,8 @@ volatile float traj_array[TRAJ_BUF];
 volatile float posn_array[TRAJ_BUF];
 char m[BUF_SIZE];
 
-volatile float traj;
-volatile int traj_length;
-
-
+float traj;
+int traj_length;
 
 //200Hz ISR to control torque/motor commands
 void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
@@ -106,8 +104,6 @@ void read_posn_arrays(void) {
 		sscanf(m, "%f", &traj);
 		traj_array[i] = traj;
 	}
-	
-	
 }
 
 
@@ -139,11 +135,13 @@ void posn_PID(void) {
 
 	u = Kp * e + Ki * eint + Kd * edot;
 	
-	//bounds on PWM
-	if (u > 100) {
-		u = 100;
-	} else if (u < -100) {
-		u = -100;
+	//bounds on current reference. current can take in
+	//a refval of like 200 for the ITEST, so I'm assuming
+	//it can take even more than that
+	if (u > POSN_OUT_MAX) {
+		u = POSN_OUT_MAX;
+	} else if (u < -POSN_OUT_MAX) {
+		u = -POSN_OUT_MAX;
 	}
 	
 	//store value of position in array
@@ -155,13 +153,10 @@ void posn_PID(void) {
 	//ISR can interrupt this one and grab refval too early
 	ref_curr = u;
 	
-	
 	//setup next iteration of PID
 	edot =  e - e_old;
 	eint += e;
 	e_old = e;
 	posn_count++;
-	
-	
 	
 }

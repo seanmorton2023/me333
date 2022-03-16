@@ -229,7 +229,7 @@ while not has_quit:
 		#and retrieve the values
 		bytes = ser.read_until(b'\n')
 		traj_length = int(bytes)
-		print(f'Length of trajectory: {traj_length}')
+		#print(f'Length of trajectory: {traj_length}')
 
 		for i in range(traj_length):
 			bytes = ser.read_until(b' ')
@@ -242,7 +242,8 @@ while not has_quit:
 
 		x_ref = list(range(traj_length))
 
-		print(f'Trajectory list received: {traj_list}')
+		#print(f'Trajectory list received: {traj_list}')
+		#print(f'Position list received: {posn_list}')
 
 		plt.plot(x_ref, posn_list, traj_list)
 		plt.show()

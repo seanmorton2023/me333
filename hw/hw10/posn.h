@@ -12,6 +12,7 @@
 #define POSN_EINT_MAX 50
 #define POSN_EDOT_THRES 0.1
 #define POSN_E_THRES 0.1
+#define POSN_OUT_MAX 700
 
 #define POSN_DATASIZE 400 //for 2 seconds' worth of ISR executions
 							//for a 200HZ ISR
