@@ -13,8 +13,8 @@ volatile float ref_curr;
 volatile float current;
 
 //arrays for storing data
-volatile float curr_array[NUM_SAMPS];
-volatile float ref_array[NUM_SAMPS];
+float curr_array[NUM_SAMPS];
+float ref_array[NUM_SAMPS];
 char m[BUF_SIZE];
 
 extern volatile int curr_count; //for counting up in ITEST

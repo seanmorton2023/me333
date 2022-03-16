@@ -2,14 +2,41 @@
 import serial
 import matplotlib.pyplot as plt
 import sys
+from statistics import mean 
 
 sys.path.append('/hw/hw10/non_c_files')
 from genref import genRef
+#from ch28_read_plot_matrix import read_plot_matrix
 
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ', end = '')
 print(ser.name)
 print()
+
+def read_plot_matrix():
+    n_str = ser.read_until(b'\n');  # get the number of data points to receive
+    n_int = int(n_str) # turn it into an int
+    print('Data length = ' + str(n_int))
+    ref = []
+    data = []
+    data_received = 0
+    while data_received < n_int:
+        dat_str = ser.read_until(b'\n');  # get the data as a string, ints seperated by spaces
+        dat_f = list(map(float,dat_str.split())) # now the data is a list
+        ref.append(dat_f[0])
+        data.append(dat_f[1])
+        data_received = data_received + 1
+    #meanzip = zip(ref,data)
+    #meanlist = []
+    #for i,j in meanzip:
+    #    meanlist.append(abs(i-j))
+    #score = mean(meanlist)
+    t = range(len(ref)) # index array
+    plt.plot(t,ref,'r*-',t,data,'b*-')
+    #plt.title('Score = ' + str(score))
+    plt.ylabel('value')
+    plt.xlabel('index')
+    plt.show()
 
 has_quit = False
 # menu loop
@@ -25,13 +52,15 @@ while not has_quit:
 	print('\t' + '_' * 90)
 	print('\tq: quit \t\tr: read PIC32 mode \t\tx: example command \n')
 
+	ser.flush()
+
 	# read the user's choice
 	selection = input('ENTER COMMAND: ')
 	selection_endline = selection+'\n'
 	 
 	# send the command to the PIC32
 	ser.write(selection_endline.encode()); # .encode() turns the string into a char array
-	
+
 	# take the appropriate action
 	# there is no switch() in python, using if elif instead
 
@@ -168,6 +197,23 @@ while not has_quit:
 		#ser.write(serial_text)
 		pass
 
+	#elif (selection == 'm'):
+	#	ref = genRef('cubic')
+	#	#print(len(ref))
+	#	t = range(len(ref))
+	#	plt.plot(t,ref,'r*-')
+	#	plt.ylabel('ange in degrees')
+	#	plt.xlabel('index')
+	#	plt.show()
+	#	# send 
+	#	ser.write((str(len(ref))+'\n').encode())
+	#	for i in ref:
+	#		ser.write((str(i)+'\n').encode())
+
+	#elif (selection == 'o'):
+	#	read_plot_matrix()
+
+
 	elif (selection == 'm'):
 		#load step trajectory
 		print('Sending step trajectory to PIC.\n')
@@ -229,25 +275,39 @@ while not has_quit:
 		#and retrieve the values
 		bytes = ser.read_until(b'\n')
 		traj_length = int(bytes)
-		#print(f'Length of trajectory: {traj_length}')
+		print(f'Length of trajectory: {traj_length}')
 
 		for i in range(traj_length):
-			bytes = ser.read_until(b' ')
+		#for i in range(length):
+			print(f'In data-reading loop, iteration: {i}')
+
+			bytes = ser.read_until(b'\n')
+			print(bytes)
 			traj = float(bytes)
 			traj_list.append(traj)
 
 			bytes = ser.read_until(b'\n')
+			print(bytes)
 			posn = float(bytes)
 			posn_list.append(posn)
 
+			#bytes = ser.read_until(b'\n')
+			#text = str(bytes)
+			#data_list = text.split()
+			#traj = data_list[0]
+			#posn = data_list[1]
+			#traj_list.append(traj)
+			#posn_list.append(posn)
+			#print(text)
+
 		x_ref = list(range(traj_length))
 
-		#print(f'Trajectory list received: {traj_list}')
-		#print(f'Position list received: {posn_list}')
+		print(f'Trajectory list received: {traj_list}')
+		print(f'Position list received: {posn_list}')
 
+		#ser.flush()
 		plt.plot(x_ref, posn_list, traj_list)
 		plt.show()
-
 
 	elif (selection == 'p'):
 		print("PIC mode set to IDLE.\n")
@@ -278,6 +338,32 @@ while not has_quit:
 		n_int = int(n_str) # turn it into an int
 		print('Got back: ' + str(n_int) + '\n') # print it to the screen
 
+
+	elif (selection == 'y'):
+		
+		posn_list = []
+		traj_list = []
+
+		#wait for PIC to do all the computations
+		#and retrieve the values
+		bytes = ser.read_until(b'\n')
+		traj_length = int(bytes)
+		print(f'Length of trajectory: {traj_length}')
+
+		for i in range(traj_length):
+		#for i in range(length):
+
+			bytes = ser.read_until(b'\n')
+			traj = float(bytes)
+			traj_list.append(traj)
+			if (i == 0 or (i+1)%100 == 0):
+				print(f'Received: {traj} ', end='')
+
+			bytes = ser.read_until(b'\n')
+			posn = float(bytes)
+			posn_list.append(posn)
+			if (i == 0 or (i+1)%100 == 0):
+				print(posn)
 
 
 	elif (selection == 'q'):

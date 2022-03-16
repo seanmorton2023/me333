@@ -58,7 +58,7 @@ def genRef(method):
         if numpos >= 3:
             for i in range(1, numpos-1):
                 vel_list[i] = (pos_list[i+1]-pos_list[i-1])/(time_list[i+1]-time_list[i-1])
-        print(vel_list)
+       # print(vel_list)
         refCtr = 0
         for i in range(0,numpos-1):
             timestart = time_list[i]

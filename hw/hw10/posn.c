@@ -13,8 +13,8 @@ volatile float ref_posn;
 extern volatile float ref_curr;
 
 //for executing trajectories in l/m/n/o
-volatile float traj_array[TRAJ_BUF];
-volatile float posn_array[TRAJ_BUF];
+float traj_array[TRAJ_BUF];
+float posn_array[TRAJ_BUF];
 char m[BUF_SIZE];
 
 float traj;
@@ -82,12 +82,18 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 
 void send_posn_arrays(void) {
 	
+	sprintf(m,"");
+	
 	//send number of datapoints to client
 	sprintf(m, "%d\r\n", traj_length);
 	NU32_WriteUART3(m);
 	
-	for (int i = 0; i < traj_length; ++i) {
-		sprintf(m, "%f %f\r\n", traj_array[i], posn_array[i]);
+	for (int ii = 0; ii < traj_length; ++ii) {
+		// sprintf(m, "%f %f\r\n", traj_array[i], posn_array[i]);
+		// NU32_WriteUART3(m);	
+		sprintf(m, "%f\r\n", traj_array[ii]);
+		NU32_WriteUART3(m);	
+		sprintf(m, "%f\r\n", posn_array[ii]);
 		NU32_WriteUART3(m);	
 	}	
 }
@@ -99,10 +105,11 @@ void read_posn_arrays(void) {
 	sscanf(m, "%d", &traj_length);
 	
 	//read each individual trajectory command
-	for (int i = 0; i < traj_length; i++) {
+	for (int j = 0; j < traj_length; j++) {
 		NU32_ReadUART3(m, BUF_SIZE);
-		sscanf(m, "%f", &traj);
-		traj_array[i] = traj;
+		// sscanf(m, "%f", &traj);
+		// traj_array[i] = traj;
+		sscanf(m, "%f", traj_array + j); //pointer to the i'th element of t_a
 	}
 }
 

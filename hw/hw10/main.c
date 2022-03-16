@@ -22,6 +22,9 @@ extern volatile float f, f_old, fint, fdot;
 extern volatile int curr_count, posn_count;
 extern volatile float ref_posn, ref_curr;
 
+extern float posn_array[TRAJ_BUF];
+extern int traj_length;
+
 //reference position/velocity, controlled by user input
 int client_input; //for PWM percentage
 
@@ -258,6 +261,11 @@ int main()
 						
 			//send data to client
 			send_posn_arrays();
+			
+			//clear arrays
+			for (int kk = 0; kk < traj_length; kk++) {
+				posn_array[kk] = 0;
+			}
 			break;
 		}
 		
@@ -274,7 +282,7 @@ int main()
 			set_mode(IDLE);
 
 			//delay a short amount of time to make sure ISR hits
-			for (int i = 0; i < 4000000; ++i){
+			for (int jj = 0; jj < 4000000; ++jj){
 				//nothing
 			}
 
@@ -297,6 +305,13 @@ int main()
 			sprintf(buffer,"%d\r\n", n + 1); // return the number + 1
 			NU32_WriteUART3(buffer);
 			break;
+		}
+	  
+	    case 'y':
+		{
+			//test command - see what values of array length
+			//and arrays the PIC received
+			send_posn_arrays();
 		}
 	  
 
