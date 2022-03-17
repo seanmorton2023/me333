@@ -12,33 +12,6 @@ print('Opening port: ', end = '')
 print(ser.name)
 print()
 
-def read_plot_matrix():
-    n_str = ser.read_until(b'\n');  # get the number of data points to receive
-    n_int = int(n_str) # turn it into an int
-    print('Data length = ' + str(n_int))
-    ref = []
-    data = []
-    data_received = 0
-    while data_received < n_int:
-        dat_str = ser.read_until(b'\n');  # get the data as a string, ints seperated by spaces
-        dat_f = list(map(float,dat_str.split())) # now the data is a list
-        ref.append(dat_f[0])
-        data.append(dat_f[1])
-        data_received = data_received + 1
-    #meanzip = zip(ref,data)
-    #meanlist = []
-    #for i,j in meanzip:
-    #    meanlist.append(abs(i-j))
-    #score = mean(meanlist)
-    t = range(len(ref)) # index array
-    plt.plot(t,ref,'r*-',t,data,'b*-')
-    #plt.title('Score = ' + str(score))
-    plt.ylabel('value')
-    plt.xlabel('index')
-    plt.show()
-
-
-
 def read_arrays():
 
 	ref_array = []
@@ -60,6 +33,51 @@ def read_arrays():
 		curr_array.append(val2)
 
 	return ref_array, curr_array
+
+###
+
+def plot_arrays(ref_array, curr_array):
+
+		#plot arrays and mean deviation, like Nick's example
+		x_ref = list(range(len(ref_array)))
+
+		meanzip = zip(ref_array,curr_array)
+		meanlist = []
+		for i,j in meanzip:
+		    meanlist.append(abs(i-j))
+		score = mean(meanlist)
+		score = round(score,4)
+
+		plt.plot(x_ref, curr_array, ref_array)
+		plt.title('Score = ' + str(score))
+		plt.ylabel('value')
+		plt.xlabel('index')
+		plt.show()
+
+###
+
+def send_trajectory(shape):
+
+	print(f'Sending {shape} trajectory to PIC.\n')
+	ref = genRef(shape)
+
+	#send length of the array to the PIC so we know how much data there is
+	print("Sending data to the PIC...")
+		
+	length = len(ref)
+	print('Length of ref: ' + str(length))
+	serial_text = (str(length) + '\n').encode()
+	ser.write(serial_text)
+
+	#take every element in the ref array and send it to the PIC
+	for i in range(len(ref)):
+		val = str(ref[i])
+		serial_text = (val + '\n').encode()
+		ser.write(serial_text)
+
+	print("Data sent to the PIC!\n")
+
+###
 
 has_quit = False
 # menu loop
@@ -189,11 +207,8 @@ while not has_quit:
 	elif (selection == 'k'):
 
 		print('Running ITEST mode now. Check plot of datapoints.')
-
 		ref_array, curr_array = read_arrays()
-		xvals = list(range(0,len(ref_array)))
-		plt.plot(xvals, ref_array, curr_array)
-		plt.show()
+		plot_arrays(ref_array, curr_array)
 
 	elif (selection == 'l'):
 		
@@ -207,56 +222,16 @@ while not has_quit:
 		pass
 
 	elif (selection == 'm'):
-		#load step trajectory
-		print('Sending step trajectory to PIC.\n')
-		ref = genRef('step')
-
-		#send length of the array to the PIC so we know how much data there is
-		print("Sending data to the PIC...")
-		length = len(ref)
-		print('Length of ref: ' + str(length))
-
-		serial_text = (str(length) + '\n').encode()
-		ser.write(serial_text)
-
-		#take every element in the ref array and send it to the PIC
-		for i in range(len(ref)):
-			val = str(ref[i])
-			serial_text = (val + '\n').encode()
-			ser.write(serial_text)
-
-		print("Data sent to the PIC!\n")
+		send_trajectory('step')
 
 	elif (selection == 'n'):
-		#load cubic trajectory
-		print('Sending cubic trajectory to PIC.\n')
-		ref = genRef('cubic')
-
-		#send length of the array to the PIC so we know how much data there is
-		print("Sending data to the PIC...")
-		
-		length = len(ref)
-		print('Length of ref: ' + str(length))
-		serial_text = (str(length) + '\n').encode()
-		ser.write(serial_text)
-
-		#take every element in the ref array and send it to the PIC
-		for i in range(len(ref)):
-			val = str(ref[i])
-			serial_text = (val + '\n').encode()
-			ser.write(serial_text)
-
-		print("Data sent to the PIC!\n")
-
+		send_trajectory('cubic')
 
 	elif (selection == 'o'):
-		#execute trajectory
+
 		print('Executing trajectory...')
 		traj_list, posn_list = read_arrays()
-
-		x_ref = list(range(len(traj_list)))
-		plt.plot(x_ref, posn_list, traj_list)
-		plt.show()
+		plot_arrays(traj_list, posn_list)
 
 	elif (selection == 'p'):
 		print("PIC mode set to IDLE.\n")
@@ -278,6 +253,7 @@ while not has_quit:
 
 	elif (selection == 'y'):
 		
+		print('Arrays stored on the PIC:')
 		#show what arrays the PIC has stored
 		traj_list, posn_list = read_arrays()
 		for i in range(len(traj_list)):
