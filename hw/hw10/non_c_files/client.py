@@ -147,11 +147,6 @@ while not has_quit:
 		gain = float(gain)
 		serial_text = (str(gain) + '\n').encode()
 		ser.write(serial_text)
-
-		gain = input('Enter new gain Kd for current: ')
-		gain = float(gain)
-		serial_text = (str(gain) + '\n').encode()
-		ser.write(serial_text)
 		print()
 
 	elif (selection == 'h'):
@@ -163,11 +158,7 @@ while not has_quit:
 
 		bytes = ser.read_until(b'\n')
 		gain = float(bytes)
-		print(f'Value of current gain Ki: {gain}')
-
-		bytes = ser.read_until(b'\n')
-		gain = float(bytes)
-		print(f'Value of current gain Kd: {gain} \n')
+		print(f'Value of current gain Ki: {gain}\n')
 
 	elif (selection == 'i'):
 
@@ -217,6 +208,7 @@ while not has_quit:
 		posn = float(posn)
 		serial_text = (str(posn) + '\n').encode()
 		ser.write(serial_text)
+		print()
 
 		#PIC handles the rest from here
 		pass

@@ -1,6 +1,0 @@
-TODO:
-
-get PICO to a state where it's reading the position of the encoder as it rotates
-
-solve multiple inclusion error. maybe I've included a header file somewhere twice? like in main?
-could also make each variable an extern variable and define it only in main()

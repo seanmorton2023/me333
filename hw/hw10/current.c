@@ -1,11 +1,10 @@
 
 #include "current.h"
 
-float Jp = 0, Ji = 0, Jd = 0;
+float Jp = 0, Ji = 0;
 
 //control variables for current control
-volatile float f, f_old = 0;
-volatile float fint = 0, fdot = 0;
+volatile float f, fint = 0;
 volatile float  v; //used to set OC1RS to edit PWM
 
 volatile int curr_count = 0;
@@ -85,15 +84,17 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 			//plotting current values this time
 				
 			current_PID();
+			curr_count -= 1; //not using arrays for plotting
 			break;
 		}
 		
 		case TRACK:
 		{
 			//same formulation as ITEST, but refval comes
-			//from reference arrays
+			//position PID
 
-			current_PID();			
+			current_PID();	
+			curr_count -= 1; //not using arrays for plotting
 			break;
 		} 		
 	}
@@ -127,10 +128,9 @@ void current_PID() {
 		fint = -EINT_MAX;
 	}
 	
-	
 	//carry out PI controller for current
 	f = ref_curr - current;
-	v = Jp * f + Ji * fint + Jd * fdot;
+	v = Jp * f + Ji * fint;
 
 	
 	//bounds on PI controller output
@@ -158,9 +158,7 @@ void current_PID() {
 	ref_array[curr_count] = ref_curr;
 
 	//setup calcs for next pass of ISR
-	fdot = f - f_old;
 	fint += f;
-	f_old = f;
 	curr_count++;
 		
 }

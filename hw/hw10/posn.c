@@ -39,13 +39,15 @@ void __ISR(_TIMER_4_VECTOR, IPL4SOFT) PositionControl(void) {
 		
 		case TRACK:
 		{
-			
+			ref_posn = traj_array[posn_count];
 			posn_PID();			
 			
 			//end condition: we get to the end of the 
 			//reference array
-			if (posn_count > traj_length) {
-				set_mode(IDLE);
+			if (posn_count > (traj_length - 1)) {
+				posn_count = traj_length - 1;
+				ref_posn = traj_array[posn_count];
+				set_mode(HOLD);
 				break;
 			}
 			
@@ -103,9 +105,7 @@ void posn_PID(void) {
 	set_encoder_flag(0); //prepare for new instructions
 	float posn = get_encoder_count();
 	posn = posn * 360/4/334;
-	
-	ref_posn = traj_array[posn_count];
-	
+		
 	//PID control: calculate errors and calculate next ref val
 	//of current/PWM output
 	e = ref_posn - posn;

@@ -13,10 +13,10 @@
 #define TRAJ_BUF 3000
 
 extern float Kp, Ki, Kd;
-extern float Jp, Ji, Jd;
+extern float Jp, Ji;
 
 extern volatile float e, e_old, eint, edot;
-extern volatile float f, f_old, fint, fdot;
+extern volatile float f, fint;
 
 //for sending data in arrays (ITEST + TRACK)
 extern volatile int curr_count, posn_count;
@@ -116,10 +116,7 @@ int main()
 			sscanf(buffer, "%f", &Jp);
 			
 			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%f", &Ji);		
-
-			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%f", &Jd);			
+			sscanf(buffer, "%f", &Ji);			
 			break;
 		}
 		
@@ -130,11 +127,7 @@ int main()
 			NU32_WriteUART3(buffer);
 			
 			sprintf(buffer, "%f\r\n", Ji);
-			NU32_WriteUART3(buffer);
-			
-			sprintf(buffer, "%f\r\n", Jd);
-			NU32_WriteUART3(buffer);
-			
+			NU32_WriteUART3(buffer);			
 			break;
 		}
 		
@@ -177,10 +170,7 @@ int main()
 			eint = 0;
 			e_old = 0;
 			edot = 0;
-			
 			fint = 0;
-			f_old = 0;
-			fdot = 0;
 			
 			curr_count = 0;
 			
@@ -231,10 +221,7 @@ int main()
 			eint = 0;
 			e_old = 0;
 			edot = 0;
-			
 			fint = 0;
-			f_old = 0;
-			fdot = 0;
 
 			posn_count = 0;
 			

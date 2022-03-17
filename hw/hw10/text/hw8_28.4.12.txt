@@ -1,0 +1,84 @@
+Sean Morton
+ME333
+Homework 10
+
+Turn in: code, best examples of gains found, and demonstration video of all menu items
+
+See below for control gains
+
+___________________________
+28.4.12 Trajectory Tracking
+
+All that remains is to implement the menu items “m” (Load step trajectory), “n” (Load
+cubic trajectory), and “o” (Execute trajectory). These commands allow us to design a
+reference trajectory for the motor, execute it, and see the position controller tracking results.
+
+___
+
+1. Implement the menu item “m” (Load step trajectory). The client should prompt the user
+for the trajectory parameters for genRef.m. Provided the duration of the trajectory is not
+too long to store in the PIC32’s data array, the client Urst sends the number of samples N
+to the PIC32, then sends N reference positions. It is up to you whether the reference
+positions are sent as Voating point numbers (e.g., degrees) or integers (e.g., tenths of
+degrees, hundredths of degrees, or encoder counts). But the user should only ever have to
+deal with degrees, in specifying angles and looking at plots.
+
+___
+
+2. Implement the menu item “n” (Load cubic trajectory). This entry is very similar to the
+previous item, except genRef.m is invoked with the ’cubic’ option.
+
+___
+
+3. Implement the menu item “o” (Execute trajectory). The PIC32 is placed in TRACK
+mode. In the 200 Hz position control ISR, check if the mode is TRACK. If so, then the
+ISR increments an index into the reference trajectory array, and the indexed trajectory
+position is used as the reference to the PID controller, which calculates a commanded
+current for the current control ISR.
+
+The position control ISR should also collect motor angle data for later plotting.
+When the array index reaches N, the operating mode is switched to HOLD, and the last
+angle of the reference trajectory array is used as the holding angle. The collected data is
+sent back to the client for plotting, similar to the ITEST case. The MATLAB client
+plotting code should be similar to Code Sample 28.4, but using the appropriate data types
+and scaling of the sample times, so the user sees the results in terms of time, not samples.
+You also need to add the TRACK case to the 5 kHz current control ISR. To the current
+controller, the TRACK case is identical to the HOLD case: in both cases, the current
+controller attempts to match the current commanded by the position controller.
+
+___
+
+4. Experiment with tracking different trajectories (such as the ones in Figure 28.5) with
+different position control gains until you get good performance. For example, the
+performance in Figure 28.2 is reasonable, though a larger derivative gain would help to
+eliminate the overshoot. In experimentally tuning your gains, it is easiest to start with
+proportional (P) control alone, then add derivative (D) control. Finally, tune your PD gains
+simultaneously. You may not need an integral (I) term for good performance.
+
+___
+
+5. Turn in your best plots of following the step and cubic trajectories in Figure 28.5
+with the load attached. Indicate the control gains you used, as well as their units.
+
+Best plots:
+Step: posn_gains_v1.4.PNG
+Cubic: posn_gains_cubic.PNG
+
+Control gains I used:
+
+Current:
+Kp: 0 %duty/mA
+Ki: 0.8 %duty/(mA*s)
+
+Posn: I had different results for step vs. cubic tracking, so I'll show both
+sets of results:
+
+Step Kp: 4 mA/deg
+Step Ki: 0 mA/(deg*s)
+Step Kd: 30 mA*s/deg
+
+Cubic Kp: 1000 ma
+Cubic Ki: 0 mA/(deg*s)
+Cubic Kd: 0 mA*s/deg
+
+Congratulations! You now have a full motor control system.

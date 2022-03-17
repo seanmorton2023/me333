@@ -20,21 +20,17 @@ answers to the following questions:
 1. The NU32 communicates with the encoder counter by an SPI channel. Which SPI channel
 will you use? Which NU32 pins does it use?
 
-I will start by using SPI channel 4--I'm not sure what the difference between 
-SPIxCON and SPIxACON is, but SPI4 is the only channel that doesn't have the extra "a".
-SPI4 uses the following NU32 pins:
+N/A, reading encoder counts using the PICO and embedded code. UART channels
+we use to connect to the PICO: pins F4 and F5 are UART2 RX and TX,
+respectively.
 
- - SS4: ?? (can't find this)
- - SCK4: pin B14
- - SDI4: pin F4
- - SDO4: pin F5
- 
 --
 
 2. The NU32 reads the MAX9918 current sensor using an ADC input. Which ADC input
 will you use? Which NU32 pin is it?
 
-I will use ADC input AN5. This is pin B5 on the NU32.
+N/A, using I2c communication to read current from INA219 current sensor. Pins
+D10 and D9 are SCL1 and SDA1, respectively.
 
 --
 
