@@ -6,7 +6,6 @@ from statistics import mean
 
 sys.path.append('/hw/hw10/non_c_files')
 from genref import genRef
-#from ch28_read_plot_matrix import read_plot_matrix
 
 ser = serial.Serial('COM3',230400,rtscts=1)
 print('Opening port: ', end = '')
@@ -38,6 +37,30 @@ def read_plot_matrix():
     plt.xlabel('index')
     plt.show()
 
+
+
+def read_arrays():
+
+	ref_array = []
+	curr_array = []
+
+	bytes = ser.read_until(b'\n')
+	num_samps = int(bytes)
+	print(f'Number of datapoints: {num_samps} \n')
+
+	for i in range(num_samps):
+		#read until binary space char
+		bytes = ser.read_until(b' ')
+		val1 = float(bytes)
+		ref_array.append(val1)
+
+		#read until binary newline char
+		bytes = ser.read_until(b'\n')
+		val2 = float(bytes)
+		curr_array.append(val2)
+
+	return ref_array, curr_array
+
 has_quit = False
 # menu loop
 while not has_quit:
@@ -50,7 +73,7 @@ while not has_quit:
 	print('\tk: test current gains \tl: go to position \t\tm: load step traj.')
 	print('\tn: load cubic traj. \to: execute traj. \t\tp: power off PWM')
 	print('\t' + '_' * 90)
-	print('\tq: quit \t\tr: read PIC32 mode \t\tx: example command \n')
+	print('\tq: quit \t\tr: read PIC32 mode \t\ty: view traj. arrays\n')
 
 	ser.flush()
 
@@ -165,54 +188,23 @@ while not has_quit:
 
 	elif (selection == 'k'):
 
-		curr_array = []
-		ref_array = []
-
 		print('Running ITEST mode now. Check plot of datapoints.')
-		bytes = ser.read_until(b'\n')
-		num_samps = int(bytes)
-		print(f'Number of ITEST samples: {num_samps} \n')
 
-		for i in range(num_samps):
-			#read until binary space char
-			bytes = ser.read_until(b' ')
-			current = float(bytes)
-			curr_array.append(current)
-
-			#read until binary newline char
-			bytes = ser.read_until(b'\n')
-			refval = float(bytes)
-			ref_array.append(refval)
-
-		xvals = list(range(0,num_samps))
+		ref_array, curr_array = read_arrays()
+		xvals = list(range(0,len(ref_array)))
 		plt.plot(xvals, ref_array, curr_array)
 		plt.show()
 
 	elif (selection == 'l'):
 		
-		#gp to a position
-		#posn = input('Enter a position to move to: ')
-		#posn = float(posn)
-		#serial_text = (str(posn) + '\n').encode()
-		#ser.write(serial_text)
+		#go to a position
+		posn = input('Enter a position to move to: ')
+		posn = float(posn)
+		serial_text = (str(posn) + '\n').encode()
+		ser.write(serial_text)
+
+		#PIC handles the rest from here
 		pass
-
-	#elif (selection == 'm'):
-	#	ref = genRef('cubic')
-	#	#print(len(ref))
-	#	t = range(len(ref))
-	#	plt.plot(t,ref,'r*-')
-	#	plt.ylabel('ange in degrees')
-	#	plt.xlabel('index')
-	#	plt.show()
-	#	# send 
-	#	ser.write((str(len(ref))+'\n').encode())
-	#	for i in ref:
-	#		ser.write((str(i)+'\n').encode())
-
-	#elif (selection == 'o'):
-	#	read_plot_matrix()
-
 
 	elif (selection == 'm'):
 		#load step trajectory
@@ -223,12 +215,9 @@ while not has_quit:
 		print("Sending data to the PIC...")
 		length = len(ref)
 		print('Length of ref: ' + str(length))
-		#print('Printing ref array: ')
-		#print(ref)
 
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
-
 
 		#take every element in the ref array and send it to the PIC
 		for i in range(len(ref)):
@@ -246,12 +235,8 @@ while not has_quit:
 		#send length of the array to the PIC so we know how much data there is
 		print("Sending data to the PIC...")
 		
-		
 		length = len(ref)
 		print('Length of ref: ' + str(length))
-		#print('Printing ref trajectory: ')
-		#print(ref)
-
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
 
@@ -267,45 +252,9 @@ while not has_quit:
 	elif (selection == 'o'):
 		#execute trajectory
 		print('Executing trajectory...')
+		traj_list, posn_list = read_arrays()
 
-		posn_list = []
-		traj_list = []
-
-		#wait for PIC to do all the computations
-		#and retrieve the values
-		bytes = ser.read_until(b'\n')
-		traj_length = int(bytes)
-		print(f'Length of trajectory: {traj_length} \n')
-
-		for i in range(traj_length):
-		#for i in range(length):
-			#print(f'In data-reading loop, iteration: {i}')
-
-			bytes = ser.read_until(b'\n')
-			#print(bytes)
-			traj = float(bytes)
-			traj_list.append(traj)
-
-			bytes = ser.read_until(b'\n')
-			#print(bytes)
-			posn = float(bytes)
-			posn_list.append(posn)
-
-			#bytes = ser.read_until(b'\n')
-			#text = str(bytes)
-			#data_list = text.split()
-			#traj = data_list[0]
-			#posn = data_list[1]
-			#traj_list.append(traj)
-			#posn_list.append(posn)
-			#print(text)
-
-		x_ref = list(range(traj_length))
-
-		#print(f'Trajectory list received: {traj_list}')
-		#print(f'Position list received: {posn_list}')
-
-		#ser.flush()
+		x_ref = list(range(len(traj_list)))
 		plt.plot(x_ref, posn_list, traj_list)
 		plt.show()
 
@@ -327,43 +276,15 @@ while not has_quit:
 		"TRACK Mode: 4 \n\n",
 		)
 
-	elif (selection == 'x'):
-		# example operation
-		n_str = input('Enter number: ') # get the number to send
-		n_int = int(n_str) # turn it into an int
-		print('number = ' + str(n_int)) # print it to the screen to double check
-
-		ser.write((str(n_int)+'\n').encode()); # send the number
-		n_str = ser.read_until(b'\n');  # get the incremented number back
-		n_int = int(n_str) # turn it into an int
-		print('Got back: ' + str(n_int) + '\n') # print it to the screen
-
-
 	elif (selection == 'y'):
 		
-		posn_list = []
-		traj_list = []
-
-		#wait for PIC to do all the computations
-		#and retrieve the values
-		bytes = ser.read_until(b'\n')
-		traj_length = int(bytes)
-		print(f'Length of trajectory: {traj_length}')
-
-		for i in range(traj_length):
-		#for i in range(length):
-
-			bytes = ser.read_until(b'\n')
-			traj = float(bytes)
-			traj_list.append(traj)
-
-			bytes = ser.read_until(b'\n')
-			posn = float(bytes)
-			posn_list.append(posn)
-
+		#show what arrays the PIC has stored
+		traj_list, posn_list = read_arrays()
+		for i in range(len(traj_list)):
 			if (i == 0 or (i+1)%100 == 0):
-				print(f'Received: {traj} {posn}')
-
+				traj = traj_list[i]
+				posn = posn_list[i]
+				print(f'Index {i}: ref {traj} actual {posn}')
 		print()
 
 	elif (selection == 'q'):

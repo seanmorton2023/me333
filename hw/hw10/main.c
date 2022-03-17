@@ -201,27 +201,13 @@ int main()
 		
 		case 'l':
 		{
-			/*
+			
 			//go to a position
 			posn_count = 0;
 			NU32_ReadUART3(buffer, BUF_SIZE);
-			sscanf(buffer, "%f", ref_posn);
+			sscanf(buffer, "%f", &ref_posn);
 			
-			set_mode(HOLD);
-			
-			//wait for HOLD mode to be done, i.e. to settle
-			//at a position
-			while (get_mode() == HOLD){
-				//nothing
-				//NU32_WriteUART3("Inside loop for HOLD mode\r\n");
-
-			}
-			
-			//send a basic signal saying "HOLD mode is done"
-			//NU32_WriteUART3("1\r\n");
-				
-				*/
-				
+			set_mode(HOLD); //will stay here until 'p' command is sent			
 			break;
 		}
 		

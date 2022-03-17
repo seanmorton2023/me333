@@ -81,18 +81,15 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 		
 		case HOLD:
 		{
-			/*
 			//same formulation as ITEST, but we're not
 			//plotting current values this time
 				
 			current_PID();
-			*/
 			break;
 		}
 		
 		case TRACK:
 		{
-			
 			//same formulation as ITEST, but refval comes
 			//from reference arrays
 
@@ -112,7 +109,7 @@ void __ISR(_TIMER_3_VECTOR, IPL5SOFT) CurrentControl(void) {
 void send_current_arrays() {
 		
 	for (int i = 0; i < NUM_SAMPS; ++i) {
-		sprintf(m, "%f %f\r\n", curr_array[i], ref_array[i]);
+		sprintf(m, "%f %f\r\n", ref_array[i], curr_array[i]);
 		NU32_WriteUART3(m);	
 	}
 }
