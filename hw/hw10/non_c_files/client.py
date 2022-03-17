@@ -223,8 +223,8 @@ while not has_quit:
 		print("Sending data to the PIC...")
 		length = len(ref)
 		print('Length of ref: ' + str(length))
-		print('Printing ref array: ')
-		print(ref)
+		#print('Printing ref array: ')
+		#print(ref)
 
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
@@ -249,8 +249,8 @@ while not has_quit:
 		
 		length = len(ref)
 		print('Length of ref: ' + str(length))
-		print('Printing ref trajectory: ')
-		print(ref)
+		#print('Printing ref trajectory: ')
+		#print(ref)
 
 		serial_text = (str(length) + '\n').encode()
 		ser.write(serial_text)
@@ -275,19 +275,19 @@ while not has_quit:
 		#and retrieve the values
 		bytes = ser.read_until(b'\n')
 		traj_length = int(bytes)
-		print(f'Length of trajectory: {traj_length}')
+		print(f'Length of trajectory: {traj_length} \n')
 
 		for i in range(traj_length):
 		#for i in range(length):
-			print(f'In data-reading loop, iteration: {i}')
+			#print(f'In data-reading loop, iteration: {i}')
 
 			bytes = ser.read_until(b'\n')
-			print(bytes)
+			#print(bytes)
 			traj = float(bytes)
 			traj_list.append(traj)
 
 			bytes = ser.read_until(b'\n')
-			print(bytes)
+			#print(bytes)
 			posn = float(bytes)
 			posn_list.append(posn)
 
@@ -302,8 +302,8 @@ while not has_quit:
 
 		x_ref = list(range(traj_length))
 
-		print(f'Trajectory list received: {traj_list}')
-		print(f'Position list received: {posn_list}')
+		#print(f'Trajectory list received: {traj_list}')
+		#print(f'Position list received: {posn_list}')
 
 		#ser.flush()
 		plt.plot(x_ref, posn_list, traj_list)
@@ -356,15 +356,15 @@ while not has_quit:
 			bytes = ser.read_until(b'\n')
 			traj = float(bytes)
 			traj_list.append(traj)
-			if (i == 0 or (i+1)%100 == 0):
-				print(f'Received: {traj} ', end='')
 
 			bytes = ser.read_until(b'\n')
 			posn = float(bytes)
 			posn_list.append(posn)
-			if (i == 0 or (i+1)%100 == 0):
-				print(posn)
 
+			if (i == 0 or (i+1)%100 == 0):
+				print(f'Received: {traj} {posn}')
+
+		print()
 
 	elif (selection == 'q'):
 		print('Exiting client')

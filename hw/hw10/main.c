@@ -312,6 +312,7 @@ int main()
 			//test command - see what values of array length
 			//and arrays the PIC received
 			send_posn_arrays();
+			break;
 		}
 	  
 
